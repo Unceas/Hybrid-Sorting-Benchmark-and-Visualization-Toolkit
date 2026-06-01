@@ -1,0 +1,30 @@
+{
+  "id": "48d84e3a-2c42-46d5-91a4-499beebbe59c",
+  "timestamp": "2026-06-01T14:56:15.626522",
+  "results": [
+    {
+      "algorithm": "introsort",
+      "dataset": "random",
+      "size": 10000,
+      "threshold": 16,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 1.0778,
+      "comparisons": 141888,
+      "swaps": 76150,
+      "max_depth": 6,
+      "insertion_sort_triggers": 978,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3056,
+      "seed": 42,
+      "profile": "custom",
+      "sortedness": 0.5008,
+      "duplicate_density": 0.004,
+      "skewness": -0.0237,
+      "recommended_profile": "low_latency",
+      "recommendation_reason": "Standard uniform random profile. Low Latency parameters minimize total execution cycles.",
+      "logs": [],
+      "splits": []
+    }
+  ]
+}

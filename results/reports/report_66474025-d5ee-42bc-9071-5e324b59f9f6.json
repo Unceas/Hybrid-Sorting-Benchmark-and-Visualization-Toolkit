@@ -1,0 +1,70 @@
+{
+  "id": "66474025-d5ee-42bc-9071-5e324b59f9f6",
+  "timestamp": "2026-06-01T14:06:14.851224",
+  "results": [
+    {
+      "algorithm": "introsort",
+      "dataset": "random",
+      "size": 20000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 3,
+      "execution_time_ms": 2.4227,
+      "comparisons": 321087,
+      "swaps": 187026,
+      "max_depth": 8,
+      "insertion_sort_triggers": 1383,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3077,
+      "splits": []
+    },
+    {
+      "algorithm": "quick_insertion",
+      "dataset": "random",
+      "size": 20000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 3,
+      "execution_time_ms": 2.0053,
+      "comparisons": 321087,
+      "swaps": 187026,
+      "max_depth": 8,
+      "insertion_sort_triggers": 1383,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3077,
+      "splits": []
+    },
+    {
+      "algorithm": "quick_merge",
+      "dataset": "random",
+      "size": 20000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 3,
+      "execution_time_ms": 2.7333,
+      "comparisons": 290489,
+      "swaps": 192398,
+      "max_depth": 8,
+      "insertion_sort_triggers": 0,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3077,
+      "splits": []
+    },
+    {
+      "algorithm": "quick_heap",
+      "dataset": "random",
+      "size": 20000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 3,
+      "execution_time_ms": 2.398,
+      "comparisons": 329859,
+      "swaps": 177964,
+      "max_depth": 8,
+      "insertion_sort_triggers": 0,
+      "heapsort_fallbacks": 1383,
+      "partition_balance": 0.3077,
+      "splits": []
+    }
+  ]
+}

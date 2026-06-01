@@ -1,0 +1,713 @@
+{
+  "id": "ec4e719c-8053-466d-bff3-4a1f35fdd1bf",
+  "timestamp": "2026-06-01T14:13:26.411660",
+  "results": [
+    {
+      "algorithm": "introsort",
+      "dataset": "random",
+      "size": 200,
+      "threshold": 2,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 0.0,
+      "comparisons": 1620,
+      "swaps": 729,
+      "max_depth": 5,
+      "insertion_sort_triggers": 0,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.2121,
+      "splits": [
+        {
+          "low": 0,
+          "high": 199,
+          "pivot_index": 109,
+          "depth": 0
+        },
+        {
+          "low": 110,
+          "high": 199,
+          "pivot_index": 155,
+          "depth": 1
+        },
+        {
+          "low": 156,
+          "high": 199,
+          "pivot_index": 182,
+          "depth": 2
+        },
+        {
+          "low": 183,
+          "high": 199,
+          "pivot_index": 186,
+          "depth": 3
+        },
+        {
+          "low": 183,
+          "high": 185,
+          "pivot_index": 184,
+          "depth": 4
+        },
+        {
+          "low": 187,
+          "high": 199,
+          "pivot_index": 193,
+          "depth": 3
+        },
+        {
+          "low": 194,
+          "high": 199,
+          "pivot_index": 195,
+          "depth": 4
+        },
+        {
+          "low": 196,
+          "high": 199,
+          "pivot_index": 198,
+          "depth": 4
+        },
+        {
+          "low": 196,
+          "high": 197,
+          "pivot_index": 196,
+          "depth": 4
+        },
+        {
+          "low": 187,
+          "high": 192,
+          "pivot_index": 188,
+          "depth": 3
+        },
+        {
+          "low": 189,
+          "high": 192,
+          "pivot_index": 191,
+          "depth": 3
+        },
+        {
+          "low": 189,
+          "high": 190,
+          "pivot_index": 190,
+          "depth": 3
+        },
+        {
+          "low": 156,
+          "high": 181,
+          "pivot_index": 160,
+          "depth": 2
+        },
+        {
+          "low": 156,
+          "high": 159,
+          "pivot_index": 158,
+          "depth": 3
+        },
+        {
+          "low": 156,
+          "high": 157,
+          "pivot_index": 156,
+          "depth": 3
+        },
+        {
+          "low": 161,
+          "high": 181,
+          "pivot_index": 170,
+          "depth": 2
+        },
+        {
+          "low": 161,
+          "high": 169,
+          "pivot_index": 165,
+          "depth": 3
+        },
+        {
+          "low": 166,
+          "high": 169,
+          "pivot_index": 167,
+          "depth": 4
+        },
+        {
+          "low": 168,
+          "high": 169,
+          "pivot_index": 168,
+          "depth": 4
+        },
+        {
+          "low": 161,
+          "high": 164,
+          "pivot_index": 162,
+          "depth": 3
+        },
+        {
+          "low": 163,
+          "high": 164,
+          "pivot_index": 163,
+          "depth": 3
+        },
+        {
+          "low": 171,
+          "high": 181,
+          "pivot_index": 172,
+          "depth": 2
+        },
+        {
+          "low": 173,
+          "high": 181,
+          "pivot_index": 174,
+          "depth": 2
+        },
+        {
+          "low": 175,
+          "high": 181,
+          "pivot_index": 180,
+          "depth": 2
+        },
+        {
+          "low": 175,
+          "high": 179,
+          "pivot_index": 176,
+          "depth": 2
+        },
+        {
+          "low": 177,
+          "high": 179,
+          "pivot_index": 178,
+          "depth": 2
+        },
+        {
+          "low": 110,
+          "high": 154,
+          "pivot_index": 143,
+          "depth": 1
+        },
+        {
+          "low": 144,
+          "high": 154,
+          "pivot_index": 152,
+          "depth": 2
+        },
+        {
+          "low": 153,
+          "high": 154,
+          "pivot_index": 153,
+          "depth": 3
+        },
+        {
+          "low": 144,
+          "high": 151,
+          "pivot_index": 148,
+          "depth": 2
+        },
+        {
+          "low": 149,
+          "high": 151,
+          "pivot_index": 150,
+          "depth": 3
+        },
+        {
+          "low": 144,
+          "high": 147,
+          "pivot_index": 146,
+          "depth": 2
+        },
+        {
+          "low": 144,
+          "high": 145,
+          "pivot_index": 145,
+          "depth": 2
+        },
+        {
+          "low": 110,
+          "high": 142,
+          "pivot_index": 121,
+          "depth": 1
+        },
+        {
+          "low": 110,
+          "high": 120,
+          "pivot_index": 117,
+          "depth": 2
+        },
+        {
+          "low": 118,
+          "high": 120,
+          "pivot_index": 119,
+          "depth": 3
+        },
+        {
+          "low": 110,
+          "high": 116,
+          "pivot_index": 112,
+          "depth": 2
+        },
+        {
+          "low": 110,
+          "high": 111,
+          "pivot_index": 111,
+          "depth": 3
+        },
+        {
+          "low": 113,
+          "high": 116,
+          "pivot_index": 114,
+          "depth": 2
+        },
+        {
+          "low": 115,
+          "high": 116,
+          "pivot_index": 115,
+          "depth": 2
+        },
+        {
+          "low": 122,
+          "high": 142,
+          "pivot_index": 139,
+          "depth": 1
+        },
+        {
+          "low": 140,
+          "high": 142,
+          "pivot_index": 141,
+          "depth": 2
+        },
+        {
+          "low": 122,
+          "high": 138,
+          "pivot_index": 126,
+          "depth": 1
+        },
+        {
+          "low": 122,
+          "high": 125,
+          "pivot_index": 123,
+          "depth": 2
+        },
+        {
+          "low": 124,
+          "high": 125,
+          "pivot_index": 124,
+          "depth": 2
+        },
+        {
+          "low": 127,
+          "high": 138,
+          "pivot_index": 134,
+          "depth": 1
+        },
+        {
+          "low": 135,
+          "high": 138,
+          "pivot_index": 136,
+          "depth": 2
+        },
+        {
+          "low": 137,
+          "high": 138,
+          "pivot_index": 138,
+          "depth": 2
+        },
+        {
+          "low": 127,
+          "high": 133,
+          "pivot_index": 130,
+          "depth": 1
+        },
+        {
+          "low": 131,
+          "high": 133,
+          "pivot_index": 132,
+          "depth": 2
+        },
+        {
+          "low": 127,
+          "high": 129,
+          "pivot_index": 128,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 108,
+          "pivot_index": 69,
+          "depth": 0
+        },
+        {
+          "low": 70,
+          "high": 108,
+          "pivot_index": 79,
+          "depth": 1
+        },
+        {
+          "low": 70,
+          "high": 78,
+          "pivot_index": 73,
+          "depth": 2
+        },
+        {
+          "low": 70,
+          "high": 72,
+          "pivot_index": 71,
+          "depth": 3
+        },
+        {
+          "low": 74,
+          "high": 78,
+          "pivot_index": 76,
+          "depth": 2
+        },
+        {
+          "low": 77,
+          "high": 78,
+          "pivot_index": 77,
+          "depth": 3
+        },
+        {
+          "low": 74,
+          "high": 75,
+          "pivot_index": 74,
+          "depth": 2
+        },
+        {
+          "low": 80,
+          "high": 108,
+          "pivot_index": 91,
+          "depth": 1
+        },
+        {
+          "low": 80,
+          "high": 90,
+          "pivot_index": 83,
+          "depth": 2
+        },
+        {
+          "low": 80,
+          "high": 82,
+          "pivot_index": 81,
+          "depth": 3
+        },
+        {
+          "low": 84,
+          "high": 90,
+          "pivot_index": 86,
+          "depth": 2
+        },
+        {
+          "low": 84,
+          "high": 85,
+          "pivot_index": 85,
+          "depth": 3
+        },
+        {
+          "low": 87,
+          "high": 90,
+          "pivot_index": 88,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 90,
+          "pivot_index": 90,
+          "depth": 2
+        },
+        {
+          "low": 92,
+          "high": 108,
+          "pivot_index": 102,
+          "depth": 1
+        },
+        {
+          "low": 103,
+          "high": 108,
+          "pivot_index": 105,
+          "depth": 2
+        },
+        {
+          "low": 103,
+          "high": 104,
+          "pivot_index": 104,
+          "depth": 3
+        },
+        {
+          "low": 106,
+          "high": 108,
+          "pivot_index": 107,
+          "depth": 2
+        },
+        {
+          "low": 92,
+          "high": 101,
+          "pivot_index": 97,
+          "depth": 1
+        },
+        {
+          "low": 98,
+          "high": 101,
+          "pivot_index": 100,
+          "depth": 2
+        },
+        {
+          "low": 98,
+          "high": 99,
+          "pivot_index": 99,
+          "depth": 2
+        },
+        {
+          "low": 92,
+          "high": 96,
+          "pivot_index": 95,
+          "depth": 1
+        },
+        {
+          "low": 92,
+          "high": 94,
+          "pivot_index": 93,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 68,
+          "pivot_index": 37,
+          "depth": 0
+        },
+        {
+          "low": 38,
+          "high": 68,
+          "pivot_index": 58,
+          "depth": 1
+        },
+        {
+          "low": 59,
+          "high": 68,
+          "pivot_index": 65,
+          "depth": 2
+        },
+        {
+          "low": 66,
+          "high": 68,
+          "pivot_index": 67,
+          "depth": 3
+        },
+        {
+          "low": 59,
+          "high": 64,
+          "pivot_index": 61,
+          "depth": 2
+        },
+        {
+          "low": 59,
+          "high": 60,
+          "pivot_index": 59,
+          "depth": 3
+        },
+        {
+          "low": 62,
+          "high": 64,
+          "pivot_index": 63,
+          "depth": 2
+        },
+        {
+          "low": 38,
+          "high": 57,
+          "pivot_index": 47,
+          "depth": 1
+        },
+        {
+          "low": 38,
+          "high": 46,
+          "pivot_index": 39,
+          "depth": 2
+        },
+        {
+          "low": 40,
+          "high": 46,
+          "pivot_index": 41,
+          "depth": 2
+        },
+        {
+          "low": 42,
+          "high": 46,
+          "pivot_index": 45,
+          "depth": 2
+        },
+        {
+          "low": 42,
+          "high": 44,
+          "pivot_index": 43,
+          "depth": 2
+        },
+        {
+          "low": 48,
+          "high": 57,
+          "pivot_index": 53,
+          "depth": 1
+        },
+        {
+          "low": 54,
+          "high": 57,
+          "pivot_index": 56,
+          "depth": 2
+        },
+        {
+          "low": 54,
+          "high": 55,
+          "pivot_index": 55,
+          "depth": 2
+        },
+        {
+          "low": 48,
+          "high": 52,
+          "pivot_index": 50,
+          "depth": 1
+        },
+        {
+          "low": 51,
+          "high": 52,
+          "pivot_index": 52,
+          "depth": 2
+        },
+        {
+          "low": 48,
+          "high": 49,
+          "pivot_index": 49,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 36,
+          "pivot_index": 5,
+          "depth": 0
+        },
+        {
+          "low": 0,
+          "high": 4,
+          "pivot_index": 2,
+          "depth": 1
+        },
+        {
+          "low": 3,
+          "high": 4,
+          "pivot_index": 4,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 1,
+          "pivot_index": 1,
+          "depth": 1
+        },
+        {
+          "low": 6,
+          "high": 36,
+          "pivot_index": 10,
+          "depth": 0
+        },
+        {
+          "low": 6,
+          "high": 9,
+          "pivot_index": 7,
+          "depth": 1
+        },
+        {
+          "low": 8,
+          "high": 9,
+          "pivot_index": 9,
+          "depth": 1
+        },
+        {
+          "low": 11,
+          "high": 36,
+          "pivot_index": 12,
+          "depth": 0
+        },
+        {
+          "low": 13,
+          "high": 36,
+          "pivot_index": 31,
+          "depth": 0
+        },
+        {
+          "low": 32,
+          "high": 36,
+          "pivot_index": 34,
+          "depth": 1
+        },
+        {
+          "low": 35,
+          "high": 36,
+          "pivot_index": 35,
+          "depth": 2
+        },
+        {
+          "low": 32,
+          "high": 33,
+          "pivot_index": 33,
+          "depth": 1
+        },
+        {
+          "low": 13,
+          "high": 30,
+          "pivot_index": 25,
+          "depth": 0
+        },
+        {
+          "low": 26,
+          "high": 30,
+          "pivot_index": 28,
+          "depth": 1
+        },
+        {
+          "low": 29,
+          "high": 30,
+          "pivot_index": 29,
+          "depth": 2
+        },
+        {
+          "low": 26,
+          "high": 27,
+          "pivot_index": 26,
+          "depth": 1
+        },
+        {
+          "low": 13,
+          "high": 24,
+          "pivot_index": 17,
+          "depth": 0
+        },
+        {
+          "low": 13,
+          "high": 16,
+          "pivot_index": 15,
+          "depth": 1
+        },
+        {
+          "low": 13,
+          "high": 14,
+          "pivot_index": 14,
+          "depth": 1
+        },
+        {
+          "low": 18,
+          "high": 24,
+          "pivot_index": 23,
+          "depth": 0
+        },
+        {
+          "low": 18,
+          "high": 22,
+          "pivot_index": 20,
+          "depth": 0
+        },
+        {
+          "low": 21,
+          "high": 22,
+          "pivot_index": 22,
+          "depth": 1
+        },
+        {
+          "low": 18,
+          "high": 19,
+          "pivot_index": 19,
+          "depth": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "d6b253d8-0fd6-4907-a1ea-4e9125638cc9",
+  "timestamp": "2026-06-01T14:13:28.530936",
+  "results": [
+    {
+      "algorithm": "introsort",
+      "dataset": "random",
+      "size": 200,
+      "threshold": 49,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 0.0,
+      "comparisons": 2511,
+      "swaps": 2123,
+      "max_depth": 2,
+      "insertion_sort_triggers": 5,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.4365,
+      "splits": [
+        {
+          "low": 0,
+          "high": 199,
+          "pivot_index": 109,
+          "depth": 0
+        },
+        {
+          "low": 110,
+          "high": 199,
+          "pivot_index": 155,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 108,
+          "pivot_index": 69,
+          "depth": 0
+        },
+        {
+          "low": 0,
+          "high": 68,
+          "pivot_index": 37,
+          "depth": 0
+        }
+      ]
+    }
+  ]
+}

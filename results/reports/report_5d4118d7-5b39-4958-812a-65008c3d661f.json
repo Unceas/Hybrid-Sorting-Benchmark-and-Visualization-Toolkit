@@ -1,0 +1,2234 @@
+{
+  "id": "5d4118d7-5b39-4958-812a-65008c3d661f",
+  "timestamp": "2026-06-01T14:59:40.137978",
+  "results": [
+    {
+      "algorithm": "introsort",
+      "dataset": "random",
+      "size": 1000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 2.9028,
+      "comparisons": 11342,
+      "swaps": 7468,
+      "max_depth": 4,
+      "insertion_sort_triggers": 67,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3122,
+      "seed": 42,
+      "profile": "custom",
+      "sortedness": 0.4985,
+      "duplicate_density": 0.001,
+      "skewness": -0.0119,
+      "recommended_profile": "low_latency",
+      "recommendation_reason": "Standard uniform random profile. Low Latency parameters minimize total execution cycles.",
+      "logs": [
+        "[SYSTEM] Introsort pipeline started. Size N = 1000, Recursion Depth Limit = 18, Base Threshold = 24.",
+        "[DEBUG] Depth 0: Partitioned [0, 999] at pivot index 380.",
+        "[DEBUG] Depth 1: Partitioned [0, 379] at pivot index 261.",
+        "[DEBUG] Depth 2: Partitioned [262, 379] at pivot index 308.",
+        "[DEBUG] Depth 3: Partitioned [262, 307] at pivot index 266.",
+        "[INFO] Depth 4: Subproblem size 4 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 3: Partitioned [267, 307] at pivot index 290.",
+        "[INFO] Depth 4: Subproblem size 17 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 3: Subproblem size 23 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [309, 379] at pivot index 325.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [326, 379] at pivot index 347.",
+        "[INFO] Depth 3: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [348, 379] at pivot index 352.",
+        "[INFO] Depth 3: Subproblem size 4 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [353, 379] at pivot index 363.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [0, 260] at pivot index 82.",
+        "[DEBUG] Depth 2: Partitioned [0, 81] at pivot index 64.",
+        "[INFO] Depth 3: Subproblem size 17 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [0, 63] at pivot index 22.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [23, 63] at pivot index 43.",
+        "[INFO] Depth 3: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 260] at pivot index 236.",
+        "[DEBUG] Depth 2: Partitioned [237, 260] at pivot index 251.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 235] at pivot index 153.",
+        "[DEBUG] Depth 2: Partitioned [83, 152] at pivot index 123.",
+        "[DEBUG] Depth 3: Partitioned [124, 152] at pivot index 143.",
+        "[INFO] Depth 4: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 3: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [83, 122] at pivot index 88.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 122] at pivot index 113.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 112] at pivot index 101.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [154, 235] at pivot index 186.",
+        "[DEBUG] Depth 2: Partitioned [154, 185] at pivot index 161.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [162, 185] at pivot index 174.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 235] at pivot index 216.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 215] at pivot index 192.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 999] at pivot index 910.",
+        "[DEBUG] Depth 1: Partitioned [911, 999] at pivot index 979.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 978] at pivot index 971.",
+        "[INFO] Depth 2: Subproblem size 7 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 970] at pivot index 935.",
+        "[DEBUG] Depth 2: Partitioned [911, 934] at pivot index 923.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [936, 970] at pivot index 948.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 909] at pivot index 713.",
+        "[DEBUG] Depth 1: Partitioned [714, 909] at pivot index 773.",
+        "[DEBUG] Depth 2: Partitioned [714, 772] at pivot index 730.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [731, 772] at pivot index 736.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 772] at pivot index 766.",
+        "[INFO] Depth 3: Subproblem size 6 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 765] at pivot index 758.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 909] at pivot index 872.",
+        "[DEBUG] Depth 2: Partitioned [873, 909] at pivot index 889.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 871] at pivot index 825.",
+        "[DEBUG] Depth 2: Partitioned [826, 871] at pivot index 855.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [826, 854] at pivot index 835.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 824] at pivot index 819.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 818] at pivot index 793.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [794, 818] at pivot index 810.",
+        "[INFO] Depth 2: Subproblem size 8 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 712] at pivot index 604.",
+        "[DEBUG] Depth 1: Partitioned [605, 712] at pivot index 662.",
+        "[DEBUG] Depth 2: Partitioned [663, 712] at pivot index 685.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [686, 712] at pivot index 702.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 661] at pivot index 640.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 639] at pivot index 617.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 603] at pivot index 558.",
+        "[DEBUG] Depth 1: Partitioned [559, 603] at pivot index 601.",
+        "[INFO] Depth 2: Subproblem size 2 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 600] at pivot index 585.",
+        "[INFO] Depth 2: Subproblem size 15 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 584] at pivot index 570.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 14 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 557] at pivot index 512.",
+        "[DEBUG] Depth 1: Partitioned [513, 557] at pivot index 546.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [513, 545] at pivot index 531.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 18 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 511] at pivot index 457.",
+        "[DEBUG] Depth 1: Partitioned [458, 511] at pivot index 483.",
+        "[DEBUG] Depth 2: Partitioned [458, 482] at pivot index 466.",
+        "[INFO] Depth 3: Subproblem size 8 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [484, 511] at pivot index 507.",
+        "[INFO] Depth 2: Subproblem size 4 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 456] at pivot index 403.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [404, 456] at pivot index 423.",
+        "[INFO] Depth 1: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [424, 456] at pivot index 435.",
+        "[INFO] Depth 1: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 0: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[SYSTEM] Introsort sorted 1000 elements. Comparisons: 11342, Swaps: 7468, Max Stack Depth: 4."
+      ],
+      "splits": [
+        {
+          "low": 0,
+          "high": 999,
+          "pivot_index": 380,
+          "depth": 0
+        },
+        {
+          "low": 0,
+          "high": 379,
+          "pivot_index": 261,
+          "depth": 1
+        },
+        {
+          "low": 262,
+          "high": 379,
+          "pivot_index": 308,
+          "depth": 2
+        },
+        {
+          "low": 262,
+          "high": 307,
+          "pivot_index": 266,
+          "depth": 3
+        },
+        {
+          "low": 267,
+          "high": 307,
+          "pivot_index": 290,
+          "depth": 3
+        },
+        {
+          "low": 309,
+          "high": 379,
+          "pivot_index": 325,
+          "depth": 2
+        },
+        {
+          "low": 326,
+          "high": 379,
+          "pivot_index": 347,
+          "depth": 2
+        },
+        {
+          "low": 348,
+          "high": 379,
+          "pivot_index": 352,
+          "depth": 2
+        },
+        {
+          "low": 353,
+          "high": 379,
+          "pivot_index": 363,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 260,
+          "pivot_index": 82,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 81,
+          "pivot_index": 64,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 63,
+          "pivot_index": 22,
+          "depth": 2
+        },
+        {
+          "low": 23,
+          "high": 63,
+          "pivot_index": 43,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 260,
+          "pivot_index": 236,
+          "depth": 1
+        },
+        {
+          "low": 237,
+          "high": 260,
+          "pivot_index": 251,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 235,
+          "pivot_index": 153,
+          "depth": 1
+        },
+        {
+          "low": 83,
+          "high": 152,
+          "pivot_index": 123,
+          "depth": 2
+        },
+        {
+          "low": 124,
+          "high": 152,
+          "pivot_index": 143,
+          "depth": 3
+        },
+        {
+          "low": 83,
+          "high": 122,
+          "pivot_index": 88,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 122,
+          "pivot_index": 113,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 112,
+          "pivot_index": 101,
+          "depth": 2
+        },
+        {
+          "low": 154,
+          "high": 235,
+          "pivot_index": 186,
+          "depth": 1
+        },
+        {
+          "low": 154,
+          "high": 185,
+          "pivot_index": 161,
+          "depth": 2
+        },
+        {
+          "low": 162,
+          "high": 185,
+          "pivot_index": 174,
+          "depth": 2
+        },
+        {
+          "low": 187,
+          "high": 235,
+          "pivot_index": 216,
+          "depth": 1
+        },
+        {
+          "low": 187,
+          "high": 215,
+          "pivot_index": 192,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 999,
+          "pivot_index": 910,
+          "depth": 0
+        },
+        {
+          "low": 911,
+          "high": 999,
+          "pivot_index": 979,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 978,
+          "pivot_index": 971,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 970,
+          "pivot_index": 935,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 934,
+          "pivot_index": 923,
+          "depth": 2
+        },
+        {
+          "low": 936,
+          "high": 970,
+          "pivot_index": 948,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 909,
+          "pivot_index": 713,
+          "depth": 0
+        },
+        {
+          "low": 714,
+          "high": 909,
+          "pivot_index": 773,
+          "depth": 1
+        },
+        {
+          "low": 714,
+          "high": 772,
+          "pivot_index": 730,
+          "depth": 2
+        },
+        {
+          "low": 731,
+          "high": 772,
+          "pivot_index": 736,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 772,
+          "pivot_index": 766,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 765,
+          "pivot_index": 758,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 909,
+          "pivot_index": 872,
+          "depth": 1
+        },
+        {
+          "low": 873,
+          "high": 909,
+          "pivot_index": 889,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 871,
+          "pivot_index": 825,
+          "depth": 1
+        },
+        {
+          "low": 826,
+          "high": 871,
+          "pivot_index": 855,
+          "depth": 2
+        },
+        {
+          "low": 826,
+          "high": 854,
+          "pivot_index": 835,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 824,
+          "pivot_index": 819,
+          "depth": 1
+        },
+        {
+          "low": 774,
+          "high": 818,
+          "pivot_index": 793,
+          "depth": 1
+        },
+        {
+          "low": 794,
+          "high": 818,
+          "pivot_index": 810,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 712,
+          "pivot_index": 604,
+          "depth": 0
+        },
+        {
+          "low": 605,
+          "high": 712,
+          "pivot_index": 662,
+          "depth": 1
+        },
+        {
+          "low": 663,
+          "high": 712,
+          "pivot_index": 685,
+          "depth": 2
+        },
+        {
+          "low": 686,
+          "high": 712,
+          "pivot_index": 702,
+          "depth": 2
+        },
+        {
+          "low": 605,
+          "high": 661,
+          "pivot_index": 640,
+          "depth": 1
+        },
+        {
+          "low": 605,
+          "high": 639,
+          "pivot_index": 617,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 603,
+          "pivot_index": 558,
+          "depth": 0
+        },
+        {
+          "low": 559,
+          "high": 603,
+          "pivot_index": 601,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 600,
+          "pivot_index": 585,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 584,
+          "pivot_index": 570,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 557,
+          "pivot_index": 512,
+          "depth": 0
+        },
+        {
+          "low": 513,
+          "high": 557,
+          "pivot_index": 546,
+          "depth": 1
+        },
+        {
+          "low": 513,
+          "high": 545,
+          "pivot_index": 531,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 511,
+          "pivot_index": 457,
+          "depth": 0
+        },
+        {
+          "low": 458,
+          "high": 511,
+          "pivot_index": 483,
+          "depth": 1
+        },
+        {
+          "low": 458,
+          "high": 482,
+          "pivot_index": 466,
+          "depth": 2
+        },
+        {
+          "low": 484,
+          "high": 511,
+          "pivot_index": 507,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 456,
+          "pivot_index": 403,
+          "depth": 0
+        },
+        {
+          "low": 404,
+          "high": 456,
+          "pivot_index": 423,
+          "depth": 0
+        },
+        {
+          "low": 424,
+          "high": 456,
+          "pivot_index": 435,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "algorithm": "quick_insertion",
+      "dataset": "random",
+      "size": 1000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 3.0596,
+      "comparisons": 11342,
+      "swaps": 7468,
+      "max_depth": 4,
+      "insertion_sort_triggers": 67,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3122,
+      "seed": 42,
+      "profile": "custom",
+      "sortedness": 0.4985,
+      "duplicate_density": 0.001,
+      "skewness": -0.0119,
+      "recommended_profile": "low_latency",
+      "recommendation_reason": "Standard uniform random profile. Low Latency parameters minimize total execution cycles.",
+      "logs": [
+        "[SYSTEM] Quick+Insertion pipeline started. Size N = 1000, Base Threshold = 24.",
+        "[DEBUG] Depth 0: Partitioned [0, 999] at pivot index 380.",
+        "[DEBUG] Depth 1: Partitioned [0, 379] at pivot index 261.",
+        "[DEBUG] Depth 2: Partitioned [262, 379] at pivot index 308.",
+        "[DEBUG] Depth 3: Partitioned [262, 307] at pivot index 266.",
+        "[INFO] Depth 4: Subproblem size 4 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 3: Partitioned [267, 307] at pivot index 290.",
+        "[INFO] Depth 4: Subproblem size 17 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 3: Subproblem size 23 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [309, 379] at pivot index 325.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [326, 379] at pivot index 347.",
+        "[INFO] Depth 3: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [348, 379] at pivot index 352.",
+        "[INFO] Depth 3: Subproblem size 4 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [353, 379] at pivot index 363.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [0, 260] at pivot index 82.",
+        "[DEBUG] Depth 2: Partitioned [0, 81] at pivot index 64.",
+        "[INFO] Depth 3: Subproblem size 17 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [0, 63] at pivot index 22.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [23, 63] at pivot index 43.",
+        "[INFO] Depth 3: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 260] at pivot index 236.",
+        "[DEBUG] Depth 2: Partitioned [237, 260] at pivot index 251.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 235] at pivot index 153.",
+        "[DEBUG] Depth 2: Partitioned [83, 152] at pivot index 123.",
+        "[DEBUG] Depth 3: Partitioned [124, 152] at pivot index 143.",
+        "[INFO] Depth 4: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 3: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [83, 122] at pivot index 88.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 122] at pivot index 113.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 112] at pivot index 101.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [154, 235] at pivot index 186.",
+        "[DEBUG] Depth 2: Partitioned [154, 185] at pivot index 161.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [162, 185] at pivot index 174.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 235] at pivot index 216.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 215] at pivot index 192.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 999] at pivot index 910.",
+        "[DEBUG] Depth 1: Partitioned [911, 999] at pivot index 979.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 978] at pivot index 971.",
+        "[INFO] Depth 2: Subproblem size 7 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 970] at pivot index 935.",
+        "[DEBUG] Depth 2: Partitioned [911, 934] at pivot index 923.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [936, 970] at pivot index 948.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 909] at pivot index 713.",
+        "[DEBUG] Depth 1: Partitioned [714, 909] at pivot index 773.",
+        "[DEBUG] Depth 2: Partitioned [714, 772] at pivot index 730.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [731, 772] at pivot index 736.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 772] at pivot index 766.",
+        "[INFO] Depth 3: Subproblem size 6 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 765] at pivot index 758.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 909] at pivot index 872.",
+        "[DEBUG] Depth 2: Partitioned [873, 909] at pivot index 889.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 871] at pivot index 825.",
+        "[DEBUG] Depth 2: Partitioned [826, 871] at pivot index 855.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [826, 854] at pivot index 835.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 824] at pivot index 819.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 818] at pivot index 793.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [794, 818] at pivot index 810.",
+        "[INFO] Depth 2: Subproblem size 8 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 712] at pivot index 604.",
+        "[DEBUG] Depth 1: Partitioned [605, 712] at pivot index 662.",
+        "[DEBUG] Depth 2: Partitioned [663, 712] at pivot index 685.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [686, 712] at pivot index 702.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 661] at pivot index 640.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 639] at pivot index 617.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 603] at pivot index 558.",
+        "[DEBUG] Depth 1: Partitioned [559, 603] at pivot index 601.",
+        "[INFO] Depth 2: Subproblem size 2 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 600] at pivot index 585.",
+        "[INFO] Depth 2: Subproblem size 15 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 584] at pivot index 570.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 14 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 557] at pivot index 512.",
+        "[DEBUG] Depth 1: Partitioned [513, 557] at pivot index 546.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [513, 545] at pivot index 531.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 18 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 511] at pivot index 457.",
+        "[DEBUG] Depth 1: Partitioned [458, 511] at pivot index 483.",
+        "[DEBUG] Depth 2: Partitioned [458, 482] at pivot index 466.",
+        "[INFO] Depth 3: Subproblem size 8 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [484, 511] at pivot index 507.",
+        "[INFO] Depth 2: Subproblem size 4 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 456] at pivot index 403.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [404, 456] at pivot index 423.",
+        "[INFO] Depth 1: Subproblem size 19 < 24 -> Insertion Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [424, 456] at pivot index 435.",
+        "[INFO] Depth 1: Subproblem size 11 < 24 -> Insertion Sort base case.",
+        "[INFO] Depth 0: Subproblem size 21 < 24 -> Insertion Sort base case.",
+        "[SYSTEM] Quick+Insertion sorted 1000 elements. Comparisons: 11342, Swaps: 7468, Max Stack Depth: 4."
+      ],
+      "splits": [
+        {
+          "low": 0,
+          "high": 999,
+          "pivot_index": 380,
+          "depth": 0
+        },
+        {
+          "low": 0,
+          "high": 379,
+          "pivot_index": 261,
+          "depth": 1
+        },
+        {
+          "low": 262,
+          "high": 379,
+          "pivot_index": 308,
+          "depth": 2
+        },
+        {
+          "low": 262,
+          "high": 307,
+          "pivot_index": 266,
+          "depth": 3
+        },
+        {
+          "low": 267,
+          "high": 307,
+          "pivot_index": 290,
+          "depth": 3
+        },
+        {
+          "low": 309,
+          "high": 379,
+          "pivot_index": 325,
+          "depth": 2
+        },
+        {
+          "low": 326,
+          "high": 379,
+          "pivot_index": 347,
+          "depth": 2
+        },
+        {
+          "low": 348,
+          "high": 379,
+          "pivot_index": 352,
+          "depth": 2
+        },
+        {
+          "low": 353,
+          "high": 379,
+          "pivot_index": 363,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 260,
+          "pivot_index": 82,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 81,
+          "pivot_index": 64,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 63,
+          "pivot_index": 22,
+          "depth": 2
+        },
+        {
+          "low": 23,
+          "high": 63,
+          "pivot_index": 43,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 260,
+          "pivot_index": 236,
+          "depth": 1
+        },
+        {
+          "low": 237,
+          "high": 260,
+          "pivot_index": 251,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 235,
+          "pivot_index": 153,
+          "depth": 1
+        },
+        {
+          "low": 83,
+          "high": 152,
+          "pivot_index": 123,
+          "depth": 2
+        },
+        {
+          "low": 124,
+          "high": 152,
+          "pivot_index": 143,
+          "depth": 3
+        },
+        {
+          "low": 83,
+          "high": 122,
+          "pivot_index": 88,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 122,
+          "pivot_index": 113,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 112,
+          "pivot_index": 101,
+          "depth": 2
+        },
+        {
+          "low": 154,
+          "high": 235,
+          "pivot_index": 186,
+          "depth": 1
+        },
+        {
+          "low": 154,
+          "high": 185,
+          "pivot_index": 161,
+          "depth": 2
+        },
+        {
+          "low": 162,
+          "high": 185,
+          "pivot_index": 174,
+          "depth": 2
+        },
+        {
+          "low": 187,
+          "high": 235,
+          "pivot_index": 216,
+          "depth": 1
+        },
+        {
+          "low": 187,
+          "high": 215,
+          "pivot_index": 192,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 999,
+          "pivot_index": 910,
+          "depth": 0
+        },
+        {
+          "low": 911,
+          "high": 999,
+          "pivot_index": 979,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 978,
+          "pivot_index": 971,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 970,
+          "pivot_index": 935,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 934,
+          "pivot_index": 923,
+          "depth": 2
+        },
+        {
+          "low": 936,
+          "high": 970,
+          "pivot_index": 948,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 909,
+          "pivot_index": 713,
+          "depth": 0
+        },
+        {
+          "low": 714,
+          "high": 909,
+          "pivot_index": 773,
+          "depth": 1
+        },
+        {
+          "low": 714,
+          "high": 772,
+          "pivot_index": 730,
+          "depth": 2
+        },
+        {
+          "low": 731,
+          "high": 772,
+          "pivot_index": 736,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 772,
+          "pivot_index": 766,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 765,
+          "pivot_index": 758,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 909,
+          "pivot_index": 872,
+          "depth": 1
+        },
+        {
+          "low": 873,
+          "high": 909,
+          "pivot_index": 889,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 871,
+          "pivot_index": 825,
+          "depth": 1
+        },
+        {
+          "low": 826,
+          "high": 871,
+          "pivot_index": 855,
+          "depth": 2
+        },
+        {
+          "low": 826,
+          "high": 854,
+          "pivot_index": 835,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 824,
+          "pivot_index": 819,
+          "depth": 1
+        },
+        {
+          "low": 774,
+          "high": 818,
+          "pivot_index": 793,
+          "depth": 1
+        },
+        {
+          "low": 794,
+          "high": 818,
+          "pivot_index": 810,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 712,
+          "pivot_index": 604,
+          "depth": 0
+        },
+        {
+          "low": 605,
+          "high": 712,
+          "pivot_index": 662,
+          "depth": 1
+        },
+        {
+          "low": 663,
+          "high": 712,
+          "pivot_index": 685,
+          "depth": 2
+        },
+        {
+          "low": 686,
+          "high": 712,
+          "pivot_index": 702,
+          "depth": 2
+        },
+        {
+          "low": 605,
+          "high": 661,
+          "pivot_index": 640,
+          "depth": 1
+        },
+        {
+          "low": 605,
+          "high": 639,
+          "pivot_index": 617,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 603,
+          "pivot_index": 558,
+          "depth": 0
+        },
+        {
+          "low": 559,
+          "high": 603,
+          "pivot_index": 601,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 600,
+          "pivot_index": 585,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 584,
+          "pivot_index": 570,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 557,
+          "pivot_index": 512,
+          "depth": 0
+        },
+        {
+          "low": 513,
+          "high": 557,
+          "pivot_index": 546,
+          "depth": 1
+        },
+        {
+          "low": 513,
+          "high": 545,
+          "pivot_index": 531,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 511,
+          "pivot_index": 457,
+          "depth": 0
+        },
+        {
+          "low": 458,
+          "high": 511,
+          "pivot_index": 483,
+          "depth": 1
+        },
+        {
+          "low": 458,
+          "high": 482,
+          "pivot_index": 466,
+          "depth": 2
+        },
+        {
+          "low": 484,
+          "high": 511,
+          "pivot_index": 507,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 456,
+          "pivot_index": 403,
+          "depth": 0
+        },
+        {
+          "low": 404,
+          "high": 456,
+          "pivot_index": 423,
+          "depth": 0
+        },
+        {
+          "low": 424,
+          "high": 456,
+          "pivot_index": 435,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "algorithm": "quick_merge",
+      "dataset": "random",
+      "size": 1000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 2.8554,
+      "comparisons": 9615,
+      "swaps": 7557,
+      "max_depth": 4,
+      "insertion_sort_triggers": 0,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.3122,
+      "seed": 42,
+      "profile": "custom",
+      "sortedness": 0.4985,
+      "duplicate_density": 0.001,
+      "skewness": -0.0119,
+      "recommended_profile": "low_latency",
+      "recommendation_reason": "Standard uniform random profile. Low Latency parameters minimize total execution cycles.",
+      "logs": [
+        "[SYSTEM] Quick+Merge pipeline started. Size N = 1000, Base Threshold = 24.",
+        "[DEBUG] Depth 0: Partitioned [0, 999] at pivot index 380.",
+        "[DEBUG] Depth 1: Partitioned [0, 379] at pivot index 261.",
+        "[DEBUG] Depth 2: Partitioned [262, 379] at pivot index 308.",
+        "[DEBUG] Depth 3: Partitioned [262, 307] at pivot index 266.",
+        "[INFO] Depth 4: Subproblem size 4 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 3: Partitioned [267, 307] at pivot index 290.",
+        "[INFO] Depth 4: Subproblem size 17 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 3: Subproblem size 23 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [309, 379] at pivot index 325.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [326, 379] at pivot index 347.",
+        "[INFO] Depth 3: Subproblem size 21 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [348, 379] at pivot index 352.",
+        "[INFO] Depth 3: Subproblem size 4 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [353, 379] at pivot index 363.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [0, 260] at pivot index 82.",
+        "[DEBUG] Depth 2: Partitioned [0, 81] at pivot index 64.",
+        "[INFO] Depth 3: Subproblem size 17 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [0, 63] at pivot index 22.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [23, 63] at pivot index 43.",
+        "[INFO] Depth 3: Subproblem size 20 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 260] at pivot index 236.",
+        "[DEBUG] Depth 2: Partitioned [237, 260] at pivot index 251.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 235] at pivot index 153.",
+        "[DEBUG] Depth 2: Partitioned [83, 152] at pivot index 123.",
+        "[DEBUG] Depth 3: Partitioned [124, 152] at pivot index 143.",
+        "[INFO] Depth 4: Subproblem size 9 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 3: Subproblem size 19 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [83, 122] at pivot index 88.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 122] at pivot index 113.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 112] at pivot index 101.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [154, 235] at pivot index 186.",
+        "[DEBUG] Depth 2: Partitioned [154, 185] at pivot index 161.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [162, 185] at pivot index 174.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 235] at pivot index 216.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 215] at pivot index 192.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 999] at pivot index 910.",
+        "[DEBUG] Depth 1: Partitioned [911, 999] at pivot index 979.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 978] at pivot index 971.",
+        "[INFO] Depth 2: Subproblem size 7 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 970] at pivot index 935.",
+        "[DEBUG] Depth 2: Partitioned [911, 934] at pivot index 923.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [936, 970] at pivot index 948.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 909] at pivot index 713.",
+        "[DEBUG] Depth 1: Partitioned [714, 909] at pivot index 773.",
+        "[DEBUG] Depth 2: Partitioned [714, 772] at pivot index 730.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [731, 772] at pivot index 736.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 772] at pivot index 766.",
+        "[INFO] Depth 3: Subproblem size 6 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 765] at pivot index 758.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 909] at pivot index 872.",
+        "[DEBUG] Depth 2: Partitioned [873, 909] at pivot index 889.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 871] at pivot index 825.",
+        "[DEBUG] Depth 2: Partitioned [826, 871] at pivot index 855.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [826, 854] at pivot index 835.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 824] at pivot index 819.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 818] at pivot index 793.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [794, 818] at pivot index 810.",
+        "[INFO] Depth 2: Subproblem size 8 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 712] at pivot index 604.",
+        "[DEBUG] Depth 1: Partitioned [605, 712] at pivot index 662.",
+        "[DEBUG] Depth 2: Partitioned [663, 712] at pivot index 685.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 2: Partitioned [686, 712] at pivot index 702.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 661] at pivot index 640.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 639] at pivot index 617.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 603] at pivot index 558.",
+        "[DEBUG] Depth 1: Partitioned [559, 603] at pivot index 601.",
+        "[INFO] Depth 2: Subproblem size 2 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 600] at pivot index 585.",
+        "[INFO] Depth 2: Subproblem size 15 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 584] at pivot index 570.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 14 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 557] at pivot index 512.",
+        "[DEBUG] Depth 1: Partitioned [513, 557] at pivot index 546.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [513, 545] at pivot index 531.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 18 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 511] at pivot index 457.",
+        "[DEBUG] Depth 1: Partitioned [458, 511] at pivot index 483.",
+        "[DEBUG] Depth 2: Partitioned [458, 482] at pivot index 466.",
+        "[INFO] Depth 3: Subproblem size 8 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 1: Partitioned [484, 511] at pivot index 507.",
+        "[INFO] Depth 2: Subproblem size 4 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 456] at pivot index 403.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [404, 456] at pivot index 423.",
+        "[INFO] Depth 1: Subproblem size 19 < 24 -> Merge Sort base case.",
+        "[DEBUG] Depth 0: Partitioned [424, 456] at pivot index 435.",
+        "[INFO] Depth 1: Subproblem size 11 < 24 -> Merge Sort base case.",
+        "[INFO] Depth 0: Subproblem size 21 < 24 -> Merge Sort base case.",
+        "[SYSTEM] Quick+Merge sorted 1000 elements. Comparisons: 9615, Swaps: 7557, Max Stack Depth: 4."
+      ],
+      "splits": [
+        {
+          "low": 0,
+          "high": 999,
+          "pivot_index": 380,
+          "depth": 0
+        },
+        {
+          "low": 0,
+          "high": 379,
+          "pivot_index": 261,
+          "depth": 1
+        },
+        {
+          "low": 262,
+          "high": 379,
+          "pivot_index": 308,
+          "depth": 2
+        },
+        {
+          "low": 262,
+          "high": 307,
+          "pivot_index": 266,
+          "depth": 3
+        },
+        {
+          "low": 267,
+          "high": 307,
+          "pivot_index": 290,
+          "depth": 3
+        },
+        {
+          "low": 309,
+          "high": 379,
+          "pivot_index": 325,
+          "depth": 2
+        },
+        {
+          "low": 326,
+          "high": 379,
+          "pivot_index": 347,
+          "depth": 2
+        },
+        {
+          "low": 348,
+          "high": 379,
+          "pivot_index": 352,
+          "depth": 2
+        },
+        {
+          "low": 353,
+          "high": 379,
+          "pivot_index": 363,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 260,
+          "pivot_index": 82,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 81,
+          "pivot_index": 64,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 63,
+          "pivot_index": 22,
+          "depth": 2
+        },
+        {
+          "low": 23,
+          "high": 63,
+          "pivot_index": 43,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 260,
+          "pivot_index": 236,
+          "depth": 1
+        },
+        {
+          "low": 237,
+          "high": 260,
+          "pivot_index": 251,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 235,
+          "pivot_index": 153,
+          "depth": 1
+        },
+        {
+          "low": 83,
+          "high": 152,
+          "pivot_index": 123,
+          "depth": 2
+        },
+        {
+          "low": 124,
+          "high": 152,
+          "pivot_index": 143,
+          "depth": 3
+        },
+        {
+          "low": 83,
+          "high": 122,
+          "pivot_index": 88,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 122,
+          "pivot_index": 113,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 112,
+          "pivot_index": 101,
+          "depth": 2
+        },
+        {
+          "low": 154,
+          "high": 235,
+          "pivot_index": 186,
+          "depth": 1
+        },
+        {
+          "low": 154,
+          "high": 185,
+          "pivot_index": 161,
+          "depth": 2
+        },
+        {
+          "low": 162,
+          "high": 185,
+          "pivot_index": 174,
+          "depth": 2
+        },
+        {
+          "low": 187,
+          "high": 235,
+          "pivot_index": 216,
+          "depth": 1
+        },
+        {
+          "low": 187,
+          "high": 215,
+          "pivot_index": 192,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 999,
+          "pivot_index": 910,
+          "depth": 0
+        },
+        {
+          "low": 911,
+          "high": 999,
+          "pivot_index": 979,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 978,
+          "pivot_index": 971,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 970,
+          "pivot_index": 935,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 934,
+          "pivot_index": 923,
+          "depth": 2
+        },
+        {
+          "low": 936,
+          "high": 970,
+          "pivot_index": 948,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 909,
+          "pivot_index": 713,
+          "depth": 0
+        },
+        {
+          "low": 714,
+          "high": 909,
+          "pivot_index": 773,
+          "depth": 1
+        },
+        {
+          "low": 714,
+          "high": 772,
+          "pivot_index": 730,
+          "depth": 2
+        },
+        {
+          "low": 731,
+          "high": 772,
+          "pivot_index": 736,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 772,
+          "pivot_index": 766,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 765,
+          "pivot_index": 758,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 909,
+          "pivot_index": 872,
+          "depth": 1
+        },
+        {
+          "low": 873,
+          "high": 909,
+          "pivot_index": 889,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 871,
+          "pivot_index": 825,
+          "depth": 1
+        },
+        {
+          "low": 826,
+          "high": 871,
+          "pivot_index": 855,
+          "depth": 2
+        },
+        {
+          "low": 826,
+          "high": 854,
+          "pivot_index": 835,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 824,
+          "pivot_index": 819,
+          "depth": 1
+        },
+        {
+          "low": 774,
+          "high": 818,
+          "pivot_index": 793,
+          "depth": 1
+        },
+        {
+          "low": 794,
+          "high": 818,
+          "pivot_index": 810,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 712,
+          "pivot_index": 604,
+          "depth": 0
+        },
+        {
+          "low": 605,
+          "high": 712,
+          "pivot_index": 662,
+          "depth": 1
+        },
+        {
+          "low": 663,
+          "high": 712,
+          "pivot_index": 685,
+          "depth": 2
+        },
+        {
+          "low": 686,
+          "high": 712,
+          "pivot_index": 702,
+          "depth": 2
+        },
+        {
+          "low": 605,
+          "high": 661,
+          "pivot_index": 640,
+          "depth": 1
+        },
+        {
+          "low": 605,
+          "high": 639,
+          "pivot_index": 617,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 603,
+          "pivot_index": 558,
+          "depth": 0
+        },
+        {
+          "low": 559,
+          "high": 603,
+          "pivot_index": 601,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 600,
+          "pivot_index": 585,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 584,
+          "pivot_index": 570,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 557,
+          "pivot_index": 512,
+          "depth": 0
+        },
+        {
+          "low": 513,
+          "high": 557,
+          "pivot_index": 546,
+          "depth": 1
+        },
+        {
+          "low": 513,
+          "high": 545,
+          "pivot_index": 531,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 511,
+          "pivot_index": 457,
+          "depth": 0
+        },
+        {
+          "low": 458,
+          "high": 511,
+          "pivot_index": 483,
+          "depth": 1
+        },
+        {
+          "low": 458,
+          "high": 482,
+          "pivot_index": 466,
+          "depth": 2
+        },
+        {
+          "low": 484,
+          "high": 511,
+          "pivot_index": 507,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 456,
+          "pivot_index": 403,
+          "depth": 0
+        },
+        {
+          "low": 404,
+          "high": 456,
+          "pivot_index": 423,
+          "depth": 0
+        },
+        {
+          "low": 424,
+          "high": 456,
+          "pivot_index": 435,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "algorithm": "quick_heap",
+      "dataset": "random",
+      "size": 1000,
+      "threshold": 24,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 2.6572,
+      "comparisons": 11651,
+      "swaps": 6805,
+      "max_depth": 4,
+      "insertion_sort_triggers": 0,
+      "heapsort_fallbacks": 67,
+      "partition_balance": 0.3122,
+      "seed": 42,
+      "profile": "custom",
+      "sortedness": 0.4985,
+      "duplicate_density": 0.001,
+      "skewness": -0.0119,
+      "recommended_profile": "low_latency",
+      "recommendation_reason": "Standard uniform random profile. Low Latency parameters minimize total execution cycles.",
+      "logs": [
+        "[SYSTEM] Quick+Heap pipeline started. Size N = 1000, Base Threshold = 24.",
+        "[DEBUG] Depth 0: Partitioned [0, 999] at pivot index 380.",
+        "[DEBUG] Depth 1: Partitioned [0, 379] at pivot index 261.",
+        "[DEBUG] Depth 2: Partitioned [262, 379] at pivot index 308.",
+        "[DEBUG] Depth 3: Partitioned [262, 307] at pivot index 266.",
+        "[INFO] Depth 4: Subproblem size 4 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 3: Partitioned [267, 307] at pivot index 290.",
+        "[INFO] Depth 4: Subproblem size 17 < 24 -> HeapSort base case.",
+        "[INFO] Depth 3: Subproblem size 23 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [309, 379] at pivot index 325.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [326, 379] at pivot index 347.",
+        "[INFO] Depth 3: Subproblem size 21 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [348, 379] at pivot index 352.",
+        "[INFO] Depth 3: Subproblem size 4 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [353, 379] at pivot index 363.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [0, 260] at pivot index 82.",
+        "[DEBUG] Depth 2: Partitioned [0, 81] at pivot index 64.",
+        "[INFO] Depth 3: Subproblem size 17 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [0, 63] at pivot index 22.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [23, 63] at pivot index 43.",
+        "[INFO] Depth 3: Subproblem size 20 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 260] at pivot index 236.",
+        "[DEBUG] Depth 2: Partitioned [237, 260] at pivot index 251.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [83, 235] at pivot index 153.",
+        "[DEBUG] Depth 2: Partitioned [83, 152] at pivot index 123.",
+        "[DEBUG] Depth 3: Partitioned [124, 152] at pivot index 143.",
+        "[INFO] Depth 4: Subproblem size 9 < 24 -> HeapSort base case.",
+        "[INFO] Depth 3: Subproblem size 19 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [83, 122] at pivot index 88.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 122] at pivot index 113.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [89, 112] at pivot index 101.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [154, 235] at pivot index 186.",
+        "[DEBUG] Depth 2: Partitioned [154, 185] at pivot index 161.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [162, 185] at pivot index 174.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 235] at pivot index 216.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [187, 215] at pivot index 192.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 999] at pivot index 910.",
+        "[DEBUG] Depth 1: Partitioned [911, 999] at pivot index 979.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 978] at pivot index 971.",
+        "[INFO] Depth 2: Subproblem size 7 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [911, 970] at pivot index 935.",
+        "[DEBUG] Depth 2: Partitioned [911, 934] at pivot index 923.",
+        "[INFO] Depth 3: Subproblem size 11 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [936, 970] at pivot index 948.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 909] at pivot index 713.",
+        "[DEBUG] Depth 1: Partitioned [714, 909] at pivot index 773.",
+        "[DEBUG] Depth 2: Partitioned [714, 772] at pivot index 730.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [731, 772] at pivot index 736.",
+        "[INFO] Depth 3: Subproblem size 5 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 772] at pivot index 766.",
+        "[INFO] Depth 3: Subproblem size 6 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [737, 765] at pivot index 758.",
+        "[INFO] Depth 3: Subproblem size 7 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 909] at pivot index 872.",
+        "[DEBUG] Depth 2: Partitioned [873, 909] at pivot index 889.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 20 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 871] at pivot index 825.",
+        "[DEBUG] Depth 2: Partitioned [826, 871] at pivot index 855.",
+        "[INFO] Depth 3: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [826, 854] at pivot index 835.",
+        "[INFO] Depth 3: Subproblem size 9 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 824] at pivot index 819.",
+        "[INFO] Depth 2: Subproblem size 5 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [774, 818] at pivot index 793.",
+        "[INFO] Depth 2: Subproblem size 19 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [794, 818] at pivot index 810.",
+        "[INFO] Depth 2: Subproblem size 8 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 712] at pivot index 604.",
+        "[DEBUG] Depth 1: Partitioned [605, 712] at pivot index 662.",
+        "[DEBUG] Depth 2: Partitioned [663, 712] at pivot index 685.",
+        "[INFO] Depth 3: Subproblem size 22 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 2: Partitioned [686, 712] at pivot index 702.",
+        "[INFO] Depth 3: Subproblem size 10 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 661] at pivot index 640.",
+        "[INFO] Depth 2: Subproblem size 21 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [605, 639] at pivot index 617.",
+        "[INFO] Depth 2: Subproblem size 12 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 603] at pivot index 558.",
+        "[DEBUG] Depth 1: Partitioned [559, 603] at pivot index 601.",
+        "[INFO] Depth 2: Subproblem size 2 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 600] at pivot index 585.",
+        "[INFO] Depth 2: Subproblem size 15 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [559, 584] at pivot index 570.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 14 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 557] at pivot index 512.",
+        "[DEBUG] Depth 1: Partitioned [513, 557] at pivot index 546.",
+        "[INFO] Depth 2: Subproblem size 11 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [513, 545] at pivot index 531.",
+        "[INFO] Depth 2: Subproblem size 14 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 18 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 511] at pivot index 457.",
+        "[DEBUG] Depth 1: Partitioned [458, 511] at pivot index 483.",
+        "[DEBUG] Depth 2: Partitioned [458, 482] at pivot index 466.",
+        "[INFO] Depth 3: Subproblem size 8 < 24 -> HeapSort base case.",
+        "[INFO] Depth 2: Subproblem size 16 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 1: Partitioned [484, 511] at pivot index 507.",
+        "[INFO] Depth 2: Subproblem size 4 < 24 -> HeapSort base case.",
+        "[INFO] Depth 1: Subproblem size 23 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [381, 456] at pivot index 403.",
+        "[INFO] Depth 1: Subproblem size 22 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [404, 456] at pivot index 423.",
+        "[INFO] Depth 1: Subproblem size 19 < 24 -> HeapSort base case.",
+        "[DEBUG] Depth 0: Partitioned [424, 456] at pivot index 435.",
+        "[INFO] Depth 1: Subproblem size 11 < 24 -> HeapSort base case.",
+        "[INFO] Depth 0: Subproblem size 21 < 24 -> HeapSort base case.",
+        "[SYSTEM] Quick+Heap sorted 1000 elements. Comparisons: 11651, Swaps: 6805, Max Stack Depth: 4."
+      ],
+      "splits": [
+        {
+          "low": 0,
+          "high": 999,
+          "pivot_index": 380,
+          "depth": 0
+        },
+        {
+          "low": 0,
+          "high": 379,
+          "pivot_index": 261,
+          "depth": 1
+        },
+        {
+          "low": 262,
+          "high": 379,
+          "pivot_index": 308,
+          "depth": 2
+        },
+        {
+          "low": 262,
+          "high": 307,
+          "pivot_index": 266,
+          "depth": 3
+        },
+        {
+          "low": 267,
+          "high": 307,
+          "pivot_index": 290,
+          "depth": 3
+        },
+        {
+          "low": 309,
+          "high": 379,
+          "pivot_index": 325,
+          "depth": 2
+        },
+        {
+          "low": 326,
+          "high": 379,
+          "pivot_index": 347,
+          "depth": 2
+        },
+        {
+          "low": 348,
+          "high": 379,
+          "pivot_index": 352,
+          "depth": 2
+        },
+        {
+          "low": 353,
+          "high": 379,
+          "pivot_index": 363,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 260,
+          "pivot_index": 82,
+          "depth": 1
+        },
+        {
+          "low": 0,
+          "high": 81,
+          "pivot_index": 64,
+          "depth": 2
+        },
+        {
+          "low": 0,
+          "high": 63,
+          "pivot_index": 22,
+          "depth": 2
+        },
+        {
+          "low": 23,
+          "high": 63,
+          "pivot_index": 43,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 260,
+          "pivot_index": 236,
+          "depth": 1
+        },
+        {
+          "low": 237,
+          "high": 260,
+          "pivot_index": 251,
+          "depth": 2
+        },
+        {
+          "low": 83,
+          "high": 235,
+          "pivot_index": 153,
+          "depth": 1
+        },
+        {
+          "low": 83,
+          "high": 152,
+          "pivot_index": 123,
+          "depth": 2
+        },
+        {
+          "low": 124,
+          "high": 152,
+          "pivot_index": 143,
+          "depth": 3
+        },
+        {
+          "low": 83,
+          "high": 122,
+          "pivot_index": 88,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 122,
+          "pivot_index": 113,
+          "depth": 2
+        },
+        {
+          "low": 89,
+          "high": 112,
+          "pivot_index": 101,
+          "depth": 2
+        },
+        {
+          "low": 154,
+          "high": 235,
+          "pivot_index": 186,
+          "depth": 1
+        },
+        {
+          "low": 154,
+          "high": 185,
+          "pivot_index": 161,
+          "depth": 2
+        },
+        {
+          "low": 162,
+          "high": 185,
+          "pivot_index": 174,
+          "depth": 2
+        },
+        {
+          "low": 187,
+          "high": 235,
+          "pivot_index": 216,
+          "depth": 1
+        },
+        {
+          "low": 187,
+          "high": 215,
+          "pivot_index": 192,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 999,
+          "pivot_index": 910,
+          "depth": 0
+        },
+        {
+          "low": 911,
+          "high": 999,
+          "pivot_index": 979,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 978,
+          "pivot_index": 971,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 970,
+          "pivot_index": 935,
+          "depth": 1
+        },
+        {
+          "low": 911,
+          "high": 934,
+          "pivot_index": 923,
+          "depth": 2
+        },
+        {
+          "low": 936,
+          "high": 970,
+          "pivot_index": 948,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 909,
+          "pivot_index": 713,
+          "depth": 0
+        },
+        {
+          "low": 714,
+          "high": 909,
+          "pivot_index": 773,
+          "depth": 1
+        },
+        {
+          "low": 714,
+          "high": 772,
+          "pivot_index": 730,
+          "depth": 2
+        },
+        {
+          "low": 731,
+          "high": 772,
+          "pivot_index": 736,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 772,
+          "pivot_index": 766,
+          "depth": 2
+        },
+        {
+          "low": 737,
+          "high": 765,
+          "pivot_index": 758,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 909,
+          "pivot_index": 872,
+          "depth": 1
+        },
+        {
+          "low": 873,
+          "high": 909,
+          "pivot_index": 889,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 871,
+          "pivot_index": 825,
+          "depth": 1
+        },
+        {
+          "low": 826,
+          "high": 871,
+          "pivot_index": 855,
+          "depth": 2
+        },
+        {
+          "low": 826,
+          "high": 854,
+          "pivot_index": 835,
+          "depth": 2
+        },
+        {
+          "low": 774,
+          "high": 824,
+          "pivot_index": 819,
+          "depth": 1
+        },
+        {
+          "low": 774,
+          "high": 818,
+          "pivot_index": 793,
+          "depth": 1
+        },
+        {
+          "low": 794,
+          "high": 818,
+          "pivot_index": 810,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 712,
+          "pivot_index": 604,
+          "depth": 0
+        },
+        {
+          "low": 605,
+          "high": 712,
+          "pivot_index": 662,
+          "depth": 1
+        },
+        {
+          "low": 663,
+          "high": 712,
+          "pivot_index": 685,
+          "depth": 2
+        },
+        {
+          "low": 686,
+          "high": 712,
+          "pivot_index": 702,
+          "depth": 2
+        },
+        {
+          "low": 605,
+          "high": 661,
+          "pivot_index": 640,
+          "depth": 1
+        },
+        {
+          "low": 605,
+          "high": 639,
+          "pivot_index": 617,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 603,
+          "pivot_index": 558,
+          "depth": 0
+        },
+        {
+          "low": 559,
+          "high": 603,
+          "pivot_index": 601,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 600,
+          "pivot_index": 585,
+          "depth": 1
+        },
+        {
+          "low": 559,
+          "high": 584,
+          "pivot_index": 570,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 557,
+          "pivot_index": 512,
+          "depth": 0
+        },
+        {
+          "low": 513,
+          "high": 557,
+          "pivot_index": 546,
+          "depth": 1
+        },
+        {
+          "low": 513,
+          "high": 545,
+          "pivot_index": 531,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 511,
+          "pivot_index": 457,
+          "depth": 0
+        },
+        {
+          "low": 458,
+          "high": 511,
+          "pivot_index": 483,
+          "depth": 1
+        },
+        {
+          "low": 458,
+          "high": 482,
+          "pivot_index": 466,
+          "depth": 2
+        },
+        {
+          "low": 484,
+          "high": 511,
+          "pivot_index": 507,
+          "depth": 1
+        },
+        {
+          "low": 381,
+          "high": 456,
+          "pivot_index": 403,
+          "depth": 0
+        },
+        {
+          "low": 404,
+          "high": 456,
+          "pivot_index": 423,
+          "depth": 0
+        },
+        {
+          "low": 424,
+          "high": 456,
+          "pivot_index": 435,
+          "depth": 0
+        }
+      ]
+    }
+  ]
+}

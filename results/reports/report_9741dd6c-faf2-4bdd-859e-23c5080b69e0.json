@@ -1,0 +1,29 @@
+{
+  "id": "9741dd6c-faf2-4bdd-859e-23c5080b69e0",
+  "timestamp": "2026-06-01T14:13:23.597361",
+  "results": [
+    {
+      "algorithm": "introsort",
+      "dataset": "random",
+      "size": 200,
+      "threshold": 128,
+      "pivot_strategy": "median_of_three",
+      "runs": 5,
+      "execution_time_ms": 0.0,
+      "comparisons": 4903,
+      "swaps": 4623,
+      "max_depth": 1,
+      "insertion_sort_triggers": 2,
+      "heapsort_fallbacks": 0,
+      "partition_balance": 0.45,
+      "splits": [
+        {
+          "low": 0,
+          "high": 199,
+          "pivot_index": 109,
+          "depth": 0
+        }
+      ]
+    }
+  ]
+}
