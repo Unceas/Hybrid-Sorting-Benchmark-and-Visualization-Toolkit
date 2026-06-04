@@ -1,18 +1,15 @@
 import os
-import sys
 import subprocess
 import json
-import uuid
-from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="Hybrid Sorting & Observability API",
-    description="Backend API for executing, tracking, and analyzing hybrid sorting algorithms.",
-    version="1.0.0"
+    title="Hybrid Sorting Systems & Performance Engineering API",
+    description="Stateless backend API for executing, comparing, and optimizing hybrid sorting algorithms.",
+    version="3.0.0"
 )
 
 # Enable CORS for the Next.js frontend
@@ -27,29 +24,67 @@ app.add_middleware(
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BINARY_PATH = os.path.join(BASE_DIR, "benchmark.exe")
-REPORTS_DIR = os.path.join(BASE_DIR, "results", "reports")
 
-# Ensure directories exist
-os.makedirs(REPORTS_DIR, exist_ok=True)
+class DatasetMetricsModel(BaseModel):
+    sortedness: float
+    duplicate_ratio: float
+    inversion_count: int
+    distribution_type: str
+    recommended_hybrid: str
+    recommendation_reason: str
 
 class BenchmarkRequest(BaseModel):
-    algo: str = Field(default="introsort", description="Algorithm name (introsort, quick_insertion, quick_merge, quick_heap, or all)")
+    algo: Optional[str] = Field(default=None, description="Legacy field for single algorithm name")
+    algos: Optional[List[str]] = Field(default=None, description="List of algorithms to benchmark")
     size: int = Field(default=10000, description="Size of dataset")
-    dataset: str = Field(default="random", description="Type of dataset (random, nearly_sorted, reverse_sorted, duplicate_heavy, skewed)")
+    dataset: str = Field(default="random", description="Type of dataset")
     threshold: int = Field(default=16, description="Insertion sort/Merge sort threshold")
-    pivot: str = Field(default="median_of_three", description="Pivot selection strategy (last, first, median_of_three, random)")
+    pivot: str = Field(default="median_of_three", description="Pivot selection strategy")
     runs: int = Field(default=5, description="Number of runs to average")
-    enable_splits: bool = Field(default=False, description="Enable recursive partition splits tracking")
-    seed: int = Field(default=42, description="Random seed for reproducibility")
-    profile: str = Field(default="custom", description="Execution profile preset (balanced, low_latency, memory_optimized, large_dataset_optimized, custom)")
+    seed: int = Field(default=42, description="Random seed")
+
+class BenchmarkResult(BaseModel):
+    algorithm: str
+    dataset: str
+    size: int
+    threshold: int
+    pivot_strategy: str
+    runs: int
+    execution_time_ms: float
+    comparisons: int
+    swaps: int
+    max_depth: int
+    insertion_sort_triggers: int
+    heapsort_fallbacks: int
+    partition_balance: float
+    memory_usage_bytes: int
+    seed: int
+    dataset_metrics: DatasetMetricsModel
 
 class BenchmarkResponse(BaseModel):
-    id: str
-    timestamp: str
-    results: List[dict]
+    results: List[BenchmarkResult]
+
+class OptimizeRequest(BaseModel):
+    algo: str = Field(default="introsort")
+    size: int = Field(default=10000)
+    dataset: str = Field(default="random")
+    pivot: str = Field(default="median_of_three")
+    runs: int = Field(default=3)
+    seed: int = Field(default=42)
+    thresholds: List[int] = Field(default=[4, 8, 12, 16, 24, 32, 48, 64])
+
+class ThresholdResult(BaseModel):
+    threshold: int
+    execution_time_ms: float
+    comparisons: int
+    swaps: int
+
+class OptimizeResponse(BaseModel):
+    optimal_threshold: int
+    optimal_time_ms: float
+    sweep_data: List[ThresholdResult]
 
 def ensure_binary_compiled():
-    # If the binary does not exist, compile it
     if not os.path.exists(BINARY_PATH):
         print("benchmark.exe not found. Attempting to compile C++ source files...")
         src_files = [
@@ -63,206 +98,125 @@ def ensure_binary_compiled():
         ]
         cmd = ["g++", "-O3", "-std=c++17", "-o", BINARY_PATH] + src_files
         try:
-            res = subprocess.run(cmd, cwd=BASE_DIR, capture_output=True, text=True, check=True)
+            subprocess.run(cmd, cwd=BASE_DIR, capture_output=True, text=True, check=True)
             print("Successfully compiled benchmark.exe!")
         except subprocess.CalledProcessError as e:
             print(f"Failed to compile benchmark.exe: {e.stderr}")
             raise RuntimeError(f"C++ Compilation failed: {e.stderr}")
 
-def generate_markdown_report(report_data):
-    results = report_data["results"]
-    if not results:
-        return
-    
-    first = results[0]
-    sortedness = first.get("sortedness", 0.0)
-    dup_density = first.get("duplicate_density", 0.0)
-    skewness = first.get("skewness", 0.0)
-    rec_profile = first.get("recommended_profile", "balanced")
-    rec_reason = first.get("recommendation_reason", "")
-    seed = first.get("seed", 42)
-    dataset = first.get("dataset", "random")
-    size = first.get("size", 10000)
-
-    report_path = os.path.join(REPORTS_DIR, "benchmark_report.md")
-    
-    md_content = f"""# 📈 Adaptive Execution & Performance Report
-
-Generated: {datetime.utcnow().isoformat()} UTC  
-Experiment Seeding: `--seed {seed}`  
-Dataset Profile: `{dataset}` (Size: {size:,})
-
----
-
-## 🔍 Dataset Analytics & Decision Recommendation
-* **Presortedness Score**: `{sortedness:.4f}` (1.0 = perfectly sorted)
-* **Duplicate Value Ratio**: `{dup_density:.4f}` (0.0 = all unique values)
-* **Distribution Skewness**: `{skewness:.4f}`
-* **Recommended Switching Profile**: `{rec_profile.upper()}`
-* **Decision Engine Rationale**: *"{rec_reason}"*
-
----
-
-## ⚡ Algorithm Execution Profiling Summary
-
-| Algorithm | Average Speed (ms) | Comparisons | Swaps / Writes | Max Stack Depth | Base Triggers | Fallbacks | Partition Balance |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-"""
-    for r in results:
-        algo_name = r["algorithm"].replace("_", " + ").title()
-        triggers = r.get("insertion_sort_triggers", 0)
-        fallbacks = r.get("heapsort_fallbacks", 0)
-        balance = r.get("partition_balance", 0.5)
-        
-        md_content += f"| **{algo_name}** | {r['execution_time_ms']:.4f} | {r['comparisons']:,} | {r['swaps']:,} | {r['max_depth']} | {triggers} | {fallbacks} | {balance:.4f} |\n"
-
-    md_content += """
----
-
-## 📋 System Execution Log Excerpts
-Below are the step-by-step partition analysis logs gathered from the execution kernel of the first profile run.
-```txt
-"""
-    logs = first.get("logs", [])
-    if logs:
-        for log in logs[:35]:
-            md_content += f"{log}\n"
-        if len(logs) > 35:
-            md_content += f"... ({len(logs) - 35} additional diagnostic log steps truncated) ...\n"
-    else:
-        md_content += "[Trace Recursion Splits was disabled for this run]\n"
-        
-    md_content += "```\n"
-
-    with open(report_path, "w", encoding="utf-8") as f:
-        f.write(md_content)
-
-@app.on_event("startup")
-def startup_event():
-    ensure_binary_compiled()
-
 @app.post("/api/benchmark", response_model=BenchmarkResponse)
 def run_benchmark(req: BenchmarkRequest):
     ensure_binary_compiled()
     
-    # Construct arguments for subprocess
-    args = [
-        BINARY_PATH,
-        "--algo", req.algo,
-        "--size", str(req.size),
-        "--dataset", req.dataset,
-        "--threshold", str(req.threshold),
-        "--pivot", req.pivot,
-        "--runs", str(req.runs),
-        "--seed", str(req.seed),
-        "--profile", req.profile
-    ]
-    if req.enable_splits:
-        args.append("--enable-splits")
-        
-    try:
-        # Run binary and capture output
-        res = subprocess.run(args, capture_output=True, text=True, check=True)
-        results = json.loads(res.stdout)
-        
-        # Save results to a report file
-        report_id = str(uuid.uuid4())
-        timestamp = datetime.utcnow().isoformat()
-        
-        report_data = {
-            "id": report_id,
-            "timestamp": timestamp,
-            "results": results
-        }
-        
-        report_filename = f"report_{report_id}.json"
-        report_filepath = os.path.join(REPORTS_DIR, report_filename)
-        with open(report_filepath, "w", encoding="utf-8") as f:
-            json.dump(report_data, f, indent=2)
-            
-        # Write user-friendly Markdown report
-        generate_markdown_report(report_data)
-            
-        return report_data
-    except subprocess.CalledProcessError as e:
-        raise HTTPException(status_code=500, detail=f"C++ Benchmark execution failed: {e.stderr}")
-    except json.JSONDecodeError as e:
-        raise HTTPException(status_code=500, detail=f"Failed to parse JSON from benchmark output: {e.msg}")
+    # Extract candidate algorithms
+    selected_algos = []
+    if req.algos:
+        selected_algos = req.algos
+    elif req.algo:
+        if req.algo == "all":
+            selected_algos = ["quicksort", "mergesort", "heapsort", "quick_insertion", "quick_merge", "introsort"]
+        else:
+            selected_algos = [req.algo]
+    else:
+        selected_algos = ["introsort"]
 
-@app.get("/api/results")
-def list_results(limit: int = 20):
-    reports = []
-    try:
-        for file in os.listdir(REPORTS_DIR):
-            if file.endswith(".json") and file.startswith("report_"):
-                filepath = os.path.join(REPORTS_DIR, file)
-                with open(filepath, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    for r in data.get("results", []):
-                        if "splits" in r:
-                            r["splits_count"] = len(r["splits"])
-                            del r["splits"]
-                        if "logs" in r:
-                            r["logs_count"] = len(r["logs"])
-                            del r["logs"]
-                    reports.append({
-                        "id": data["id"],
-                        "timestamp": data["timestamp"],
-                        "summary": data["results"]
-                    })
-        # Sort by timestamp descending
-        reports.sort(key=lambda x: x["timestamp"], reverse=True)
-        return reports[:limit]
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading reports: {str(e)}")
+    # Map target algorithm keys to their C++ execution configurations
+    mapped_runs = []
+    for a in selected_algos:
+        if a == "quicksort":
+            mapped_runs.append({"cpp_algo": "quick_insertion", "cpp_threshold": 1, "label": "quicksort"})
+        elif a == "mergesort":
+            mapped_runs.append({"cpp_algo": "quick_merge", "cpp_threshold": req.size, "label": "mergesort"})
+        elif a == "heapsort":
+            mapped_runs.append({"cpp_algo": "quick_heap", "cpp_threshold": req.size, "label": "heapsort"})
+        elif a == "quick_insertion":
+            mapped_runs.append({"cpp_algo": "quick_insertion", "cpp_threshold": req.threshold, "label": "quick_insertion"})
+        elif a == "quick_merge":
+            mapped_runs.append({"cpp_algo": "quick_merge", "cpp_threshold": req.threshold, "label": "quick_merge"})
+        elif a == "introsort":
+            mapped_runs.append({"cpp_algo": "introsort", "cpp_threshold": req.threshold, "label": "introsort"})
+        else:
+            mapped_runs.append({"cpp_algo": a, "cpp_threshold": req.threshold, "label": a})
 
-@app.get("/api/results/{report_id}")
-def get_result(report_id: str):
-    filepath = os.path.join(REPORTS_DIR, f"report_{report_id}.json")
-    if not os.path.exists(filepath):
-        raise HTTPException(status_code=404, detail="Report not found")
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading report: {str(e)}")
+    results = []
+    for run in mapped_runs:
+        args = [
+            BINARY_PATH,
+            "--algo", run["cpp_algo"],
+            "--size", str(req.size),
+            "--dataset", req.dataset,
+            "--threshold", str(run["cpp_threshold"]),
+            "--pivot", req.pivot,
+            "--runs", str(req.runs),
+            "--seed", str(req.seed)
+        ]
+        
+        try:
+            res = subprocess.run(args, capture_output=True, text=True, check=True)
+            run_output = json.loads(res.stdout)
+            if run_output:
+                # Format response label and restore displayed threshold
+                item = run_output[0]
+                item["algorithm"] = run["label"]
+                if run["label"] in ["quicksort", "mergesort", "heapsort"]:
+                    item["threshold"] = req.threshold
+                results.append(item)
+        except subprocess.CalledProcessError as e:
+            raise HTTPException(status_code=500, detail=f"C++ execution failed for {run['label']}: {e.stderr}")
+        except json.JSONDecodeError as e:
+            raise HTTPException(status_code=500, detail=f"JSON decode failed for {run['label']}: {e.msg}")
 
-@app.get("/api/metrics")
-def get_metrics():
-    total_runs = 0
-    algorithms_performance = {}
+    return {"results": results}
+
+@app.post("/api/optimize-threshold", response_model=OptimizeResponse)
+def optimize_threshold(req: OptimizeRequest):
+    ensure_binary_compiled()
+    sweep_data = []
     
-    try:
-        for file in os.listdir(REPORTS_DIR):
-            if file.endswith(".json") and file.startswith("report_"):
-                filepath = os.path.join(REPORTS_DIR, file)
-                with open(filepath, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    for r in data.get("results", []):
-                        algo = r["algorithm"]
-                        time_ms = r["execution_time_ms"]
-                        size = r["size"]
-                        
-                        if algo not in algorithms_performance:
-                            algorithms_performance[algo] = {}
-                        if size not in algorithms_performance[algo]:
-                            algorithms_performance[algo][size] = []
-                        
-                        algorithms_performance[algo][size].append(time_ms)
-                        total_runs += 1
-                        
-        summary = {}
-        for algo, size_map in algorithms_performance.items():
-            summary[algo] = {}
-            for size, times in size_map.items():
-                summary[algo][size] = sum(times) / len(times)
-                
-        return {
-            "total_benchmarks_stored": total_runs,
-            "average_performance": summary
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error compiling metrics: {str(e)}")
+    # Map target optimization algorithm
+    cpp_algo = req.algo
+    if req.algo == "quicksort" or req.algo == "quick_insertion":
+        cpp_algo = "quick_insertion"
+    elif req.algo == "mergesort" or req.algo == "quick_merge":
+        cpp_algo = "quick_merge"
+    elif req.algo == "heapsort" or req.algo == "quick_heap":
+        cpp_algo = "quick_heap"
+
+    for t in req.thresholds:
+        args = [
+            BINARY_PATH,
+            "--algo", cpp_algo,
+            "--size", str(req.size),
+            "--dataset", req.dataset,
+            "--threshold", str(t),
+            "--pivot", req.pivot,
+            "--runs", str(req.runs),
+            "--seed", str(req.seed)
+        ]
+        try:
+            res = subprocess.run(args, capture_output=True, text=True, check=True)
+            results = json.loads(res.stdout)
+            if results:
+                r = results[0]
+                sweep_data.append(ThresholdResult(
+                    threshold=t,
+                    execution_time_ms=r["execution_time_ms"],
+                    comparisons=r["comparisons"],
+                    swaps=r["swaps"]
+                ))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Threshold optimization failed at threshold {t}: {str(e)}")
+            
+    if not sweep_data:
+        raise HTTPException(status_code=400, detail="No optimization sweep data generated.")
+        
+    optimal_run = min(sweep_data, key=lambda x: x.execution_time_ms)
+    
+    return OptimizeResponse(
+        optimal_threshold=optimal_run.threshold,
+        optimal_time_ms=optimal_run.execution_time_ms,
+        sweep_data=sweep_data
+    )
 
 if __name__ == "__main__":
     import uvicorn

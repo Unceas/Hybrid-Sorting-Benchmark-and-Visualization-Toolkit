@@ -1,106 +1,100 @@
-# 🚀 Adaptive Hybrid Sorting & Runtime Optimization Infrastructure
+# Hybrid Sorting Benchmark & Analysis Platform
 
-A production-quality benchmarking, execution telemetry, and visualization platform for hybrid sorting algorithms. The project compiles high-performance C++ sorting kernels, manages them via a Python FastAPI orchestration server, and visualizes live sorting performance metrics and recursion trees in a dark-themed systems-observability dashboard.
-
----
-
-## 📌 Architecture & Features
-
-- **⚡ Core Sorting Engine (C++)**: Highly optimized implementations of:
-  - **Introsort** (QuickSort switching to HeapSort on deep recursion limits, and Insertion Sort on small thresholds).
-  - **Quick + Insertion Sort** (QuickSort switching to Insertion Sort).
-  - **Quick + Merge Sort** (QuickSort switching to Merge Sort; features pre-allocated memory reuse to eliminate recursive allocation overhead).
-  - **Quick + Heap Sort** (QuickSort switching to HeapSort).
-- **📊 Real-time Telemetry Collection**: Captures comparisons, swaps, max depth, partition balance, insertion sort triggers, and heapsort fallbacks.
-- **🌲 Recursion Tree Reconstruction**: Logs interval splits (`[low, high]`) inside the C++ stack and visualizes the tree structure interactively in the frontend.
-- **🔌 Subprocess API Orchestration (FastAPI)**: Serves endpoints to run benchmarks, list historical runs, compile metrics, and automatically handles compilation of C++ source files.
-- **📈 Observability UI Dashboard (Next.js + Tailwind + Recharts)**: Grafana-style dark control panel featuring live metric tracking, threshold sweeps (plotting threshold vs time to see the "sweet spot"), and interactive tree nodes.
+An engineering-focused benchmarking and analysis platform designed to evaluate and optimize hybrid sorting algorithms. The platform features optimized C++ sorting kernels, a stateless Python FastAPI orchestration api, and an interactive React-based benchmark laboratory dashboard to investigate algorithm thresholds, dataset characteristics, and execution behaviors.
 
 ---
 
-## 🛠️ Getting Started
+## Architecture & Features
+
+- **Core Sorting Engine (C++)**: High-performance implementations of hybrid sorting strategies:
+  - **Introsort**: Initiates with QuickSort, switches to Insertion Sort on small ranges, and transitions to HeapSort if recursion depth exceeds the $2 \lfloor \log_2 N \rfloor$ safety bound.
+  - **Quick + Insertion Sort**: Switches to Insertion Sort on subproblems below the threshold.
+  - **Quick + Merge Sort**: Invokes an out-of-place Merge Sort on segments below the threshold, utilizing pre-allocated auxiliary space.
+  - **Quick + Heap Sort**: Fallback to HeapSort on small ranges.
+- **Automatic Threshold Optimization**: Sweeps across candidate threshold values to empirically determine the crossover point that minimizes execution cycles.
+- **Dataset Intelligence Analysis**: Calculates pre-sort properties including inversion counts (using an $O(N \log N)$ merge-based algorithm), duplicate value ratios, and presortedness indices to recommend the optimal hybrid strategy.
+- **Interactive Visual Decision Flows**: Visualizes algorithm logic paths and threshold crossover decisions.
+- **Stateless Subprocess API Orchestration (FastAPI)**: Manages C++ compilation and executes benchmark commands.
+- **Benchmark Laboratory Interface (Next.js + Recharts)**: Clean dark theme presenting tabular results, threshold crossover sweep charts, and winner matrices.
+- **Report Generation**: Exports performance data directly as JSON, CSV, or clipboard-ready Markdown format.
+
+---
+
+## Getting Started
 
 ### 1. Compile and Run C++ CLI Directly
-The C++ benchmark tool can be run as a standalone CLI:
+The C++ benchmark tool can be compiled and executed directly from the terminal:
 
 ```bash
-# Compile all source files
+# Compile sorting kernel files
 g++ -O3 -std=c++17 -o benchmark.exe core/benchmarks/benchmark_engine.cpp core/utils/sorting_common.cpp core/introsort/introsort.cpp core/quick_insertion/quick_insertion.cpp core/quick_merge/quick_merge.cpp core/quick_heap/quick_heap.cpp core/datasets/dataset_generator.cpp
 
 # Run benchmark
-./benchmark.exe --algo introsort --size 100000 --dataset random --threshold 16 --runs 5 --enable-splits
+./benchmark.exe --algo all --size 50000 --dataset random --threshold 16 --runs 5 --seed 42
 ```
 
-**CLI Options:**
+**CLI Command Options:**
 * `--algo`: `introsort`, `quick_insertion`, `quick_merge`, `quick_heap`, or `all`
-* `--size`: array size (integer)
-* `--dataset`: `random`, `nearly_sorted`, `reverse_sorted`, `duplicate_heavy`, `skewed`
-* `--threshold`: partition size below which base-case sorts trigger
+* `--size`: integer specifying array size
+* `--dataset`: `random`, `nearly_sorted`, `reverse_sorted`, `duplicate_heavy`
+* `--threshold`: integer threshold below which base-case sorts trigger
 * `--pivot`: `median_of_three`, `last`, `first`, `random`
 * `--runs`: number of iterations to average
-* `--enable-splits`: log recursion intervals
-* `--format`: `json` or `csv`
-* `--output`: save to file path
+* `--seed`: integer seed value for dataset generation
+* `--format`: output format (`json` or `csv`)
+* `--output`: optional path to save result file
 
 ---
+
+## Installation & Server Start
 
 ### 2. Start the Backend API (FastAPI)
-The backend manages CLI execution and stores reports.
+The backend compiles the C++ sorting executable if not present and handles execution commands:
 
 ```bash
-# Navigate to workspace root or api directory
+# Install Python dependencies
 pip install -r api/requirements.txt
 
-# Start uvicorn
+# Run the api server
 python api/main.py
 ```
-* The server will run at: `http://127.0.0.1:8000`
-* Swagger docs are interactive at: `http://127.0.0.1:8000/docs`
+* Server URL: `http://127.0.0.1:8000`
+* Interactive API Docs: `http://127.0.0.1:8000/docs`
 
----
-
-### 3. Start the Observability UI (Next.js)
-The frontend serves the dashboard.
-
+### 3. Start the Next.js Frontend
 ```bash
-# Navigate to frontend folder
+# Navigate to the frontend directory
 cd frontend
 
 # Install package dependencies
 npm install
 
-# Run the development server
+# Run the local development server
 npm run dev
 ```
-* Open the browser at: `http://localhost:3000`
+* Dashboard URL: `http://localhost:3000`
 
 ---
 
-## 📂 Repository Layout
+## Repository Layout
 
 ```txt
-Hybrid-Sorting-Toolkit/
+Hybrid-Sorting-Platform/
 │
 ├── core/                       # High-performance C++ sorting modules
 │   ├── introsort/              # Introsort hybrid
 │   ├── quick_insertion/        # Quick + Insertion hybrid
-│   ├── quick_merge/            # Quick + Merge hybrid (optimized)
+│   ├── quick_merge/            # Quick + Merge hybrid
 │   ├── quick_heap/             # Quick + Heap hybrid
-│   ├── datasets/               # Dataset distributions (random, skewed, etc.)
-│   ├── utils/                  # Telemetry struct and partitioning helpers
+│   ├── datasets/               # Dataset distributions generator
+│   ├── utils/                  # Telemetry structures and partitioning helpers
 │   └── benchmarks/             # C++ CLI driver
 │
 ├── api/                        # FastAPI python orchestration backend
 │
-├── frontend/                   # Next.js & Recharts observability dashboard
+├── frontend/                   # Next.js & Recharts benchmark lab UI
 │
-├── visualizer/                 # Older python sorting animations
+├── docs/                       # Research and architecture docs
 │
-├── docs/                       # Performance analysis & architectural docs
-│   ├── architecture/
-│   ├── benchmarks/
-│   └── methodology/
-│
-└── results/                    # Stored runs, report logs, and data
-    └── reports/
+└── results/                    # Stored performance exports
 ```

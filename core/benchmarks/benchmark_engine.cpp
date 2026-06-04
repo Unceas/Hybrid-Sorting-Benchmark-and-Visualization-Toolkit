@@ -27,40 +27,28 @@ struct BenchmarkResult {
     int insertionSortTriggers;
     int heapSortFallbacks;
     double partitionBalance;
-    std::vector<SplitInfo> splits;
-    std::vector<std::string> logs;
+    long long memoryUsageBytes;
     int seed;
-    std::string profile;
-    double sortedness;
-    double duplicateDensity;
-    double skewness;
-    std::string recommendedProfile;
-    std::string recommendationReason;
+    DatasetMetrics metrics;
 };
 
-void runSingleBenchmark(const std::string& algo, const std::string& datasetType, int size, int threshold, PivotStrategy pivot, int runs, bool enableSplits, int seed, SortProfile profile, BenchmarkResult& result) {
+void runSingleBenchmark(const std::string& algo, const std::string& datasetType, int size, int threshold, PivotStrategy pivot, int runs, int seed, BenchmarkResult& result) {
     SortConfig config;
     config.insertionThreshold = threshold;
     config.pivotStrategy = pivot;
-    config.enableSplitsLog = enableSplits;
     config.seed = seed;
-    config.profile = profile;
-    config.applyProfile();
 
     std::vector<int> baseArray = generateDataset(datasetType, size, seed);
-    double totalTimeMs = 0.0;
+    
+    // Execute dataset analysis on the pre-sorted array
+    result.metrics = analyzeDataset(baseArray);
 
+    double totalTimeMs = 0.0;
     SortTelemetry firstRunTelemetry;
-    analyzeDataset(baseArray, firstRunTelemetry);
 
     for (int r = 0; r < runs; ++r) {
         std::vector<int> arr = baseArray;
         SortTelemetry telemetry;
-        telemetry.sortedness = firstRunTelemetry.sortedness;
-        telemetry.duplicateDensity = firstRunTelemetry.duplicateDensity;
-        telemetry.skewness = firstRunTelemetry.skewness;
-        telemetry.recommendedProfile = firstRunTelemetry.recommendedProfile;
-        telemetry.recommendationReason = firstRunTelemetry.recommendationReason;
 
         auto start = std::chrono::high_resolution_clock::now();
         if (algo == "introsort") {
@@ -101,15 +89,8 @@ void runSingleBenchmark(const std::string& algo, const std::string& datasetType,
     result.partitionBalance = firstRunTelemetry.partitionCount > 0 
         ? firstRunTelemetry.totalPartitionBalance / firstRunTelemetry.partitionCount 
         : 0.5;
-    result.splits = firstRunTelemetry.splits;
-    result.logs = firstRunTelemetry.logs;
+    result.memoryUsageBytes = firstRunTelemetry.memoryUsageBytes;
     result.seed = seed;
-    result.profile = profileToString(profile);
-    result.sortedness = firstRunTelemetry.sortedness;
-    result.duplicateDensity = firstRunTelemetry.duplicateDensity;
-    result.skewness = firstRunTelemetry.skewness;
-    result.recommendedProfile = firstRunTelemetry.recommendedProfile;
-    result.recommendationReason = firstRunTelemetry.recommendationReason;
 }
 
 std::string escapeJson(const std::string& str) {
@@ -142,33 +123,19 @@ void printJson(const std::vector<BenchmarkResult>& results, std::ostream& out) {
         out << "    \"insertion_sort_triggers\": " << r.insertionSortTriggers << ",\n";
         out << "    \"heapsort_fallbacks\": " << r.heapSortFallbacks << ",\n";
         out << "    \"partition_balance\": " << std::fixed << std::setprecision(4) << r.partitionBalance << ",\n";
+        out << "    \"memory_usage_bytes\": " << r.memoryUsageBytes << ",\n";
         out << "    \"seed\": " << r.seed << ",\n";
-        out << "    \"profile\": " << escapeJson(r.profile) << ",\n";
-        out << "    \"sortedness\": " << std::fixed << std::setprecision(4) << r.sortedness << ",\n";
-        out << "    \"duplicate_density\": " << std::fixed << std::setprecision(4) << r.duplicateDensity << ",\n";
-        out << "    \"skewness\": " << std::fixed << std::setprecision(4) << r.skewness << ",\n";
-        out << "    \"recommended_profile\": " << escapeJson(r.recommendedProfile) << ",\n";
-        out << "    \"recommendation_reason\": " << escapeJson(r.recommendationReason) << ",\n";
         
-        // Logs serialization
-        out << "    \"logs\": [\n";
-        for (size_t l = 0; l < r.logs.size(); ++l) {
-            out << "      " << escapeJson(r.logs[l]);
-            if (l + 1 < r.logs.size()) out << ",";
-            out << "\n";
-        }
-        out << "    ],\n";
-
-        // Splits serialization
-        out << "    \"splits\": [\n";
-        for (size_t s = 0; s < r.splits.size(); ++s) {
-            const auto& split = r.splits[s];
-            out << "      {\"low\": " << split.low << ", \"high\": " << split.high 
-                << ", \"pivot_index\": " << split.pivotIndex << ", \"depth\": " << split.depth << "}";
-            if (s + 1 < r.splits.size()) out << ",";
-            out << "\n";
-        }
-        out << "    ]\n";
+        // Dataset metrics nested JSON
+        out << "    \"dataset_metrics\": {\n";
+        out << "      \"sortedness\": " << std::fixed << std::setprecision(4) << r.metrics.sortedness << ",\n";
+        out << "      \"duplicate_ratio\": " << std::fixed << std::setprecision(4) << r.metrics.duplicateRatio << ",\n";
+        out << "      \"inversion_count\": " << r.metrics.inversionCount << ",\n";
+        out << "      \"distribution_type\": " << escapeJson(r.metrics.distributionType) << ",\n";
+        out << "      \"recommended_hybrid\": " << escapeJson(r.metrics.recommendedHybrid) << ",\n";
+        out << "      \"recommendation_reason\": " << escapeJson(r.metrics.recommendationReason) << "\n";
+        out << "    }\n";
+        
         out << "  }";
         if (i + 1 < results.size()) out << ",";
         out << "\n";
@@ -177,7 +144,7 @@ void printJson(const std::vector<BenchmarkResult>& results, std::ostream& out) {
 }
 
 void printCsv(const std::vector<BenchmarkResult>& results, std::ostream& out) {
-    out << "algorithm,dataset,size,threshold,pivot_strategy,runs,execution_time_ms,comparisons,swaps,max_depth,insertion_sort_triggers,heapsort_fallbacks,partition_balance,seed,profile,sortedness,duplicate_density,skewness\n";
+    out << "algorithm,dataset,size,threshold,pivot_strategy,runs,execution_time_ms,comparisons,swaps,max_depth,insertion_sort_triggers,heapsort_fallbacks,partition_balance,memory_usage_bytes,seed,sortedness,duplicate_ratio,inversion_count,distribution_type,recommended_hybrid\n";
     for (const auto& r : results) {
         out << r.algorithm << ","
             << r.dataset << ","
@@ -192,11 +159,13 @@ void printCsv(const std::vector<BenchmarkResult>& results, std::ostream& out) {
             << r.insertionSortTriggers << ","
             << r.heapSortFallbacks << ","
             << std::fixed << std::setprecision(4) << r.partitionBalance << ","
+            << r.memoryUsageBytes << ","
             << r.seed << ","
-            << r.profile << ","
-            << std::fixed << std::setprecision(4) << r.sortedness << ","
-            << std::fixed << std::setprecision(4) << r.duplicateDensity << ","
-            << std::fixed << std::setprecision(4) << r.skewness << "\n";
+            << std::fixed << std::setprecision(4) << r.metrics.sortedness << ","
+            << std::fixed << std::setprecision(4) << r.metrics.duplicateRatio << ","
+            << r.metrics.inversionCount << ","
+            << r.metrics.distributionType << ","
+            << r.metrics.recommendedHybrid << "\n";
     }
 }
 
@@ -207,11 +176,9 @@ int main(int argc, char* argv[]) {
     int threshold = 16;
     PivotStrategy pivot = PivotStrategy::MEDIAN_OF_THREE;
     int runs = 5;
-    bool enableSplits = false;
     std::string format = "json";
     std::string outputPath = "";
     int seed = 42;
-    SortProfile profile = SortProfile::CUSTOM;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -227,16 +194,12 @@ int main(int argc, char* argv[]) {
             pivot = stringToPivotStrategy(argv[++i]);
         } else if (arg == "--runs" && i + 1 < argc) {
             runs = std::stoi(argv[++i]);
-        } else if (arg == "--enable-splits") {
-            enableSplits = true;
         } else if (arg == "--format" && i + 1 < argc) {
             format = argv[++i];
         } else if (arg == "--output" && i + 1 < argc) {
             outputPath = argv[++i];
         } else if (arg == "--seed" && i + 1 < argc) {
             seed = std::stoi(argv[++i]);
-        } else if (arg == "--profile" && i + 1 < argc) {
-            profile = stringToProfile(argv[++i]);
         }
     }
 
@@ -250,7 +213,7 @@ int main(int argc, char* argv[]) {
     std::vector<BenchmarkResult> results;
     for (const auto& a : algosToRun) {
         BenchmarkResult r;
-        runSingleBenchmark(a, dataset, size, threshold, pivot, runs, enableSplits, seed, profile, r);
+        runSingleBenchmark(a, dataset, size, threshold, pivot, runs, seed, r);
         results.push_back(r);
     }
 

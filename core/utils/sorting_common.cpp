@@ -1,6 +1,7 @@
 #include "sorting_common.h"
 #include <algorithm>
 #include <random>
+#include <cmath>
 
 int selectPivotIndex(std::vector<int>& arr, int low, int high, PivotStrategy strategy, SortTelemetry& telemetry) {
     if (strategy == PivotStrategy::FIRST) {
@@ -15,12 +16,11 @@ int selectPivotIndex(std::vector<int>& arr, int low, int high, PivotStrategy str
         int a = arr[low];
         int b = arr[mid];
         int c = arr[high];
-        telemetry.comparisons += 3; // 3 comparisons to find median of three
+        telemetry.comparisons += 3;
         if ((a <= b && b <= c) || (c <= b && b <= a)) return mid;
         if ((b <= a && a <= c) || (c <= a && a <= b)) return low;
         return high;
     }
-    // Default is LAST
     return high;
 }
 
@@ -105,66 +105,94 @@ void heapSortRange(std::vector<int>& arr, int low, int high, SortTelemetry& tele
     }
 }
 
-void analyzeDataset(const std::vector<int>& arr, SortTelemetry& telemetry) {
-    int n = arr.size();
+// Helper functions for merge-based inversion counting
+long long mergeAndMerge(std::vector<int>& arr, std::vector<int>& temp, int left, int mid, int right) {
+    int i = left;
+    int j = mid + 1;
+    int k = left;
+    long long invCount = 0;
+    while (i <= mid && j <= right) {
+        if (arr[i] <= arr[j]) {
+            temp[k++] = arr[i++];
+        } else {
+            temp[k++] = arr[j++];
+            invCount += (mid - i + 1);
+        }
+    }
+    while (i <= mid) {
+        temp[k++] = arr[i++];
+    }
+    while (j <= right) {
+        temp[k++] = arr[j++];
+    }
+    for (i = left; i <= right; i++) {
+        arr[i] = temp[i];
+    }
+    return invCount;
+}
+
+long long mergeAndCount(std::vector<int>& arr, std::vector<int>& temp, int left, int right) {
+    long long invCount = 0;
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        invCount += mergeAndCount(arr, temp, left, mid);
+        invCount += mergeAndCount(arr, temp, mid + 1, right);
+        invCount += mergeAndMerge(arr, temp, left, mid, right);
+    }
+    return invCount;
+}
+
+DatasetMetrics analyzeDataset(const std::vector<int>& arr) {
+    DatasetMetrics metrics;
+    int n = static_cast<int>(arr.size());
     if (n <= 1) {
-        telemetry.sortedness = 1.0;
-        telemetry.duplicateDensity = 0.0;
-        telemetry.skewness = 0.0;
-        telemetry.recommendedProfile = "balanced";
-        telemetry.recommendationReason = "Dataset size too small for profiling. Defaulting to Balanced preset.";
-        return;
+        metrics.sortedness = 1.0;
+        metrics.duplicateRatio = 0.0;
+        metrics.inversionCount = 0;
+        metrics.distributionType = "nearly_sorted";
+        metrics.recommendedHybrid = "quick_insertion";
+        metrics.recommendationReason = "Array size is too small to benefit from partition splitting. Small constant insertion sorts are optimal.";
+        return metrics;
     }
 
-    // 1. Sortedness
+    // 1. Calculate Sortedness (ratio of sorted adjacent pairs)
     int sortedPairs = 0;
     for (int i = 0; i < n - 1; ++i) {
         if (arr[i] <= arr[i + 1]) {
             sortedPairs++;
         }
     }
-    telemetry.sortedness = (double)sortedPairs / (n - 1);
+    metrics.sortedness = static_cast<double>(sortedPairs) / (n - 1);
 
-    // 2. Duplicate Density & Skewness via sorted copy
-    std::vector<int> temp = arr;
-    std::sort(temp.begin(), temp.end());
+    // 2. Count Inversions (using a copy of array to keep it O(N log N))
+    std::vector<int> tempInv = arr;
+    std::vector<int> tempBuffer(n);
+    metrics.inversionCount = mergeAndCount(tempInv, tempBuffer, 0, n - 1);
 
-    auto uniqueEnd = std::unique(temp.begin(), temp.end());
-    int uniqueCount = std::distance(temp.begin(), uniqueEnd);
-    telemetry.duplicateDensity = 1.0 - ((double)uniqueCount / n);
+    // 3. Count Unique Elements to find Duplicate Ratio
+    // Since tempInv is now fully sorted after mergeAndCount, we can find unique count directly
+    auto uniqueEnd = std::unique(tempInv.begin(), tempInv.end());
+    int uniqueCount = std::distance(tempInv.begin(), uniqueEnd);
+    metrics.duplicateRatio = 1.0 - (static_cast<double>(uniqueCount) / n);
 
-    double sum = 0.0;
-    for (int val : arr) sum += val;
-    double mean = sum / n;
-    double median = temp[n / 2];
-
-    double variance = 0.0;
-    for (int val : arr) {
-        variance += (val - mean) * (val - mean);
-    }
-    variance /= n;
-    double stdDev = std::sqrt(variance);
-
-    telemetry.skewness = (stdDev > 1e-6) ? (mean - median) / stdDev : 0.0;
-
-    // 3. Adaptive Engine Decision Logic
-    if (telemetry.sortedness > 0.90) {
-        telemetry.recommendedProfile = "balanced";
-        telemetry.recommendationReason = "High pre-sorted structure detected (sortedness: " 
-            + std::to_string(static_cast<int>(telemetry.sortedness * 100)) 
-            + "%). Balanced switching avoids unnecessary partition splits.";
-    } else if (telemetry.duplicateDensity > 0.35) {
-        telemetry.recommendedProfile = "memory_optimized";
-        telemetry.recommendationReason = "High duplicate concentration detected (duplicate ratio: " 
-            + std::to_string(static_cast<int>(telemetry.duplicateDensity * 100)) 
-            + "%). Memory optimized switching bounds recursion recursion stack space.";
-    } else if (n >= 25000) {
-        telemetry.recommendedProfile = "large_dataset_optimized";
-        telemetry.recommendationReason = "Large dataset size (N=" + std::to_string(n) 
-            + "). Larger threshold offsets deep quicksort calls on main segments.";
+    // 4. Determine Distribution Type and Recommendations
+    if (metrics.sortedness >= 0.95) {
+        metrics.distributionType = "nearly_sorted";
+        metrics.recommendedHybrid = "quick_insertion";
+        metrics.recommendationReason = "High presortedness sequence detected. Quick+Insertion minimizes partitioning passes and leverages O(N) insertion behavior.";
+    } else if (metrics.sortedness <= 0.05) {
+        metrics.distributionType = "reverse_sorted";
+        metrics.recommendedHybrid = "introsort";
+        metrics.recommendationReason = "Highly reversed sequence detected. Introsort safeguards against potential worst-case quadratic recursion depth.";
+    } else if (metrics.duplicateRatio >= 0.25) {
+        metrics.distributionType = "duplicate_heavy";
+        metrics.recommendedHybrid = "quick_merge";
+        metrics.recommendationReason = "Dense duplicate value concentration detected. Stable Merge base-case routines bound comparisons and write complexities on equal keys.";
     } else {
-        telemetry.recommendedProfile = "low_latency";
-        telemetry.recommendationReason = "Standard uniform random profile. Low Latency parameters minimize total execution cycles.";
+        metrics.distributionType = "random";
+        metrics.recommendedHybrid = "introsort";
+        metrics.recommendationReason = "Uniform random distribution model. Introsort provides optimal average runtime cycles with fallback guarantees.";
     }
-}
 
+    return metrics;
+}
