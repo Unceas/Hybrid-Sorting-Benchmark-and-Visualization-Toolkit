@@ -745,44 +745,52 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#F8F8F8] flex flex-col font-sans antialiased text-sm">
+    <div className="min-h-screen bg-[#050505] text-[#FFFFFF] flex flex-col font-sans antialiased text-sm">
       {/* Top Navbar */}
-      <header className="border-b border-[#222222] bg-[#050505]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+      <header className="border-b border-[#232323] bg-[#050505]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <div>
-            <span className="text-sm font-semibold text-[#F8F8F8] tracking-tight">
+            <span className="text-sm font-semibold text-[#FFFFFF] tracking-tight">
               SortLab
             </span>
-            <span className="text-[10px] text-[#9A9A9A] tracking-tight block">
-              Hybrid Sorting
+            <span className="text-[10px] text-[#A3A3A3] tracking-tight block">
+              Hybrid sorting
             </span>
           </div>
         </div>
 
-        <nav className="flex bg-[#0D0D0D] rounded border border-[#222222] p-0.5">
-          {(["overview", "benchmark", "visualizer", "analysis"] as const).map((tab) => (
-            <button 
-              key={tab}
-              onClick={() => {
-                setActiveTab(tab);
-                if (tab !== "visualizer" && animationRef.current) {
-                  // stop visualizer when navigating away
-                  setIsPlaying(false);
-                  clearInterval(animationRef.current);
-                }
-              }}
-              className={`px-3.5 py-1 rounded text-xs transition-all duration-150 capitalize ${activeTab === tab ? "bg-[#151515] text-[#22C55E] border border-[#222222] font-semibold" : "text-[#9A9A9A] hover:text-[#F8F8F8]"}`}
-            >
-              {tab}
-            </button>
-          ))}
+        <nav className="flex bg-[#0D0D0D] rounded border border-[#232323] p-0.5">
+          {(["overview", "benchmark", "visualizer", "analysis"] as const).map((tab) => {
+            const displayNames = {
+              overview: "Overview",
+              benchmark: "Benchmark",
+              visualizer: "Visualizer",
+              analysis: "Analysis"
+            };
+            return (
+              <button 
+                key={tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  if (tab !== "visualizer" && animationRef.current) {
+                    // stop visualizer when navigating away
+                    setIsPlaying(false);
+                    clearInterval(animationRef.current);
+                  }
+                }}
+                className={`px-3.5 py-1 rounded text-xs transition-all duration-150 ${activeTab === tab ? "bg-[#151515] text-[#22C55E] border border-[#232323] font-semibold" : "text-[#A3A3A3] hover:text-[#FFFFFF]"}`}
+              >
+                {displayNames[tab]}
+              </button>
+            );
+          })}
         </nav>
 
         <a 
           href="https://github.com/Unceas/Efficient-Sorting" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-[#9A9A9A] hover:text-[#F8F8F8] transition duration-150"
+          className="flex items-center gap-1.5 text-xs text-[#A3A3A3] hover:text-[#FFFFFF] transition duration-150"
         >
           GitHub
         </a>
@@ -793,97 +801,119 @@ export default function Home() {
         
         {/* ── PAGE 1: Overview ── */}
         {activeTab === "overview" && (
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full py-4">
             {/* Hero Section */}
-            <div className="bg-[#0D0D0D] border border-[#222222] rounded px-8 py-12 flex flex-col gap-4 text-center max-w-3xl mx-auto w-full">
+            <div className="bg-[#0D0D0D] border border-[#232323] rounded px-8 py-12 flex flex-col gap-4 text-center w-full">
               <span className="text-[10px] font-mono text-[#22C55E] tracking-wider block">
                 Release v3.0
               </span>
               <div>
-                <h1 className="text-3xl font-bold text-[#F8F8F8] tracking-tight">
+                <h1 className="text-3xl font-semibold text-[#FFFFFF] tracking-tight">
                   Hybrid Sorting Systems
                 </h1>
-                <p className="text-sm text-[#9A9A9A] tracking-tight mt-1">
-                  Performance Benchmarking & Algorithm Visualization
-                </p>
               </div>
-              <p className="text-[#9A9A9A] leading-relaxed text-xs max-w-xl mx-auto mt-2">
-                Benchmark, visualize, and analyze adaptive hybrid sorting algorithms through interactive performance experiments. Explore how crossover thresholds control hardware overhead.
+              <p className="text-[#A3A3A3] leading-relaxed text-xs max-w-xl mx-auto">
+                Benchmark, visualize and analyze hybrid sorting algorithms through interactive performance experiments.
               </p>
-              <div className="flex gap-3 justify-center mt-4">
+              <div className="flex gap-3 justify-center mt-2">
                 <button
                   onClick={() => setActiveTab("benchmark")}
-                  className="bg-[#22C55E] hover:bg-[#166534] active:bg-[#166534] text-[#050505] hover:text-[#F8F8F8] font-semibold px-5 py-2 rounded text-xs transition duration-150"
+                  className="bg-[#22C55E] hover:bg-[#4ADE80] active:bg-[#166534] text-[#050505] font-semibold px-5 py-2 rounded text-xs transition duration-150"
                 >
-                  Open benchmark
+                  Open Benchmark
                 </button>
                 <button
                   onClick={() => setActiveTab("visualizer")}
-                  className="bg-[#151515] border border-[#222222] hover:bg-[#0D0D0D] text-[#F8F8F8] font-semibold px-5 py-2 rounded text-xs transition duration-150"
+                  className="bg-[#151515] border border-[#232323] hover:bg-[#0D0D0D] text-[#FFFFFF] font-semibold px-5 py-2 rounded text-xs transition duration-150"
                 >
-                  Explore algorithms
+                  Explore Algorithms
                 </button>
               </div>
             </div>
 
-            {/* Project Overview Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                <h3 className="font-semibold text-[#F8F8F8] text-xs mb-2">Hybrid algorithms</h3>
-                <p className="text-[#9A9A9A] text-xs leading-relaxed">
-                  Evaluate custom implementations: Quick+Insertion, Quick+Merge, and Introsort running on optimized C++ kernels.
+            {/* Structured Overview Details */}
+            <div className="border-t border-[#232323] pt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs">
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-semibold text-[#FFFFFF]">Brief overview</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  This platform functions as an engineering environment designed to analyze adaptive hybrid sorting algorithms. Hybrid algorithms combine recursive partitioning strategies with high-efficiency base cases (such as insertion sort) to mitigate recursion depth overhead, optimize hardware caching, and maximize processor utilization.
+                </p>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  By executing sorting kernels compiled directly on Native C++ pipelines, the platform reports low-level hardware telemetry, allowing engineers to determine optimal crossover thresholds.
                 </p>
               </div>
-
-              <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                <h3 className="font-semibold text-[#F8F8F8] text-xs mb-2">Benchmark engine</h3>
-                <p className="text-[#9A9A9A] text-xs leading-relaxed">
-                  Measure runtime statistics across various dataset profiles: uniform random, nearly sorted, reverse, and duplicates.
-                </p>
-              </div>
-
-              <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                <h3 className="font-semibold text-[#F8F8F8] text-xs mb-2">Sorting visualizer</h3>
-                <p className="text-[#9A9A9A] text-xs leading-relaxed">
-                  Observe recursive partition boundaries, swap mechanics, heap creation states, and active hybrid switches in real-time.
-                </p>
-              </div>
-
-              <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                <h3 className="font-semibold text-[#F8F8F8] text-xs mb-2">Performance analysis</h3>
-                <p className="text-[#9A9A9A] text-xs leading-relaxed">
-                  Compare exact metrics including operation counts, stack nesting depth thresholds, and stack frame memory bytes.
-                </p>
+              
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-semibold text-[#FFFFFF]">Implemented algorithms</h3>
+                <div className="flex flex-col gap-2 font-mono text-[11px] text-[#A3A3A3]">
+                  <div className="border-b border-[#232323] pb-1">
+                    <span className="text-[#22C55E]">Introsort:</span> QuickSort with fallback to HeapSort when depth limit exceeded, combined with InsertionSort base cases.
+                  </div>
+                  <div className="border-b border-[#232323] pb-1">
+                    <span className="text-[#22C55E]">Quick + Insertion:</span> QuickSort partitioning falling back to InsertionSort when subarray size ≤ threshold.
+                  </div>
+                  <div className="border-b border-[#232323] pb-1">
+                    <span className="text-[#22C55E]">Quick + Merge:</span> QuickSort falling back to MergeSort when partition size drops below threshold.
+                  </div>
+                  <div className="pb-1">
+                    <span className="text-[#22C55E]">Standard Kernels:</span> Pure QuickSort, MergeSort, and HeapSort benchmarks for base baseline controls.
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Architecture Section Flow Diagram */}
-            <div className="bg-[#0D0D0D] border border-[#222222] rounded p-6">
-              <h3 className="text-xs font-semibold text-[#F8F8F8] mb-6 text-center">
-                System workflow
-              </h3>
-              
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 max-w-4xl mx-auto w-full py-4 text-xs font-mono">
+            {/* System Workflow */}
+            <div className="border-t border-[#232323] pt-8 flex flex-col gap-4">
+              <h3 className="text-sm font-semibold text-[#FFFFFF]">System workflow</h3>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-2 text-xs font-mono text-[#A3A3A3]">
                 {[
-                  { step: "Dataset", desc: "Sequence generation" },
-                  { step: "Algorithm selection", desc: "Select active targets" },
-                  { step: "Benchmark execution", desc: "C++ optimization run" },
-                  { step: "Metrics collection", desc: "Comparisons & memory" },
-                  { step: "Graph generation", desc: "Plot scaling curves" },
-                  { step: "Result analysis", desc: "Evaluate crossovers" }
-                ].map((item, idx, arr) => (
-                  <React.Fragment key={idx}>
-                    <div className="bg-[#151515] border border-[#222222] rounded p-4 text-center flex-1 w-full md:w-auto">
-                      <div className="text-[#22C55E] font-semibold mb-1">{item.step}</div>
-                      <div className="text-[#9A9A9A] text-[10px]">{item.desc}</div>
-                    </div>
-                    {idx < arr.length - 1 && (
-                      <div className="text-[#9A9A9A] flex items-center justify-center font-sans text-sm">
-                        →
-                      </div>
-                    )}
-                  </React.Fragment>
+                  { num: "01", step: "Dataset", desc: "Generate sequence data" },
+                  { num: "02", step: "Select", desc: "Choose active targets" },
+                  { num: "03", step: "Execute", desc: "C++ kernel benchmarks" },
+                  { num: "04", step: "Telemetry", desc: "Collect resource stats" },
+                  { num: "05", step: "Plot", desc: "Generate scaling curves" },
+                  { num: "06", step: "Analyze", desc: "Determine crossovers" }
+                ].map((item, idx) => (
+                  <div key={idx} className="border border-[#232323] bg-[#0D0D0D] p-3 flex flex-col gap-1 rounded">
+                    <span className="text-[#737373] text-[9px]">{item.num}</span>
+                    <span className="text-[#FFFFFF] font-semibold">{item.step}</span>
+                    <span className="text-[10px] text-[#737373]">{item.desc}</span>
+                  </div>
                 ))}
+              </div>
+            </div>
+
+            {/* Architecture Diagram */}
+            <div className="border-t border-[#232323] pt-8 flex flex-col gap-4">
+              <h3 className="text-sm font-semibold text-[#FFFFFF]">Architecture diagram</h3>
+              <div className="border border-[#232323] bg-[#0D0D0D] p-6 rounded flex flex-col md:flex-row items-stretch justify-center gap-4 text-xs font-mono">
+                <div className="border border-[#232323] bg-[#151515] p-4 flex flex-col justify-center items-center text-center flex-1 rounded">
+                  <span className="text-[#22C55E] font-bold">Client UI</span>
+                  <span className="text-[#737373] text-[10px] mt-1">Next.js / React</span>
+                  <span className="text-[#A3A3A3] text-[10px] mt-2 border-t border-[#232323] pt-2 w-full">Visualizer canvas, controls, scaling plots</span>
+                </div>
+                
+                <div className="flex items-center justify-center text-[#737373] font-sans">
+                  <span className="hidden md:inline">🖧</span>
+                  <span className="inline md:hidden">▼</span>
+                </div>
+
+                <div className="border border-[#232323] bg-[#151515] p-4 flex flex-col justify-center items-center text-center flex-1 rounded">
+                  <span className="text-[#22C55E] font-bold">API Gateway</span>
+                  <span className="text-[#737373] text-[10px] mt-1">FastAPI REST Server</span>
+                  <span className="text-[#A3A3A3] text-[10px] mt-2 border-t border-[#232323] pt-2 w-full">Endpoint coordination, payload serialization</span>
+                </div>
+
+                <div className="flex items-center justify-center text-[#737373] font-sans">
+                  <span className="hidden md:inline">🖧</span>
+                  <span className="inline md:hidden">▼</span>
+                </div>
+
+                <div className="border border-[#232323] bg-[#151515] p-4 flex flex-col justify-center items-center text-center flex-1 rounded">
+                  <span className="text-[#FFFFFF] font-bold">Performance Engine</span>
+                  <span className="text-[#737373] text-[10px] mt-1">Native C++ Binary</span>
+                  <span className="text-[#A3A3A3] text-[10px] mt-2 border-t border-[#232323] pt-2 w-full">Sorting execution, telemetry measurements</span>
+                </div>
               </div>
             </div>
           </div>
@@ -893,29 +923,29 @@ export default function Home() {
         {activeTab === "benchmark" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Lab Configuration Panel */}
-            <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5 flex flex-col gap-4">
-              <div className="border-b border-[#222222] pb-2 mb-1">
-                <h3 className="text-xs font-semibold text-[#F8F8F8]">Configuration panel</h3>
+            <div className="bg-[#0D0D0D] border border-[#232323] rounded p-5 flex flex-col gap-4">
+              <div className="border-b border-[#232323] pb-2 mb-1">
+                <h3 className="text-xs font-semibold text-[#FFFFFF]">Configuration panel</h3>
               </div>
 
               {/* Dataset Type */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-[#9A9A9A] font-semibold">Dataset type</label>
+                <label className="text-[10px] text-[#A3A3A3] font-semibold">Dataset type</label>
                 <select
                   value={datasetType}
                   onChange={(e) => setDatasetType(e.target.value)}
-                  className="bg-[#050505] border border-[#222222] rounded px-3 py-2 text-[#F8F8F8] focus:outline-none"
+                  className="bg-[#050505] border border-[#232323] rounded px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
                 >
-                  <option value="random">Random (Uniform)</option>
-                  <option value="nearly_sorted">Nearly Sorted</option>
-                  <option value="reverse_sorted">Reverse Sorted</option>
-                  <option value="duplicate_heavy">Duplicate Heavy</option>
+                  <option value="random">Random (uniform)</option>
+                  <option value="nearly_sorted">Nearly sorted</option>
+                  <option value="reverse_sorted">Reverse sorted</option>
+                  <option value="duplicate_heavy">Duplicate heavy</option>
                 </select>
               </div>
 
               {/* Dataset Size Slider */}
               <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center text-[10px] text-[#9A9A9A] font-semibold">
+                <div className="flex justify-between items-center text-[10px] text-[#A3A3A3] font-semibold">
                   <span>Dataset size (n)</span>
                   <span className="text-[#22C55E] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
                 </div>
@@ -927,7 +957,7 @@ export default function Home() {
                   onChange={(e) => setSizeExponent(parseInt(e.target.value))}
                   className="accent-[#22C55E] bg-[#050505] h-1.5 rounded cursor-pointer"
                 />
-                <div className="flex justify-between text-[9px] text-[#9A9A9A] px-1 font-mono">
+                <div className="flex justify-between text-[9px] text-[#737373] px-1 font-mono">
                   <span>100</span>
                   <span>1K</span>
                   <span>10K</span>
@@ -936,9 +966,38 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Crossover Threshold */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] text-[#A3A3A3] font-semibold">Crossover threshold</label>
+                <select
+                  value={threshold}
+                  onChange={(e) => setThreshold(parseInt(e.target.value))}
+                  className="bg-[#050505] border border-[#232323] rounded px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+                >
+                  <option value={8}>8 elements</option>
+                  <option value={16}>16 elements</option>
+                  <option value={32}>32 elements</option>
+                  <option value={64}>64 elements</option>
+                </select>
+              </div>
+
+              {/* Pivot Strategy */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] text-[#A3A3A3] font-semibold">Pivot strategy</label>
+                <select
+                  value={pivotStrategy}
+                  onChange={(e) => setPivotStrategy(e.target.value)}
+                  className="bg-[#050505] border border-[#232323] rounded px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+                >
+                  <option value="first">First element</option>
+                  <option value="random">Random index</option>
+                  <option value="median_of_three">Median of three</option>
+                </select>
+              </div>
+
               {/* Algorithms Selection Checkboxes */}
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] text-[#9A9A9A] font-semibold">Algorithm selection</label>
+                <label className="text-[10px] text-[#A3A3A3] font-semibold">Algorithm selection</label>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {[
                     { id: "quicksort", name: "QuickSort" },
@@ -950,7 +1009,7 @@ export default function Home() {
                   ].map(algoItem => (
                     <label 
                       key={algoItem.id} 
-                      className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition duration-150 ${selectedAlgos.includes(algoItem.id) ? "bg-[#166534]/10 border-[#22C55E] text-[#F8F8F8]" : "bg-[#050505] border-transparent text-[#9A9A9A] hover:border-[#222222]"}`}
+                      className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition duration-150 ${selectedAlgos.includes(algoItem.id) ? "bg-[#166534]/10 border-[#22C55E] text-[#FFFFFF]" : "bg-[#050505] border-[#232323] text-[#A3A3A3] hover:border-[#737373]"}`}
                     >
                       <input 
                         type="checkbox"
@@ -964,55 +1023,11 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Advanced Settings Collapsible */}
-              <div className="border border-[#222222] rounded">
-                <button
-                  onClick={() => setAdvancedOpen(!advancedOpen)}
-                  className="w-full text-left px-3 py-2 text-xs bg-[#0D0D0D] hover:bg-[#151515] flex justify-between items-center text-[#9A9A9A] font-semibold"
-                >
-                  <span>Advanced settings</span>
-                  <span>{advancedOpen ? "−" : "+"}</span>
-                </button>
-                {advancedOpen && (
-                  <div className="p-3 flex flex-col gap-3 bg-[#050505]">
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex justify-between items-center text-[10px] text-[#9A9A9A]">
-                        <span>Crossover threshold</span>
-                        <span className="text-[#22C55E] font-semibold">{threshold}</span>
-                      </div>
-                      <select
-                        value={threshold}
-                        onChange={(e) => setThreshold(parseInt(e.target.value))}
-                        className="bg-[#050505] border border-[#222222] rounded px-2.5 py-1.5 text-xs focus:outline-none"
-                      >
-                        <option value={8}>8 Elements</option>
-                        <option value={16}>16 Elements</option>
-                        <option value={32}>32 Elements</option>
-                        <option value={64}>64 Elements</option>
-                      </select>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] text-[#9A9A9A]">Pivot strategy</label>
-                      <select
-                        value={pivotStrategy}
-                        onChange={(e) => setPivotStrategy(e.target.value)}
-                        className="bg-[#050505] border border-[#222222] rounded px-2.5 py-1.5 text-xs focus:outline-none"
-                      >
-                        <option value="first">First Element</option>
-                        <option value="random">Random Index</option>
-                        <option value="median_of_three">Median of Three</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-              </div>
-
               {/* Action Button */}
               <button
                 onClick={handleRunBenchmark}
                 disabled={benchLoading}
-                className="w-full flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#166534] active:bg-[#166534] disabled:bg-[#151515] disabled:text-[#9A9A9A] text-[#050505] hover:text-[#F8F8F8] font-semibold py-2.5 rounded transition duration-150 text-xs"
+                className="w-full flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#4ADE80] active:bg-[#166534] disabled:bg-[#151515] disabled:text-[#737373] text-[#050505] font-semibold py-2.5 rounded transition duration-150 text-xs mt-2"
               >
                 {benchLoading ? "Running..." : "Run benchmark"}
               </button>
@@ -1026,45 +1041,25 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Benchmark Summary cards */}
+              {/* Benchmark Summary Printout */}
               {benchResults.length > 0 && (
                 (() => {
                   const best = [...benchResults].reduce((min, cur) => cur.execution_time_ms < min.execution_time_ms ? cur : min, benchResults[0]);
-                  const quickPure = benchResults.find(r => r.algorithm === "quicksort");
-                  const improvementPct = quickPure 
-                    ? ((quickPure.execution_time_ms - best.execution_time_ms) / quickPure.execution_time_ms * 100).toFixed(0)
-                    : "N/A";
-
                   return (
-                    <div className="bg-[#0D0D0D] border border-[#222222] p-4 rounded flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] text-[#9A9A9A] tracking-wider block">Best performer</span>
-                        <div className="text-base font-semibold text-[#22C55E] mt-0.5">{getAlgoDisplayName(best.algorithm)}</div>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-[#9A9A9A] tracking-wider block">Runtime</span>
-                        <div className="text-base font-semibold text-[#F8F8F8] mt-0.5">
-                          {(best.execution_time_ms * 1000).toFixed(1)} μs
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-[#9A9A9A] tracking-wider block">Improvement</span>
-                        <div className="text-base font-semibold text-[#F8F8F8] mt-0.5">
-                          {improvementPct !== "N/A" && parseInt(improvementPct) > 0 ? `${improvementPct}% faster than QuickSort` : "Optimal"}
-                        </div>
-                      </div>
+                    <div className="font-mono text-xs text-[#A3A3A3] border-b border-[#232323] pb-3">
+                      Diagnostics: <span className="text-[#22C55E]">{getAlgoDisplayName(best.algorithm)}</span> completed in <span className="text-[#FFFFFF] font-bold">{(best.execution_time_ms * 1000).toFixed(1)} μs</span> (fastest)
                     </div>
                   );
                 })()
               )}
 
               {/* Results Table */}
-              <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                <h3 className="text-xs font-semibold text-[#F8F8F8] mb-4 border-b border-[#222222] pb-2">
+              <div className="bg-[#0D0D0D] border border-[#232323] rounded p-5">
+                <h3 className="text-xs font-semibold text-[#FFFFFF] mb-4 border-b border-[#232323] pb-2">
                   Benchmark results
                 </h3>
                 {benchResults.length === 0 ? (
-                  <div className="text-center py-12 text-[#9A9A9A] italic text-xs">
+                  <div className="text-center py-12 text-[#737373] italic text-xs">
                     No active results. Configure parameters and run benchmark to compile records.
                   </div>
                 ) : (
@@ -1074,36 +1069,41 @@ export default function Home() {
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="border-b border-[#222222] text-[#9A9A9A] font-semibold text-[10px]">
+                            <tr className="border-b border-[#232323] text-[#A3A3A3] font-semibold text-[10px]">
                               <th className="py-2 px-3">Algorithm</th>
                               <th className="py-2 px-3 text-right">Runtime (μs)</th>
                               <th className="py-2 px-3 text-right">Comparisons</th>
                               <th className="py-2 px-3 text-right">Swaps / writes</th>
+                              <th className="py-2 px-3 text-right">Memory (B)</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-[#222222] font-mono text-[#9A9A9A]">
+                          <tbody className="font-mono text-[#A3A3A3]">
                             {benchResults.map((r, idx) => {
                               const isFastest = r.algorithm === best.algorithm;
+                              const rowBg = isFastest ? "bg-[#166534]/5 text-[#FFFFFF]" : "hover:bg-[#151515]/20";
+                              const borderCell = (pos: "first" | "middle" | "last") => {
+                                if (!isFastest) return "border-b border-[#232323] py-2 px-3";
+                                if (pos === "first") return "border-t border-b border-l border-[#22C55E] py-2 px-3 text-[#22C55E]";
+                                if (pos === "last") return "border-t border-b border-r border-[#22C55E] py-2 px-3";
+                                return "border-t border-b border-[#22C55E] py-2 px-3";
+                              };
+
                               return (
-                                <tr 
-                                  key={idx} 
-                                  className={`transition-all duration-200 ${
-                                    isFastest 
-                                      ? "bg-[#166534]/5 shadow-[inset_0_0_12px_rgba(34,197,94,0.05)] text-[#F8F8F8]" 
-                                      : "hover:bg-[#151515]/20"
-                                  }`}
-                                >
-                                  <td className={`py-2.5 px-3 font-sans font-semibold first:border-l last:border-r ${isFastest ? "border-[#22C55E] text-[#22C55E]" : "border-transparent text-[#F8F8F8]"}`}>
+                                <tr key={idx} className={rowBg}>
+                                  <td className={borderCell("first")}>
                                     {isFastest ? `✓ ${getAlgoDisplayName(r.algorithm)}` : getAlgoDisplayName(r.algorithm)}
                                   </td>
-                                  <td className={`py-2.5 px-3 text-right font-bold first:border-l last:border-r ${isFastest ? "border-[#22C55E] text-[#22C55E]" : "border-transparent text-[#9A9A9A]"}`}>
+                                  <td className={`${borderCell("middle")} text-right font-bold`}>
                                     {(r.execution_time_ms * 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })}
                                   </td>
-                                  <td className={`py-2.5 px-3 text-right first:border-l last:border-r ${isFastest ? "border-[#22C55E]" : "border-transparent"}`}>
+                                  <td className={`${borderCell("middle")} text-right`}>
                                     {r.comparisons.toLocaleString()}
                                   </td>
-                                  <td className={`py-2.5 px-3 text-right first:border-l last:border-r ${isFastest ? "border-[#22C55E]" : "border-transparent"}`}>
+                                  <td className={`${borderCell("middle")} text-right`}>
                                     {r.swaps.toLocaleString()}
+                                  </td>
+                                  <td className={`${borderCell("last")} text-right`}>
+                                    {r.memory_usage_bytes ? r.memory_usage_bytes.toLocaleString() : "0"}
                                   </td>
                                 </tr>
                               );
@@ -1123,19 +1123,19 @@ export default function Home() {
                   return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Runtime Bar Chart */}
-                      <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                        <h4 className="text-xs font-semibold text-[#9A9A9A] mb-4">Runtime comparison (μs)</h4>
+                      <div className="bg-[#0D0D0D] border border-[#232323] rounded p-5">
+                        <h4 className="text-xs font-semibold text-[#A3A3A3] mb-4">Runtime comparison (μs)</h4>
                         <div className="h-56">
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={benchResults.map(r => ({ ...r, runtime_us: r.execution_time_ms * 1000 }))}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="#222222" />
-                              <XAxis dataKey="algorithm" stroke="#9A9A9A" tickFormatter={(v) => v.replace("quick_", "Q+").replace("sort", "")} style={{ fontSize: 9 }} />
-                              <YAxis stroke="#9A9A9A" style={{ fontSize: 9 }} />
-                              <Tooltip contentStyle={{ backgroundColor: '#0D0D0D', borderColor: '#222222', fontSize: 10, color: '#F8F8F8' }} />
+                              <CartesianGrid strokeDasharray="3 3" stroke="#232323" />
+                              <XAxis dataKey="algorithm" stroke="#A3A3A3" tickFormatter={(v) => v.replace("quick_", "Q+").replace("sort", "")} style={{ fontSize: 9 }} />
+                              <YAxis stroke="#A3A3A3" style={{ fontSize: 9 }} />
+                              <Tooltip contentStyle={{ backgroundColor: '#0D0D0D', borderColor: '#232323', fontSize: 10, color: '#FFFFFF' }} />
                               <Bar dataKey="runtime_us" name="Time (μs)" radius={[2, 2, 0, 0]}>
                                 {benchResults.map((entry, index) => {
                                   const isFastest = entry.algorithm === best.algorithm;
-                                  return <Cell key={`cell-${index}`} fill={isFastest ? "#22C55E" : "#222222"} stroke={isFastest ? "#22C55E" : "#9A9A9A"} strokeWidth={1} />;
+                                  return <Cell key={`cell-${index}`} fill={isFastest ? "#22C55E" : "#232323"} stroke={isFastest ? "#22C55E" : "#737373"} strokeWidth={1} />;
                                 })}
                               </Bar>
                             </BarChart>
@@ -1144,8 +1144,8 @@ export default function Home() {
                       </div>
 
                       {/* Scale Line Chart (Estimates based on scaling curves) */}
-                      <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5">
-                        <h4 className="text-xs font-semibold text-[#9A9A9A] mb-4">Performance vs dataset size</h4>
+                      <div className="bg-[#0D0D0D] border border-[#232323] rounded p-5">
+                        <h4 className="text-xs font-semibold text-[#A3A3A3] mb-4">Performance vs dataset size</h4>
                         <div className="h-56">
                           <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={[
@@ -1154,13 +1154,14 @@ export default function Home() {
                               { size: "10K", quicksort: 780, mergesort: 1100, heapsort: 1250, introsort: 680 },
                               { size: "100K", quicksort: 9100, mergesort: 13200, heapsort: 14800, introsort: 8100 }
                             ]}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="#222222" />
-                              <XAxis dataKey="size" stroke="#9A9A9A" style={{ fontSize: 9 }} />
-                              <YAxis stroke="#9A9A9A" style={{ fontSize: 9 }} />
-                              <Tooltip contentStyle={{ backgroundColor: '#0D0D0D', borderColor: '#222222', fontSize: 10, color: '#F8F8F8' }} />
+                              <CartesianGrid strokeDasharray="3 3" stroke="#232323" />
+                              <XAxis dataKey="size" stroke="#A3A3A3" style={{ fontSize: 9 }} />
+                              <YAxis stroke="#A3A3A3" style={{ fontSize: 9 }} />
+                              <Tooltip contentStyle={{ backgroundColor: '#0D0D0D', borderColor: '#232323', fontSize: 10, color: '#FFFFFF' }} />
                               <Line type="monotone" dataKey="introsort" stroke="#22C55E" strokeWidth={1.5} name="Introsort" dot={false} />
-                              <Line type="monotone" dataKey="quicksort" stroke="#9A9A9A" strokeWidth={1.2} name="Quick" dot={false} />
-                              <Line type="monotone" dataKey="mergesort" stroke="#F8F8F8" strokeWidth={1.2} name="Merge" dot={false} />
+                              <Line type="monotone" dataKey="quicksort" stroke="#A3A3A3" strokeWidth={1.2} name="Quick" dot={false} />
+                              <Line type="monotone" dataKey="mergesort" stroke="#FFFFFF" strokeWidth={1.2} name="Merge" dot={false} />
+                              <Line type="monotone" dataKey="heapsort" stroke="#737373" strokeWidth={1.2} name="Heap" dot={false} />
                             </LineChart>
                           </ResponsiveContainer>
                         </div>
@@ -1203,16 +1204,16 @@ export default function Home() {
         {activeTab === "visualizer" && (
           <div className="flex flex-col gap-6">
             {/* Visualizer Controls */}
-            <div className="bg-[#0D0D0D] border border-[#222222] rounded p-5 flex flex-col gap-4">
+            <div className="bg-[#0D0D0D] border border-[#232323] rounded p-5 flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <h3 className="text-sm font-semibold text-[#F8F8F8]">Visualizer control panel</h3>
-                <p className="text-xs text-[#9A9A9A]">Select algorithms to compare side-by-side, adjust array parameters, and run the visualization pipeline.</p>
+                <h3 className="text-xs font-semibold text-[#FFFFFF]">Visualizer control panel</h3>
+                <p className="text-[11px] text-[#A3A3A3]">Select algorithms to compare side-by-side, adjust array parameters, and run the visualization pipeline.</p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                 {/* Algorithm Checklist */}
                 <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <span className="text-[10px] text-[#9A9A9A] uppercase tracking-wider font-semibold">Algorithms to visualize</span>
+                  <span className="text-[10px] text-[#A3A3A3] uppercase tracking-wider font-semibold">Algorithms to visualize</span>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-1">
                     {[
                       { id: "introsort", name: "Introsort" },
@@ -1224,7 +1225,7 @@ export default function Home() {
                     ].map(algo => {
                       const checked = selectedVizAlgos.includes(algo.id);
                       return (
-                        <label key={algo.id} className="flex items-center gap-2 text-xs text-[#F8F8F8] cursor-pointer select-none">
+                        <label key={algo.id} className="flex items-center gap-2 text-xs text-[#FFFFFF] cursor-pointer select-none">
                           <input
                             type="checkbox"
                             checked={checked}
@@ -1248,7 +1249,7 @@ export default function Home() {
 
                 {/* Array Size */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[10px] text-[#9A9A9A] uppercase tracking-wider font-semibold">
+                  <div className="flex justify-between items-center text-[10px] text-[#A3A3A3] uppercase tracking-wider font-semibold">
                     <span>Array size</span>
                     <span className="text-[#22C55E] font-bold">{vizSize}</span>
                   </div>
@@ -1264,7 +1265,7 @@ export default function Home() {
 
                 {/* Crossover Threshold */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[10px] text-[#9A9A9A] uppercase tracking-wider font-semibold">
+                  <div className="flex justify-between items-center text-[10px] text-[#A3A3A3] uppercase tracking-wider font-semibold">
                     <span>Crossover threshold</span>
                     <span className="text-[#22C55E] font-bold">{vizThreshold}</span>
                   </div>
@@ -1280,14 +1281,14 @@ export default function Home() {
               </div>
 
               {/* Divider */}
-              <div className="border-t border-[#222222] my-2" />
+              <div className="border-t border-[#232323] my-2" />
 
               {/* Lower Controls & Action Buttons */}
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div className="flex items-center gap-6">
                   {/* Animation Delay */}
                   <div className="flex flex-col gap-1.5 w-48">
-                    <div className="flex justify-between items-center text-[10px] text-[#9A9A9A] uppercase tracking-wider font-semibold">
+                    <div className="flex justify-between items-center text-[10px] text-[#A3A3A3] uppercase tracking-wider font-semibold">
                       <span>Animation delay</span>
                       <span className="text-[#22C55E] font-bold">{vizSpeed}ms</span>
                     </div>
@@ -1302,22 +1303,22 @@ export default function Home() {
                   </div>
                   {/* Elapsed Time */}
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-[#9A9A9A] uppercase tracking-wider font-semibold">Elapsed time</span>
-                    <span className="text-xs font-mono font-semibold text-[#F8F8F8]">{(vizElapsedTime / 10).toFixed(1)}s</span>
+                    <span className="text-[10px] text-[#A3A3A3] uppercase tracking-wider font-semibold">Elapsed time</span>
+                    <span className="text-xs font-mono font-semibold text-[#FFFFFF]">{(vizElapsedTime / 10).toFixed(1)}s</span>
                   </div>
                 </div>
 
                 <div className="flex gap-3 w-full md:w-auto">
                   <button
                     onClick={handlePlayPause}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 bg-[#22C55E] hover:bg-[#1ebd53] active:bg-[#1aab4a] text-[#050505] font-semibold px-6 py-2 rounded text-xs transition-colors"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 bg-[#22C55E] hover:bg-[#4ADE80] active:bg-[#166534] text-[#050505] font-semibold px-6 py-2 rounded text-xs transition-colors"
                   >
                     {isPlaying ? <Pause size={12} /> : <Play size={12} />}
                     {isPlaying ? "Pause animation" : "Start animation"}
                   </button>
                   <button
                     onClick={generateNewVisualizerArray}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 bg-[#0D0D0D] hover:bg-[#181818] text-[#F8F8F8] border border-[#222222] font-semibold px-6 py-2 rounded text-xs transition-colors"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 bg-[#0D0D0D] hover:bg-[#151515] text-[#FFFFFF] border border-[#232323] font-semibold px-6 py-2 rounded text-xs transition-colors"
                   >
                     <RotateCcw size={12} />
                     Reset dataset
@@ -1338,17 +1339,17 @@ export default function Home() {
                     className={`bg-[#0D0D0D] border rounded p-5 flex flex-col gap-4 transition-all duration-300 ${
                       state.winner 
                         ? "border-[#22C55E] shadow-[0_0_15px_rgba(34,197,94,0.15)]" 
-                        : "border-[#222222]"
+                        : "border-[#232323]"
                     }`}
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between border-b border-[#222222] pb-2">
+                    <div className="flex items-center justify-between border-b border-[#232323] pb-2">
                       <div className="flex flex-col">
-                        <span className="text-xs font-semibold text-[#F8F8F8]">
+                        <span className="text-xs font-semibold text-[#FFFFFF]">
                           {getAlgoDisplayName(algo)}
                         </span>
-                        <span className="text-[10px] text-[#9A9A9A]">
-                          Active sub-algorithm: <span className="text-[#22C55E] font-medium">{state.currentSubAlgo}</span>
+                        <span className="text-[10px] text-[#A3A3A3]">
+                          Current algorithm: <span className="text-[#22C55E] font-medium">{state.currentSubAlgo}</span>
                         </span>
                       </div>
                       {state.winner && (
@@ -1357,19 +1358,19 @@ export default function Home() {
                         </span>
                       )}
                       {state.done && !state.winner && (
-                        <span className="text-[10px] bg-[#222222] text-[#9A9A9A] px-2 py-0.5 rounded font-medium">
+                        <span className="text-[10px] bg-[#151515] text-[#A3A3A3] border border-[#232323] px-2 py-0.5 rounded font-medium">
                           Completed
                         </span>
                       )}
                     </div>
 
-                    {/* Visualizer Canvas (Full-width for this card) */}
-                    <div className="h-48 flex items-end justify-between gap-0.5 bg-[#050505] p-3 border border-[#222222] rounded">
+                    {/* Visualizer Canvas (Dominate Layout Height) */}
+                    <div className="h-64 flex items-end justify-between gap-0.5 bg-[#050505] p-3 border border-[#232323] rounded">
                       {state.array.map((bar, idx) => {
-                        let colorClass = "bg-[#222222]"; // unsorted (gray)
-                        if (bar.state === "compare") colorClass = "bg-white"; // comparison (white)
-                        if (bar.state === "operation") colorClass = "bg-white/50"; // operation (light gray/white transparency)
-                        if (bar.state === "sorted") colorClass = "bg-[#22C55E]"; // sorted (accent green)
+                        let colorClass = "bg-[#232323]"; // default unsorted
+                        if (bar.state === "compare") colorClass = "bg-[#FFFFFF]"; // comparing
+                        if (bar.state === "operation") colorClass = "bg-[#22C55E]"; // active (mutating)
+                        if (bar.state === "sorted") colorClass = "bg-[#4ADE80]"; // sorted (light green)
 
                         return (
                           <div 
@@ -1382,27 +1383,27 @@ export default function Home() {
                     </div>
 
                     {/* Crossover & Sub-algo Info */}
-                    <div className="border-t border-[#222222] pt-3 flex flex-col gap-2">
+                    <div className="border-t border-[#232323] pt-3 flex flex-col gap-2">
                       <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] font-mono">
-                        <div className="flex justify-between border-b border-[#222222]/50 pb-1">
-                          <span className="text-[#9A9A9A]">Kernel status</span>
-                          <span className="text-[#F8F8F8] font-semibold">{state.switchStatus}</span>
+                        <div className="flex justify-between border-b border-[#232323]/50 pb-1">
+                          <span className="text-[#A3A3A3]">Execution state</span>
+                          <span className="text-[#FFFFFF] font-semibold">{state.switchStatus}</span>
                         </div>
-                        <div className="flex justify-between border-b border-[#222222]/50 pb-1">
-                          <span className="text-[#9A9A9A]">Partition size</span>
-                          <span className="text-[#F8F8F8] font-semibold">{state.currentPartitionSize}</span>
+                        <div className="flex justify-between border-b border-[#232323]/50 pb-1">
+                          <span className="text-[#A3A3A3]">Partition size</span>
+                          <span className="text-[#FFFFFF] font-semibold">{state.currentPartitionSize}</span>
                         </div>
-                        <div className="flex justify-between border-b border-[#222222]/50 pb-1">
-                          <span className="text-[#9A9A9A]">Comparisons</span>
+                        <div className="flex justify-between border-b border-[#232323]/50 pb-1">
+                          <span className="text-[#A3A3A3]">Comparisons</span>
                           <span className="text-[#22C55E] font-bold">{state.comparisons.toLocaleString()}</span>
                         </div>
-                        <div className="flex justify-between border-b border-[#222222]/50 pb-1">
-                          <span className="text-[#9A9A9A]">Swaps/mutations</span>
-                          <span className="text-[#F8F8F8] font-semibold">{state.swaps.toLocaleString()}</span>
+                        <div className="flex justify-between border-b border-[#232323]/50 pb-1">
+                          <span className="text-[#A3A3A3]">Swaps/mutations</span>
+                          <span className="text-[#FFFFFF] font-semibold">{state.swaps.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between col-span-2">
-                          <span className="text-[#9A9A9A]">Recursion depth</span>
-                          <span className="text-[#F8F8F8] font-semibold">{state.depth}</span>
+                          <span className="text-[#A3A3A3]">Recursion depth</span>
+                          <span className="text-[#FFFFFF] font-semibold">{state.depth}</span>
                         </div>
                       </div>
                     </div>
@@ -1412,18 +1413,18 @@ export default function Home() {
             </div>
 
             {/* Color Legend (Centered under the grid) */}
-            <div className="flex gap-6 text-[10px] font-mono text-[#9A9A9A] justify-center mt-6">
+            <div className="flex gap-6 text-[10px] font-mono text-[#A3A3A3] justify-center mt-6">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-[#222222] rounded-full"></span> Unsorted (base array)
+                <span className="w-2 h-2 bg-[#232323] rounded-full border border-[#737373]"></span> Unsorted (base array)
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-white rounded-full"></span> Comparison (active elements)
+                <span className="w-2 h-2 bg-[#FFFFFF] rounded-full"></span> Comparing
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-white/50 rounded-full"></span> Operation (mutating elements)
+                <span className="w-2 h-2 bg-[#22C55E] rounded-full"></span> Active (mutating)
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-[#22C55E] rounded-full"></span> Sorted (in position)
+                <span className="w-2 h-2 bg-[#4ADE80] rounded-full"></span> Sorted
               </div>
             </div>
           </div>
@@ -1431,111 +1432,100 @@ export default function Home() {
 
         {/* ── PAGE 4: Analysis ── */}
         {activeTab === "analysis" && (
-          <div className="flex flex-col gap-6">
-            {/* Algorithm Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-5 flex flex-col gap-3 text-xs leading-relaxed">
-                <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wide border-b border-[#27272a] pb-2">
-                  Quick + Insertion Sort
-                </h3>
-                <p className="text-zinc-400">
-                  <strong>Overview:</strong> Splits partitions recursively using QuickSort. Once partition size drops below the threshold, it invokes Insertion Sort on that range.
+          <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full py-4 text-xs">
+            {/* Algorithm Analysis Profiles */}
+            <div className="flex flex-col gap-6">
+              <div>
+                <h3 className="text-sm font-semibold text-[#FFFFFF] mb-1">Quick + Insertion sort</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  Splits partitions recursively using QuickSort. Once partition size drops below the threshold, it invokes Insertion Sort on that range to bypass stack frame overhead and optimize cache locality.
                 </p>
-                <div>
-                  <strong className="text-zinc-300 block mb-0.5">Advantages:</strong>
-                  <span className="text-zinc-450">Bypasses massive overhead of stack frames for small ranges. Optimal cache locality.</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 font-mono text-[11px] text-[#A3A3A3]">
+                  <div>
+                    <span className="text-[#22C55E] font-semibold">Advantages:</span> Bypasses recursion stack limits for small subarrays. Near-zero initialization latency.
+                  </div>
+                  <div>
+                    <span className="text-[#737373] font-semibold">Disadvantages:</span> Degrades to quadratic O(N²) time complexity under skewed pivot selection on worst-case arrays.
+                  </div>
                 </div>
-                <div>
-                  <strong className="text-zinc-300 block mb-0.5">Disadvantages:</strong>
-                  <span className="text-zinc-450">Degrades to quadratic O(N²) time complexity under skewed pivot selection on worst-case arrays.</span>
-                </div>
-                <div className="bg-black/30 rounded border border-[#27272a] p-2 mt-1">
-                  <span className="text-[10px] text-zinc-500 uppercase block mb-1">Complexity Profile</span>
-                  <span className="text-zinc-300">Time: O(N log N) avg | Space: O(log N)</span>
+                <div className="text-[10px] text-[#737373] mt-2 font-mono">
+                  Complexity: Time: O(N log N) average | Space: O(log N)
                 </div>
               </div>
 
-              <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-5 flex flex-col gap-3 text-xs leading-relaxed">
-                <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wide border-b border-[#27272a] pb-2">
-                  Quick + Merge Sort
-                </h3>
-                <p className="text-zinc-400">
-                  <strong>Overview:</strong> Swaps partition routines to an out-of-place Merge Sort when the size drops below threshold limits.
+              <div className="border-t border-[#232323] pt-6">
+                <h3 className="text-sm font-semibold text-[#FFFFFF] mb-1">Quick + Merge sort</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  Swaps partitioning routines to an out-of-place Merge Sort when the size drops below threshold limits, providing stable subproblem sorting.
                 </p>
-                <div>
-                  <strong className="text-zinc-300 block mb-0.5">Advantages:</strong>
-                  <span className="text-zinc-450">Stable sorting on segments, lower overall comparisons compared to insertion on larger thresholds.</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 font-mono text-[11px] text-[#A3A3A3]">
+                  <div>
+                    <span className="text-[#22C55E] font-semibold">Advantages:</span> Stable sorting on segments, lower overall comparisons compared to insertion on larger thresholds.
+                  </div>
+                  <div>
+                    <span className="text-[#737373] font-semibold">Disadvantages:</span> Requires O(N) auxiliary heap allocations. High array element writes during merge copy operations.
+                  </div>
                 </div>
-                <div>
-                  <strong className="text-zinc-300 block mb-0.5">Disadvantages:</strong>
-                  <span className="text-zinc-450">Requires O(N) auxiliary heap allocations. High array element writes during merge copy operations.</span>
-                </div>
-                <div className="bg-black/30 rounded border border-[#27272a] p-2 mt-1">
-                  <span className="text-[10px] text-zinc-500 uppercase block mb-1">Complexity Profile</span>
-                  <span className="text-zinc-300">Time: O(N log N) avg | Space: O(N) aux</span>
+                <div className="text-[10px] text-[#737373] mt-2 font-mono">
+                  Complexity: Time: O(N log N) average | Space: O(N) auxiliary
                 </div>
               </div>
 
-              <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-5 flex flex-col gap-3 text-xs leading-relaxed">
-                <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wide border-b border-[#27272a] pb-2">
-                  Introsort
-                </h3>
-                <p className="text-zinc-400">
-                  <strong>Overview:</strong> Begins with QuickSort, switches to Insertion Sort on tiny subproblems, and transitions to HeapSort if recursion depth exceeds limits.
+              <div className="border-t border-[#232323] pt-6">
+                <h3 className="text-sm font-semibold text-[#FFFFFF] mb-1">Introsort</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  Begins with QuickSort, switches to Insertion Sort on tiny subproblems, and transitions to HeapSort if recursion depth exceeds limits.
                 </p>
-                <div>
-                  <strong className="text-zinc-300 block mb-0.5">Advantages:</strong>
-                  <span className="text-zinc-450">Guarantees O(N log N) worst-case time complexity limit. Safe from quadratic stack collapse.</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 font-mono text-[11px] text-[#A3A3A3]">
+                  <div>
+                    <span className="text-[#22C55E] font-semibold">Advantages:</span> Guarantees O(N log N) worst-case time complexity limit. Safe from quadratic stack collapse.
+                  </div>
+                  <div>
+                    <span className="text-[#737373] font-semibold">Disadvantages:</span> HeapSort limits pivot cache coherence during fallback sequences.
+                  </div>
                 </div>
-                <div>
-                  <strong className="text-zinc-300 block mb-0.5">Disadvantages:</strong>
-                  <span className="text-zinc-450">Heapsort limits pivot cache coherence during fallback sequences.</span>
-                </div>
-                <div className="bg-black/30 rounded border border-[#27272a] p-2 mt-1">
-                  <span className="text-[10px] text-zinc-500 uppercase block mb-1">Complexity Profile</span>
-                  <span className="text-zinc-300">Time: O(N log N) bounds | Space: O(log N)</span>
+                <div className="text-[10px] text-[#737373] mt-2 font-mono">
+                  Complexity: Time: O(N log N) bounds | Space: O(log N)
                 </div>
               </div>
             </div>
 
-            {/* Complexity Table & Threshold Analysis Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Complexity Comparison Table */}
-              <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-5">
-                <h3 className="text-xs font-bold text-zinc-250 uppercase tracking-wider mb-4 border-b border-[#27272a] pb-2">
-                  Complexity Comparison Reference
-                </h3>
+            {/* Complexity Reference & Threshold Analysis */}
+            <div className="border-t border-[#232323] pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Complexity Reference Table */}
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-semibold text-[#FFFFFF]">Complexity comparison reference</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-[#27272a] text-zinc-500 uppercase text-[10px] font-bold">
+                      <tr className="border-b border-[#232323] text-[#A3A3A3] font-semibold text-[10px]">
                         <th className="py-2">Algorithm</th>
-                        <th className="py-2">Best Case</th>
-                        <th className="py-2">Average Case</th>
-                        <th className="py-2">Worst Case</th>
-                        <th className="py-2">Space Complexity</th>
+                        <th className="py-2">Best case</th>
+                        <th className="py-2">Average case</th>
+                        <th className="py-2">Worst case</th>
+                        <th className="py-2">Space complexity</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-950 font-mono text-zinc-300">
-                      <tr className="hover:bg-zinc-900/10">
-                        <td className="py-2 font-sans font-semibold text-zinc-200">Quick + Insertion</td>
+                    <tbody className="divide-y divide-[#232323] font-mono text-[#A3A3A3]">
+                      <tr>
+                        <td className="py-2 font-sans font-semibold text-[#FFFFFF]">Quick + Insertion</td>
                         <td className="py-2">O(N)</td>
                         <td className="py-2">O(N log N)</td>
-                        <td className="py-2 text-amber-500">O(N²)</td>
+                        <td className="py-2">O(N²)</td>
                         <td className="py-2">O(log N)</td>
                       </tr>
-                      <tr className="hover:bg-zinc-900/10">
-                        <td className="py-2 font-sans font-semibold text-zinc-200">Quick + Merge</td>
+                      <tr>
+                        <td className="py-2 font-sans font-semibold text-[#FFFFFF]">Quick + Merge</td>
                         <td className="py-2">O(N log N)</td>
                         <td className="py-2">O(N log N)</td>
-                        <td className="py-2 text-amber-500">O(N²)</td>
-                        <td className="py-2 text-red-400">O(N)</td>
-                      </tr>
-                      <tr className="hover:bg-zinc-900/10">
-                        <td className="py-2 font-sans font-semibold text-zinc-200">Introsort</td>
+                        <td className="py-2">O(N²)</td>
                         <td className="py-2">O(N)</td>
-                        <td className="py-2 text-emerald-400 font-bold">O(N log N)</td>
-                        <td className="py-2 text-emerald-400 font-bold">O(N log N)</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-sans font-semibold text-[#FFFFFF]">Introsort</td>
+                        <td className="py-2">O(N)</td>
+                        <td className="py-2 text-[#22C55E]">O(N log N)</td>
+                        <td className="py-2 text-[#22C55E]">O(N log N)</td>
                         <td className="py-2">O(log N)</td>
                       </tr>
                     </tbody>
@@ -1543,64 +1533,60 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Threshold Analysis Card */}
-              <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-5 flex flex-col gap-3">
-                <h3 className="text-xs font-bold text-zinc-250 uppercase tracking-wider border-b border-[#27272a] pb-2">
-                  Crossover Threshold Speed curves
-                </h3>
-                <p className="text-zinc-500 text-xs leading-relaxed">
+              {/* Threshold Analysis List */}
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-semibold text-[#FFFFFF]">Crossover threshold speed curves</h3>
+                <p className="text-[#A3A3A3] text-xs leading-relaxed">
                   Runtimes associated with various threshold limits (N = 50,000, Uniform Random, averaged over 5 runs):
                 </p>
-                <div className="flex flex-col gap-2 font-mono text-xs">
-                  <div className="flex justify-between border-b border-zinc-950 pb-1.5">
-                    <span className="text-zinc-400">Threshold = 8</span>
-                    <span className="text-zinc-300">4.12 ms (Sub-optimal, high stack overheads)</span>
+                <div className="flex flex-col gap-2 font-mono text-xs text-[#A3A3A3]">
+                  <div className="flex justify-between border-b border-[#232323] pb-1.5">
+                    <span>Threshold = 8</span>
+                    <span>4.12 ms (sub-optimal)</span>
                   </div>
-                  <div className="flex justify-between border-b border-zinc-950 pb-1.5">
-                    <span className="text-zinc-400">Threshold = 16</span>
-                    <span className="text-emerald-400 font-bold">3.51 ms (SWEET SPOT)</span>
+                  <div className="flex justify-between border-b border-[#232323] pb-1.5">
+                    <span>Threshold = 16</span>
+                    <span className="text-[#22C55E] font-bold">3.51 ms (sweet spot)</span>
                   </div>
-                  <div className="flex justify-between border-b border-zinc-950 pb-1.5">
-                    <span className="text-zinc-400">Threshold = 32</span>
-                    <span className="text-zinc-300">3.88 ms (Slight insertion sort overhead)</span>
+                  <div className="flex justify-between border-b border-[#232323] pb-1.5">
+                    <span>Threshold = 32</span>
+                    <span>3.88 ms (moderate overhead)</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Threshold = 64</span>
-                    <span className="text-zinc-300">4.72 ms (Insertion sort quadratic decay)</span>
+                    <span>Threshold = 64</span>
+                    <span>4.72 ms (quadratic decay)</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Dataset Impact Analysis */}
-            <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-5">
-              <h3 className="text-xs font-bold text-zinc-200 uppercase tracking-wider mb-4 border-b border-[#27272a] pb-2">
-                Dataset Distribution Impact Summary
-              </h3>
+            {/* Dataset Distribution Impact Summary */}
+            <div className="border-t border-[#232323] pt-8 flex flex-col gap-4">
+              <h3 className="text-sm font-semibold text-[#FFFFFF]">Dataset distribution impact summary</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                <div className="bg-black/20 border border-[#27272a] p-3 rounded">
-                  <strong className="text-zinc-200 block mb-1">Random Distribution</strong>
-                  <span className="text-zinc-500 block mb-2">High Entropy</span>
-                  <div className="text-[11px] text-emerald-400 font-bold uppercase">Winner: Introsort</div>
-                  <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">Standard random layouts benefit from QuickSort&apos;s optimal pivot partitioning loops.</p>
+                <div className="border border-[#232323] bg-[#0D0D0D] p-3 rounded">
+                  <strong className="text-[#FFFFFF] block mb-1">Random distribution</strong>
+                  <span className="text-[#737373] block mb-2 font-mono">High Entropy</span>
+                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</div>
+                  <p className="text-[10px] text-[#A3A3A3] mt-1 leading-relaxed">Standard random layouts benefit from QuickSort&apos;s optimal pivot partitioning loops.</p>
                 </div>
-                <div className="bg-black/20 border border-[#27272a] p-3 rounded">
-                  <strong className="text-zinc-200 block mb-1">Nearly Sorted</strong>
-                  <span className="text-zinc-500 block mb-2">Low Inversions</span>
-                  <div className="text-[11px] text-emerald-400 font-bold uppercase">Winner: Quick+Insertion</div>
-                  <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">Insertion Sort base runs in O(N) for presorted runs, avoiding recursive tree builds.</p>
+                <div className="border border-[#232323] bg-[#0D0D0D] p-3 rounded">
+                  <strong className="text-[#FFFFFF] block mb-1">Nearly sorted</strong>
+                  <span className="text-[#737373] block mb-2 font-mono">Low Inversions</span>
+                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Quick+Insertion</div>
+                  <p className="text-[10px] text-[#A3A3A3] mt-1 leading-relaxed">Insertion Sort base runs in O(N) for presorted runs, avoiding recursive tree builds.</p>
                 </div>
-                <div className="bg-black/20 border border-[#27272a] p-3 rounded">
-                  <strong className="text-zinc-200 block mb-1">Reverse Sorted</strong>
-                  <span className="text-zinc-500 block mb-2">Maximum Inversions</span>
-                  <div className="text-[11px] text-emerald-400 font-bold uppercase">Winner: Introsort</div>
-                  <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">Worst-case pivot selections trigger Introsort&apos;s HeapSort fallback wrapper to keep bounds.</p>
+                <div className="border border-[#232323] bg-[#0D0D0D] p-3 rounded">
+                  <strong className="text-[#FFFFFF] block mb-1">Reverse sorted</strong>
+                  <span className="text-[#737373] block mb-2 font-mono">Maximum Inversions</span>
+                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</div>
+                  <p className="text-[10px] text-[#A3A3A3] mt-1 leading-relaxed">Worst-case pivot selections trigger Introsort&apos;s HeapSort fallback wrapper to keep bounds.</p>
                 </div>
-                <div className="bg-black/20 border border-[#27272a] p-3 rounded">
-                  <strong className="text-zinc-200 block mb-1">Duplicate Heavy</strong>
-                  <span className="text-zinc-500 block mb-2">High Key Collisions</span>
-                  <div className="text-[11px] text-emerald-400 font-bold uppercase">Winner: Quick+Merge</div>
-                  <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">Stable merge sorts process repetitive keys with fewer comparisons than insertions.</p>
+                <div className="border border-[#232323] bg-[#0D0D0D] p-3 rounded">
+                  <strong className="text-[#FFFFFF] block mb-1">Duplicate heavy</strong>
+                  <span className="text-[#737373] block mb-2 font-mono">High Key Collisions</span>
+                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Quick+Merge</div>
+                  <p className="text-[10px] text-[#A3A3A3] mt-1 leading-relaxed">Stable merge sorts process repetitive keys with fewer comparisons than insertions.</p>
                 </div>
               </div>
             </div>
