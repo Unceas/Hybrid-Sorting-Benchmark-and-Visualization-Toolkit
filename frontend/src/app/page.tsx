@@ -82,6 +82,82 @@ interface HistoryItem {
   swaps: number;
 }
 
+// Subtle sorting animation background component
+const SubtleSortingBg = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationId: number;
+    let width = (canvas.width = canvas.offsetWidth);
+    let height = (canvas.height = canvas.offsetHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = (canvas.width = canvas.offsetWidth);
+      height = (canvas.height = canvas.offsetHeight);
+    };
+    window.addEventListener("resize", handleResize);
+
+    const numBars = 45;
+    const bars: { value: number; currentVal: number }[] = [];
+    for (let i = 0; i < numBars; i++) {
+      const val = Math.random() * 0.7 + 0.15;
+      bars.push({ value: val, currentVal: val });
+    }
+
+    let active1 = -1;
+    let active2 = -1;
+    let frame = 0;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      
+      const barWidth = width / numBars;
+      for (let i = 0; i < numBars; i++) {
+        bars[i].currentVal += (bars[i].value - bars[i].currentVal) * 0.1;
+        const barHeight = bars[i].currentVal * height * 0.75;
+        const x = i * barWidth;
+        const y = height - barHeight;
+
+        if (i === active1 || i === active2) {
+          ctx.fillStyle = "rgba(34, 197, 94, 0.08)";
+        } else {
+          ctx.fillStyle = "rgba(35, 35, 35, 0.15)";
+        }
+        ctx.fillRect(x + 1.5, y, barWidth - 3, barHeight);
+      }
+
+      frame++;
+      if (frame % 45 === 0) {
+        const idx = Math.floor(Math.random() * (numBars - 1));
+        active1 = idx;
+        active2 = idx + 1;
+        if (bars[idx].value > bars[idx + 1].value) {
+          const temp = bars[idx].value;
+          bars[idx].value = bars[idx + 1].value;
+          bars[idx + 1].value = temp;
+        }
+      }
+
+      animationId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
+};
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"overview" | "benchmark" | "visualizer" | "analysis">("overview");
 
@@ -796,126 +872,199 @@ export default function Home() {
         </a>
       </header>
 
-      {/* Main Content Workspace */}
       <main className="flex-1 p-6 max-w-7xl mx-auto w-full flex flex-col gap-6 overflow-y-auto">
-        
         {/* ── PAGE 1: Overview ── */}
         {activeTab === "overview" && (
-          <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full py-4">
-            {/* Hero Section */}
-            <div className="bg-[#0D0D0D] border border-[#232323] rounded px-8 py-12 flex flex-col gap-4 text-center w-full">
-              <span className="text-[10px] font-mono text-[#22C55E] tracking-wider block">
-                Release v3.0
-              </span>
-              <div>
-                <h1 className="text-3xl font-semibold text-[#FFFFFF] tracking-tight">
-                  Hybrid Sorting Systems
-                </h1>
+          <div className="flex flex-col gap-16 max-w-4xl mx-auto w-full py-8 text-xs relative">
+            
+            {/* Hero Section with Canvas Background */}
+            <div className="relative border border-[#232323] bg-[#0D0D0D] rounded px-8 py-16 flex flex-col gap-6 text-center w-full overflow-hidden">
+              {/* Subtle Sorting Background Animation */}
+              <div className="absolute inset-0 pointer-events-none opacity-30">
+                <SubtleSortingBg />
               </div>
-              <p className="text-[#A3A3A3] leading-relaxed text-xs max-w-xl mx-auto">
-                Benchmark, visualize and analyze hybrid sorting algorithms through interactive performance experiments.
-              </p>
-              <div className="flex gap-3 justify-center mt-2">
-                <button
-                  onClick={() => setActiveTab("benchmark")}
-                  className="bg-[#22C55E] hover:bg-[#4ADE80] active:bg-[#166534] text-[#050505] font-semibold px-5 py-2 rounded text-xs transition duration-150"
-                >
-                  Open Benchmark
-                </button>
-                <button
-                  onClick={() => setActiveTab("visualizer")}
-                  className="bg-[#151515] border border-[#232323] hover:bg-[#0D0D0D] text-[#FFFFFF] font-semibold px-5 py-2 rounded text-xs transition duration-150"
-                >
-                  Explore Algorithms
-                </button>
-              </div>
-            </div>
 
-            {/* Structured Overview Details */}
-            <div className="border-t border-[#232323] pt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs">
-              <div className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-[#FFFFFF]">Brief overview</h3>
-                <p className="text-[#A3A3A3] leading-relaxed">
-                  This platform functions as an engineering environment designed to analyze adaptive hybrid sorting algorithms. Hybrid algorithms combine recursive partitioning strategies with high-efficiency base cases (such as insertion sort) to mitigate recursion depth overhead, optimize hardware caching, and maximize processor utilization.
+              <div className="relative z-10 flex flex-col gap-4 items-center">
+                <span className="text-[9px] font-mono text-[#22C55E] border border-[#22C55E]/20 bg-[#166534]/5 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  System architecture v3.0
+                </span>
+                <h1 className="text-3xl md:text-4xl font-semibold text-[#FFFFFF] tracking-tight max-w-xl">
+                  Performance engineering workstation for hybrid sorting
+                </h1>
+                <p className="text-[#A3A3A3] leading-relaxed text-xs max-w-lg">
+                  Empirically analyze crossover thresholds, compile native C++ kernels, and inspect execution telemetry in a unified dark-mode workshop.
                 </p>
-                <p className="text-[#A3A3A3] leading-relaxed">
-                  By executing sorting kernels compiled directly on Native C++ pipelines, the platform reports low-level hardware telemetry, allowing engineers to determine optimal crossover thresholds.
-                </p>
-              </div>
-              
-              <div className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-[#FFFFFF]">Implemented algorithms</h3>
-                <div className="flex flex-col gap-2 font-mono text-[11px] text-[#A3A3A3]">
-                  <div className="border-b border-[#232323] pb-1">
-                    <span className="text-[#22C55E]">Introsort:</span> QuickSort with fallback to HeapSort when depth limit exceeded, combined with InsertionSort base cases.
-                  </div>
-                  <div className="border-b border-[#232323] pb-1">
-                    <span className="text-[#22C55E]">Quick + Insertion:</span> QuickSort partitioning falling back to InsertionSort when subarray size ≤ threshold.
-                  </div>
-                  <div className="border-b border-[#232323] pb-1">
-                    <span className="text-[#22C55E]">Quick + Merge:</span> QuickSort falling back to MergeSort when partition size drops below threshold.
-                  </div>
-                  <div className="pb-1">
-                    <span className="text-[#22C55E]">Standard Kernels:</span> Pure QuickSort, MergeSort, and HeapSort benchmarks for base baseline controls.
-                  </div>
+                <div className="flex gap-4 justify-center mt-2">
+                  <button
+                    onClick={() => setActiveTab("benchmark")}
+                    className="bg-[#22C55E] hover:bg-[#4ADE80] active:bg-[#166534] text-[#050505] font-semibold px-6 py-2.5 rounded transition duration-150 text-xs"
+                  >
+                    Start benchmarking
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("visualizer")}
+                    className="bg-[#151515] border border-[#232323] hover:bg-[#0D0D0D] text-[#FFFFFF] font-semibold px-6 py-2.5 rounded transition duration-150 text-xs"
+                  >
+                    Explore visualizer
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* System Workflow */}
-            <div className="border-t border-[#232323] pt-8 flex flex-col gap-4">
-              <h3 className="text-sm font-semibold text-[#FFFFFF]">System workflow</h3>
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-2 text-xs font-mono text-[#A3A3A3]">
+            {/* Narrative Section 1: Introduction */}
+            <div className="flex flex-col md:flex-row gap-8 items-start justify-between">
+              <div className="flex flex-col gap-2 max-w-sm">
+                <span className="text-[#737373] uppercase tracking-wider font-mono text-[9px]">Introduction</span>
+                <h2 className="text-base font-semibold text-[#FFFFFF]">Why hybrid sorting?</h2>
+              </div>
+              <div className="flex-1 text-[#A3A3A3] leading-relaxed flex flex-col gap-4">
+                <p>
+                  Modern sorting libraries are rarely single-algorithm implementations. Instead, they rely on adaptive systems that transition between partitioning logic and base-case algorithms depending on size, depth, and memory thresholds.
+                </p>
+                <p>
+                  This workstation exposes those crossover regions. By running optimized native C++ binaries, it captures hardware comparisons, cache-friendly array writes, and memory footprint metrics to determine the mathematical sweet spot of sorting pipelines.
+                </p>
+              </div>
+            </div>
+
+            {/* Narrative Section 2: Workflow Pipeline */}
+            <div className="border-t border-[#232323] pt-12 flex flex-col gap-6">
+              <div className="flex flex-col gap-1">
+                <span className="text-[#737373] uppercase tracking-wider font-mono text-[9px]">System progression</span>
+                <h2 className="text-base font-semibold text-[#FFFFFF]">Workstation workflow</h2>
+              </div>
+              
+              {/* Vertical or Horizontal Pipeline representation */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 pt-2">
                 {[
-                  { num: "01", step: "Dataset", desc: "Generate sequence data" },
-                  { num: "02", step: "Select", desc: "Choose active targets" },
-                  { num: "03", step: "Execute", desc: "C++ kernel benchmarks" },
-                  { num: "04", step: "Telemetry", desc: "Collect resource stats" },
-                  { num: "05", step: "Plot", desc: "Generate scaling curves" },
-                  { num: "06", step: "Analyze", desc: "Determine crossovers" }
+                  { step: "Generate dataset", desc: "Uniform, duplicate-heavy, or inverted sets." },
+                  { step: "Run benchmark", desc: "Sweep cross-over thresholds in compiled C++." },
+                  { step: "Compare results", desc: "Compare timing, swaps, and comparisons." },
+                  { step: "Analyze performance", desc: "Find optimal cutoff values via scale curves." },
+                  { step: "Visualize execution", desc: "Simulate recursive boundaries side-by-side." }
                 ].map((item, idx) => (
-                  <div key={idx} className="border border-[#232323] bg-[#0D0D0D] p-3 flex flex-col gap-1 rounded">
-                    <span className="text-[#737373] text-[9px]">{item.num}</span>
-                    <span className="text-[#FFFFFF] font-semibold">{item.step}</span>
-                    <span className="text-[10px] text-[#737373]">{item.desc}</span>
+                  <div key={idx} className="flex flex-col gap-2 border-l border-[#232323] pl-4 py-2 relative">
+                    <span className="text-[10px] font-mono text-[#22C55E] font-semibold">0{idx + 1}</span>
+                    <h3 className="text-[11px] font-semibold text-[#FFFFFF]">{item.step}</h3>
+                    <p className="text-[10px] text-[#737373] leading-relaxed">{item.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Architecture Diagram */}
-            <div className="border-t border-[#232323] pt-8 flex flex-col gap-4">
-              <h3 className="text-sm font-semibold text-[#FFFFFF]">Architecture diagram</h3>
-              <div className="border border-[#232323] bg-[#0D0D0D] p-6 rounded flex flex-col md:flex-row items-stretch justify-center gap-4 text-xs font-mono">
-                <div className="border border-[#232323] bg-[#151515] p-4 flex flex-col justify-center items-center text-center flex-1 rounded">
-                  <span className="text-[#22C55E] font-bold">Client UI</span>
-                  <span className="text-[#737373] text-[10px] mt-1">Next.js / React</span>
-                  <span className="text-[#A3A3A3] text-[10px] mt-2 border-t border-[#232323] pt-2 w-full">Visualizer canvas, controls, scaling plots</span>
+            {/* Narrative Section 3: Core Pillars */}
+            <div className="border-t border-[#232323] pt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="flex flex-col gap-3">
+                <span className="font-mono text-[10px] text-[#22C55E]">01 / Benchmark Lab</span>
+                <h3 className="text-xs font-semibold text-[#FFFFFF]">Hardware telemetry</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  Test custom sorting targets against varying datasets. View monospaced execution times, swap limits, and memory usage indexes in real-time.
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <span className="font-mono text-[10px] text-[#22C55E]">02 / Live Visualizer</span>
+                <h3 className="text-xs font-semibold text-[#FFFFFF]">Sub-algorithm boundary swaps</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  Observe the exact moment when QuickSort partitions hand over execution to base-case MergeSort or InsertionSort routines under set thresholds.
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <span className="font-mono text-[10px] text-[#22C55E]">03 / Complexity Analysis</span>
+                <h3 className="text-xs font-semibold text-[#FFFFFF]">Distribution intelligence</h3>
+                <p className="text-[#A3A3A3] leading-relaxed">
+                  Inspect optimal crossover curves, verify average/worst-case limits, and analyze sorting efficiency profiles based on inversion indices.
+                </p>
+              </div>
+            </div>
+
+            {/* Narrative Section 4: Product Preview Mockup */}
+            <div className="border-t border-[#232323] pt-12 flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <span className="text-[#737373] uppercase tracking-wider font-mono text-[9px]">Workspace interface preview</span>
+                <h2 className="text-base font-semibold text-[#FFFFFF]">Developer workshop</h2>
+              </div>
+              
+              {/* Premium CSS-based Desktop Mockup */}
+              <div className="border border-[#232323] bg-[#0D0D0D] rounded overflow-hidden flex flex-col">
+                {/* Header Window Controls */}
+                <div className="bg-[#151515] border-b border-[#232323] px-4 py-2 flex items-center justify-between">
+                  <div className="flex gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#232323]" />
+                    <span className="w-2 h-2 rounded-full bg-[#232323]" />
+                    <span className="w-2 h-2 rounded-full bg-[#232323]" />
+                  </div>
+                  <span className="text-[10px] font-mono text-[#737373]">hybrid_sorting_lab_workbench.json</span>
+                  <div className="w-8" />
                 </div>
                 
-                <div className="flex items-center justify-center text-[#737373] font-sans">
-                  <span className="hidden md:inline">🖧</span>
-                  <span className="inline md:hidden">▼</span>
-                </div>
-
-                <div className="border border-[#232323] bg-[#151515] p-4 flex flex-col justify-center items-center text-center flex-1 rounded">
-                  <span className="text-[#22C55E] font-bold">API Gateway</span>
-                  <span className="text-[#737373] text-[10px] mt-1">FastAPI REST Server</span>
-                  <span className="text-[#A3A3A3] text-[10px] mt-2 border-t border-[#232323] pt-2 w-full">Endpoint coordination, payload serialization</span>
-                </div>
-
-                <div className="flex items-center justify-center text-[#737373] font-sans">
-                  <span className="hidden md:inline">🖧</span>
-                  <span className="inline md:hidden">▼</span>
-                </div>
-
-                <div className="border border-[#232323] bg-[#151515] p-4 flex flex-col justify-center items-center text-center flex-1 rounded">
-                  <span className="text-[#FFFFFF] font-bold">Performance Engine</span>
-                  <span className="text-[#737373] text-[10px] mt-1">Native C++ Binary</span>
-                  <span className="text-[#A3A3A3] text-[10px] mt-2 border-t border-[#232323] pt-2 w-full">Sorting execution, telemetry measurements</span>
+                {/* Mock Split Pane Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-3 min-h-[220px]">
+                  {/* Mock Sidebar Controls */}
+                  <div className="border-r border-[#232323] p-4 flex flex-col gap-3 bg-[#0D0D0D] text-[10px] font-mono">
+                    <span className="text-[#737373] uppercase text-[9px] font-semibold mb-1">Configuration parameters</span>
+                    <div className="flex justify-between border-b border-[#232323] pb-1">
+                      <span className="text-[#A3A3A3]">Dataset type:</span>
+                      <span className="text-[#FFFFFF]">Random (uniform)</span>
+                    </div>
+                    <div className="flex justify-between border-b border-[#232323] pb-1">
+                      <span className="text-[#A3A3A3]">Dataset size (n):</span>
+                      <span className="text-[#FFFFFF]">10,000</span>
+                    </div>
+                    <div className="flex justify-between border-b border-[#232323] pb-1">
+                      <span className="text-[#A3A3A3]">Threshold limit:</span>
+                      <span className="text-[#FFFFFF]">16 elements</span>
+                    </div>
+                    <div className="flex justify-between border-b border-[#232323] pb-1">
+                      <span className="text-[#A3A3A3]">Pivot rule:</span>
+                      <span className="text-[#FFFFFF]">Median of three</span>
+                    </div>
+                    <div className="mt-2 text-center border border-[#22C55E]/20 bg-[#166534]/5 text-[#22C55E] py-1.5 rounded text-[10px] font-semibold">
+                      ✓ Diagnostics verified
+                    </div>
+                  </div>
+                  
+                  {/* Mock Center Panel (Simulated runtime execution table) */}
+                  <div className="col-span-2 p-4 bg-[#050505] flex flex-col gap-3 font-mono text-[10px]">
+                    <span className="text-[#737373] uppercase text-[9px] font-semibold mb-1">Execution metrics table</span>
+                    <div className="overflow-x-auto w-full">
+                      <table className="w-full text-left border-collapse text-[9px]">
+                        <thead>
+                          <tr className="border-b border-[#232323] text-[#737373]">
+                            <th className="pb-1.5">Algorithm</th>
+                            <th className="pb-1.5 text-right">Runtime (μs)</th>
+                            <th className="pb-1.5 text-right">Comparisons</th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-[#A3A3A3]">
+                          <tr className="text-[#FFFFFF] bg-[#166534]/5">
+                            <td className="py-1 text-[#22C55E]">✓ Introsort</td>
+                            <td className="py-1 text-right font-bold">148.2</td>
+                            <td className="py-1 text-right">135,120</td>
+                          </tr>
+                          <tr className="border-t border-[#232323]/50">
+                            <td className="py-1">Quick + Insertion</td>
+                            <td className="py-1 text-right">174.5</td>
+                            <td className="py-1 text-right">142,504</td>
+                          </tr>
+                          <tr className="border-t border-[#232323]/50">
+                            <td className="py-1">MergeSort</td>
+                            <td className="py-1 text-right">241.1</td>
+                            <td className="py-1 text-right">132,876</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="mt-auto border-t border-[#232323] pt-2 text-[9px] text-[#737373] flex justify-between">
+                      <span>Diagnostics: introsort complete</span>
+                      <span>127.0.0.1:8000</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            
           </div>
         )}
 
