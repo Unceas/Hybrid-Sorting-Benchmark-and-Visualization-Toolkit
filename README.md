@@ -12,7 +12,7 @@ A minimalist performance-engineering laboratory designed to benchmark, visualize
   - **Quick + Merge**: Invokes an out-of-place Merge Sort on segments below the threshold, utilizing pre-allocated auxiliary space.
 - **Diagnostics and telemetry**: Captures execution times, memory usage, comparisons count, swaps/mutations, and recursion depth.
 - **Interactive sorting visualizer**: Live side-by-side execution canvas using a dedicated color mapping system (default gray, comparing white, active green, sorted light green).
-- **Performance analysis**: Structured comparison metrics and threshold crossover curves presented in a clean, terminal-like aesthetic.
+- **Performance analysis**: Structured comparison metrics and threshold crossover curves presented in a clean, terminal-like Environment. 
 
 ---
 
