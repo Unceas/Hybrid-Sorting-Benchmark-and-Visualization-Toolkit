@@ -3,11 +3,16 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { 
   Play, Pause, RotateCcw, BarChart3, Settings, Database, Activity, 
-  TrendingUp, BookOpen, Award, Copy, Download, Cpu, 
-  ArrowRight, ShieldAlert, Zap, History, FileSpreadsheet, RefreshCw
+  TrendingUp, BookOpen, Award, Cpu, ArrowRight, ShieldAlert, Zap, 
+  History, ChevronRight, ChevronLeft, Check, Lock, Info, SlidersHorizontal, Sparkles
 } from "lucide-react";
+import { 
+  ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend
+} from "recharts";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Custom Github Icon (removed from newer lucide-react versions)
+// Custom Github Icon
 const Github = ({ size = 15 }: { size?: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -35,10 +40,6 @@ const getAlgoDisplayName = (algo: string): string => {
   };
   return names[algo] || algo;
 };
-import { 
-  ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, 
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend
-} from "recharts";
 
 // API Base URL
 const API_URL = "http://127.0.0.1:8000/api";
@@ -82,7 +83,7 @@ interface HistoryItem {
   swaps: number;
 }
 
-// Subtle sorting animation background component
+// Subtle sorting animation background component for Hero
 const SubtleSortingBg = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -125,9 +126,9 @@ const SubtleSortingBg = () => {
         const y = height - barHeight;
 
         if (i === active1 || i === active2) {
-          ctx.fillStyle = "rgba(34, 197, 94, 0.08)";
+          ctx.fillStyle = "rgba(16, 185, 129, 0.2)";
         } else {
-          ctx.fillStyle = "rgba(35, 35, 35, 0.15)";
+          ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
         }
         ctx.fillRect(x + 1.5, y, barWidth - 3, barHeight);
       }
@@ -159,7 +160,9 @@ const SubtleSortingBg = () => {
 };
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"overview" | "benchmark" | "visualizer" | "analysis">("overview");
+  // Stepper Progression State
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [maxUnlockedStep, setMaxUnlockedStep] = useState<number>(0);
 
   // ── STATE: Benchmark Lab ──
   const [datasetType, setDatasetType] = useState<string>("random");
@@ -176,6 +179,10 @@ export default function Home() {
   const [benchResults, setBenchResults] = useState<BenchmarkResult[]>([]);
   const [benchLoading, setBenchLoading] = useState<boolean>(false);
   const [benchError, setBenchError] = useState<string | null>(null);
+
+  // Terminal logging simulation
+  const [telemetryLogs, setTelemetryLogs] = useState<string[]>([]);
+  const [telemetryActive, setTelemetryActive] = useState<boolean>(false);
 
   // ── STATE: Local Run History ──
   const [runHistory, setRunHistory] = useState<HistoryItem[]>(() => {
@@ -230,9 +237,45 @@ export default function Home() {
     }
   };
 
+  const runTelemetryAnimation = (size: number, rawResults: BenchmarkResult[]) => {
+    setTelemetryActive(true);
+    const messages = [
+      `[INFO] Connecting to native performance kernels...`,
+      `[INFO] Target environment: C++17 native compiler`,
+      `[INFO] Generating ${datasetType} distribution dataset (N = ${size.toLocaleString()})`,
+      `[INFO] Seed value: ${seed} | Average run passes: ${timingRuns}`,
+      `[INFO] Commencing benchmark sweeps for: ${selectedAlgos.map(getAlgoDisplayName).join(", ")}`,
+      `[INFO] Running pivot strategy: ${pivotStrategy.replace(/_/g, " ")}`,
+      `[INFO] Evaluating crossover threshold boundary at: ${threshold} elements`,
+      `[SUCCESS] Native hardware cycles collected successfully.`,
+      `[SUCCESS] Telemetry verified. Loading analytical workstation...`
+    ];
+
+    setTelemetryLogs([messages[0]]);
+    let i = 1;
+    const interval = setInterval(() => {
+      if (i < messages.length) {
+        if (messages[i]) {
+          setTelemetryLogs(prev => [...prev, messages[i]]);
+        }
+        i++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => {
+          setTelemetryActive(false);
+          setBenchResults(rawResults);
+          setCurrentStep(4);
+          if (maxUnlockedStep < 4) setMaxUnlockedStep(4);
+        }, 600);
+      }
+    }, 400);
+  };
+
   const handleRunBenchmark = async () => {
     setBenchLoading(true);
     setBenchError(null);
+    setTelemetryActive(true);
+    setTelemetryLogs([`[INFO] Starting benchmark build pipeline...`]);
     const size = getDatasetSizeFromExponent(sizeExponent);
     try {
       const res = await fetch(`${API_URL}/benchmark`, {
@@ -255,11 +298,12 @@ export default function Home() {
       }
 
       const data = await res.json();
-      setBenchResults(data.results);
       saveToHistory(data.results);
+      runTelemetryAnimation(size, data.results);
     } catch (e) {
       const err = e as Error;
       setBenchError(err.message || "An unexpected error occurred during execution.");
+      setTelemetryActive(false);
     } finally {
       setBenchLoading(false);
     }
@@ -304,7 +348,7 @@ export default function Home() {
   }
 
   const [vizStates, setVizStates] = useState<Record<string, VizState>>({});
-  const [vizThreshold, setVizThreshold] = useState<number>(10);
+  const [vizThreshold, setVizThreshold] = useState<number>(16);
 
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const generatorsRef = useRef<Record<string, Generator<void, void | number, unknown> | null>>({});
@@ -323,6 +367,14 @@ export default function Home() {
   useEffect(() => {
     vizStatesRef.current = vizStates;
   }, [vizStates]);
+
+  // Sync selected algorithms to the visualizer when moving to visualizer step
+  useEffect(() => {
+    if (currentStep === 5) {
+      setSelectedVizAlgos(selectedAlgos.slice(0, 3));
+      setVizThreshold(threshold);
+    }
+  }, [currentStep, selectedAlgos, threshold]);
 
   // Generate new visualizer dataset
   const generateNewVisualizerArray = useCallback(() => {
@@ -820,293 +872,332 @@ export default function Home() {
     };
   }, []);
 
+  // Determine fastest algorithm dynamically
+  const getFastestAlgo = () => {
+    if (benchResults.length === 0) return null;
+    return [...benchResults].reduce((min, cur) => cur.execution_time_ms < min.execution_time_ms ? cur : min, benchResults[0]);
+  };
+
+  const getResultsSummaryText = () => {
+    const best = getFastestAlgo();
+    if (!best) return "";
+    const bestName = getAlgoDisplayName(best.algorithm);
+    const timeVal = (best.execution_time_ms * 1000).toLocaleString(undefined, { maximumFractionDigits: 1 });
+    
+    switch (datasetType) {
+      case "nearly_sorted":
+        return `${bestName} completed faster than all other algorithms on this dataset (${timeVal} μs). By invoking insertion-based base runs on sorted segments, it skipped the recursive stack layers.`;
+      case "reverse_sorted":
+        return `${bestName} optimized reverse key orientations (${timeVal} μs) by managing pivot choices and swapping to fallback bounds to avoid quadratic slowdowns.`;
+      case "duplicate_heavy":
+        return `${bestName} outperformed alternative setups with repetitive keys (${timeVal} μs) by using partition balancing loops.`;
+      default:
+        return `${bestName} achieved the fastest execution run (${timeVal} μs) on this high-entropy dataset.`;
+    }
+  };
+
+  const stepsList = [
+    { id: 0, label: "Start" },
+    { id: 1, label: "Dataset" },
+    { id: 2, label: "Algorithms" },
+    { id: 3, label: "Configuration" },
+    { id: 4, label: "Results" },
+    { id: 5, label: "Visualizer" },
+    { id: 6, label: "Analysis" }
+  ];
+
+  const handleStepNavigation = (stepId: number) => {
+    if (stepId <= maxUnlockedStep) {
+      setCurrentStep(stepId);
+      if (stepId !== 5 && animationRef.current) {
+        setIsPlaying(false);
+        clearInterval(animationRef.current);
+      }
+    }
+  };
+
+  const handleNextStep = () => {
+    const next = currentStep + 1;
+    setCurrentStep(next);
+    if (maxUnlockedStep < next) {
+      setMaxUnlockedStep(next);
+    }
+  };
+
+  const handlePrevStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
   return (
-    <div className="min-h-screen bg-[#080808] text-[#FAFAFA] flex flex-col font-sans antialiased text-sm">
+    <div className="min-h-screen bg-[#050506] text-[#f8fafc] flex flex-col font-sans antialiased text-sm">
       {/* Top Navbar */}
-      <header className="border-b border-[#252525] bg-[#080808]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-2">
+      <header className="border-b border-[#1a1a22] bg-[#050506]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 rounded bg-[#10b981]/10 text-[#10b981]">
+            <Zap size={16} />
+          </div>
           <div>
-            <span className="text-sm font-semibold text-[#FAFAFA] tracking-tight">
+            <span className="text-sm font-semibold tracking-tight block text-[#f8fafc]">
               SortLab
             </span>
-            <span className="text-[10px] text-[#C9C9C9] tracking-tight block">
-              Hybrid sorting
+            <span className="text-[10px] text-[#94a3b8] tracking-tight block">
+              Guided Performance Workstation
             </span>
           </div>
         </div>
 
-        <nav className="flex gap-6 border-b border-transparent">
-          {(["overview", "benchmark", "visualizer", "analysis"] as const).map((tab) => {
-            const displayNames = {
-              overview: "Overview",
-              benchmark: "Benchmark",
-              visualizer: "Visualizer",
-              analysis: "Analysis"
-            };
+        {/* Stepper Navigation */}
+        <nav className="hidden md:flex items-center gap-2 max-w-lg">
+          {stepsList.map((step, idx) => {
+            const isCompleted = step.id < currentStep;
+            const isActive = step.id === currentStep;
+            const isUnlocked = step.id <= maxUnlockedStep;
+
             return (
-              <button 
-                key={tab}
-                onClick={() => {
-                  setActiveTab(tab);
-                  if (tab !== "visualizer" && animationRef.current) {
-                    // stop visualizer when navigating away
-                    setIsPlaying(false);
-                    clearInterval(animationRef.current);
-                  }
-                }}
-                className={`py-1.5 text-xs transition-all duration-150 relative border-b-2 ${activeTab === tab ? "border-[#22C55E] text-[#FAFAFA] font-semibold" : "border-transparent text-[#C9C9C9] hover:text-[#FAFAFA]"}`}
-              >
-                {displayNames[tab]}
-              </button>
+              <React.Fragment key={step.id}>
+                {idx > 0 && (
+                  <div className={`h-[1px] w-4 ${isCompleted ? "bg-[#10b981]" : "bg-[#1a1a22]"}`} />
+                )}
+                <button
+                  onClick={() => handleStepNavigation(step.id)}
+                  disabled={!isUnlocked}
+                  className={`flex items-center gap-1.5 text-xs py-1 px-2.5 rounded-full transition-all duration-300 ${
+                    isActive 
+                      ? "bg-[#10b981] text-[#050506] font-semibold" 
+                      : isCompleted 
+                        ? "text-[#10b981] hover:bg-[#10b981]/5" 
+                        : "text-[#64748b] cursor-not-allowed"
+                  }`}
+                >
+                  <span className="text-[10px] font-mono">
+                    {isCompleted ? <Check size={10} className="inline stroke-[3]" /> : `0${step.id}`}
+                  </span>
+                  <span>{step.label}</span>
+                </button>
+              </React.Fragment>
             );
           })}
         </nav>
 
-        <a 
-          href="https://github.com/Unceas/Efficient-Sorting" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-[#C9C9C9] hover:text-[#FAFAFA] transition duration-150"
-        >
-          GitHub
-        </a>
+        <div className="flex items-center gap-4">
+          {currentStep > 0 && (
+            <button
+              onClick={() => {
+                setCurrentStep(0);
+                setMaxUnlockedStep(0);
+                setBenchResults([]);
+              }}
+              className="text-xs text-[#64748b] hover:text-[#f8fafc] transition-colors font-medium cursor-pointer"
+            >
+              Reset Workbench
+            </button>
+          )}
+          <a 
+            href="https://github.com/Unceas/Efficient-Sorting" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs text-[#94a3b8] hover:text-[#f8fafc] transition-colors"
+          >
+            <Github size={14} />
+            <span>GitHub</span>
+          </a>
+        </div>
       </header>
 
-      <main className="flex-1 p-6 max-w-7xl mx-auto w-full flex flex-col gap-6 overflow-y-auto">
-        {/* ── PAGE 1: Overview ── */}
-        {activeTab === "overview" && (
-          <div className="flex flex-col gap-16 max-w-4xl mx-auto w-full py-8 text-xs relative">
-            
-            {/* Hero Section with Canvas Background */}
-            <div className="relative border border-[#252525] bg-[#111111] rounded px-8 py-16 flex flex-col gap-6 text-center w-full overflow-hidden">
-              {/* Subtle Sorting Background Animation */}
-              <div className="absolute inset-0 pointer-events-none opacity-30">
-                <SubtleSortingBg />
-              </div>
+      {/* Main workspace container */}
+      <main className="flex-1 p-6 max-w-5xl mx-auto w-full flex flex-col justify-start overflow-y-auto">
+        <AnimatePresence mode="wait">
+          
+          {/* STEP 0: LANDING */}
+          {currentStep === 0 && (
+            <motion.div
+              key="landing"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col gap-14 py-8 max-w-3xl mx-auto w-full"
+            >
+              {/* Typography Hero */}
+              <div className="relative border border-[#1a1a22] bg-[#0a0a0c] rounded-lg px-8 py-16 flex flex-col gap-6 text-center w-full overflow-hidden glass-panel">
+                <div className="absolute inset-0 pointer-events-none opacity-20">
+                  <SubtleSortingBg />
+                </div>
 
-              <div className="relative z-10 flex flex-col gap-4 items-center">
-                <span className="text-[9px] font-mono text-[#22C55E] border border-[#22C55E]/20 bg-[#166534]/5 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                  System architecture v3.0
-                </span>
-                <h1 className="text-3xl md:text-4xl font-semibold text-[#FAFAFA] tracking-tight max-w-xl">
-                  Performance engineering workstation for hybrid sorting
-                </h1>
-                <p className="text-[#C9C9C9] leading-relaxed text-xs max-w-lg">
-                  Empirically analyze crossover thresholds, compile native C++ kernels, and inspect execution telemetry in a unified dark-mode workshop.
-                </p>
-                <div className="flex gap-4 justify-center mt-2">
-                  <button
-                    onClick={() => setActiveTab("benchmark")}
-                    className="bg-[#22C55E] hover:bg-[#4ADE80] active:bg-[#166534] text-[#050505] font-semibold px-6 py-2.5 rounded transition duration-150 text-xs"
-                  >
-                    Start benchmarking
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("visualizer")}
-                    className="bg-[#181818] border border-[#252525] hover:bg-[#111111] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded transition duration-150 text-xs"
-                  >
-                    Explore visualizer
-                  </button>
+                <div className="relative z-10 flex flex-col gap-4 items-center">
+                  <span className="text-[9px] font-mono text-[#10b981] border border-[#10b981]/20 bg-[#10b981]/5 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                    Performance engineering workstation
+                  </span>
+                  <h1 className="text-3xl md:text-5xl font-bold text-[#f8fafc] tracking-tight max-w-2xl leading-tight">
+                    Sorting, re-engineered for performance.
+                  </h1>
+                  <p className="text-[#94a3b8] text-sm max-w-lg leading-relaxed">
+                    Empirically analyze crossover thresholds, compile native C++ kernels, and inspect execution telemetry in a guided performance environment.
+                  </p>
+                  
+                  <div className="mt-4">
+                    <button
+                      onClick={() => {
+                        setCurrentStep(1);
+                        if (maxUnlockedStep < 1) setMaxUnlockedStep(1);
+                      }}
+                      className="bg-[#10b981] hover:bg-[#34d399] text-[#050506] font-semibold px-8 py-3 rounded-md transition duration-200 text-xs flex items-center gap-2 emerald-glow hover:emerald-glow-strong cursor-pointer"
+                    >
+                      <span>Begin Guided Experiment</span>
+                      <ArrowRight size={14} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Narrative Section 1: Introduction */}
-            <div className="flex flex-col md:flex-row gap-8 items-start justify-between">
-              <div className="flex flex-col gap-2 max-w-sm">
-                <span className="text-[#8A8A8A] uppercase tracking-wider font-mono text-[9px]">Introduction</span>
-                <h2 className="text-base font-semibold text-[#FAFAFA]">Why hybrid sorting?</h2>
-              </div>
-              <div className="flex-1 text-[#C9C9C9] leading-relaxed flex flex-col gap-4">
-                <p>
-                  Modern sorting libraries are rarely single-algorithm implementations. Instead, they rely on adaptive systems that transition between partitioning logic and base-case algorithms depending on size, depth, and memory thresholds.
-                </p>
-                <p>
-                  This workstation exposes those crossover regions. By running optimized native C++ binaries, it captures hardware comparisons, cache-friendly array writes, and memory footprint metrics to determine the mathematical sweet spot of sorting pipelines.
-                </p>
-              </div>
-            </div>
-
-            {/* Narrative Section 2: Workflow Pipeline */}
-            <div className="border-t border-[#252525] pt-12 flex flex-col gap-6">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#8A8A8A] uppercase tracking-wider font-mono text-[9px]">System progression</span>
-                <h2 className="text-base font-semibold text-[#FAFAFA]">Workstation workflow</h2>
-              </div>
-              
-              {/* Vertical or Horizontal Pipeline representation */}
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 pt-2">
-                {[
-                  { step: "Generate dataset", desc: "Uniform, duplicate-heavy, or inverted sets." },
-                  { step: "Run benchmark", desc: "Sweep cross-over thresholds in compiled C++." },
-                  { step: "Compare results", desc: "Compare timing, swaps, and comparisons." },
-                  { step: "Analyze performance", desc: "Find optimal cutoff values via scale curves." },
-                  { step: "Visualize execution", desc: "Simulate recursive boundaries side-by-side." }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex flex-col gap-2 border-l border-[#252525] pl-4 py-2 relative">
-                    <span className="text-[10px] font-mono text-[#22C55E] font-semibold">0{idx + 1}</span>
-                    <h3 className="text-[11px] font-semibold text-[#FAFAFA]">{item.step}</h3>
-                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Narrative Section 3: Core Pillars */}
-            <div className="border-t border-[#252525] pt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="flex flex-col gap-3">
-                <span className="font-mono text-[10px] text-[#22C55E]">01 / Benchmark Lab</span>
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Hardware telemetry</h3>
-                <p className="text-[#C9C9C9] leading-relaxed">
-                  Test custom sorting targets against varying datasets. View monospaced execution times, swap limits, and memory usage indexes in real-time.
-                </p>
-              </div>
-              
-              <div className="flex flex-col gap-3">
-                <span className="font-mono text-[10px] text-[#22C55E]">02 / Live Visualizer</span>
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Sub-algorithm boundary swaps</h3>
-                <p className="text-[#C9C9C9] leading-relaxed">
-                  Observe the exact moment when QuickSort partitions hand over execution to base-case MergeSort or InsertionSort routines under set thresholds.
-                </p>
-              </div>
-              
-              <div className="flex flex-col gap-3">
-                <span className="font-mono text-[10px] text-[#22C55E]">03 / Complexity Analysis</span>
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Distribution intelligence</h3>
-                <p className="text-[#C9C9C9] leading-relaxed">
-                  Inspect optimal crossover curves, verify average/worst-case limits, and analyze sorting efficiency profiles based on inversion indices.
-                </p>
-              </div>
-            </div>
-
-            {/* Narrative Section 4: Product Preview Mockup */}
-            <div className="border-t border-[#252525] pt-12 flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#8A8A8A] uppercase tracking-wider font-mono text-[9px]">Workspace interface preview</span>
-                <h2 className="text-base font-semibold text-[#FAFAFA]">Developer workshop</h2>
-              </div>
-              
-              {/* Premium CSS-based Desktop Mockup */}
-              <div className="border border-[#252525] bg-[#111111] rounded overflow-hidden flex flex-col">
-                {/* Header Window Controls */}
-                <div className="bg-[#181818] border-b border-[#252525] px-4 py-2 flex items-center justify-between">
-                  <div className="flex gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#232323]" />
-                    <span className="w-2 h-2 rounded-full bg-[#232323]" />
-                    <span className="w-2 h-2 rounded-full bg-[#232323]" />
-                  </div>
-                  <span className="text-[10px] font-mono text-[#8A8A8A]">hybrid_sorting_lab_workbench.json</span>
-                  <div className="w-8" />
+              {/* Workflow Pipeline timeline */}
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#64748b] uppercase tracking-wider font-mono text-[9px]">Interactive pipeline</span>
+                  <h2 className="text-base font-semibold text-[#f8fafc]">Experiment Workflow</h2>
                 </div>
                 
-                {/* Mock Split Pane Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-3 min-h-[220px]">
-                  {/* Mock Sidebar Controls */}
-                  <div className="border-r border-[#252525] p-4 flex flex-col gap-3 bg-[#111111] text-[10px] font-mono">
-                    <span className="text-[#8A8A8A] uppercase text-[9px] font-semibold mb-1">Configuration parameters</span>
-                    <div className="flex justify-between border-b border-[#252525] pb-1">
-                      <span className="text-[#C9C9C9]">Dataset type:</span>
-                      <span className="text-[#FAFAFA]">Random (uniform)</span>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  {[
+                    { step: "Configure Dataset", desc: "Select distribution settings and sequence limits." },
+                    { step: "Pick Algorithms", desc: "Identify base frameworks and hybrid target configurations." },
+                    { step: "Run Native Kernels", desc: "Compile C++ and capture clock metrics." },
+                    { step: "Compare Results", desc: "Examine swaps, compares, and scale curves." },
+                    { step: "Visualize & Analyze", desc: "Watch recursion limits in real-time." }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex flex-col gap-2 border-l border-[#1a1a22] pl-4 py-2 hover:border-[#10b981]/30 transition-colors">
+                      <span className="text-[10px] font-mono text-[#10b981] font-semibold">0{idx + 1}</span>
+                      <h3 className="text-xs font-semibold text-[#f8fafc]">{item.step}</h3>
+                      <p className="text-[11px] text-[#64748b] leading-relaxed">{item.desc}</p>
                     </div>
-                    <div className="flex justify-between border-b border-[#252525] pb-1">
-                      <span className="text-[#C9C9C9]">Dataset size (n):</span>
-                      <span className="text-[#FAFAFA]">10,000</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Product Preview Mockup */}
+              <div className="flex flex-col gap-4 border-t border-[#1a1a22] pt-12">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#64748b] uppercase tracking-wider font-mono text-[9px]">Workspace interface preview</span>
+                  <h2 className="text-base font-semibold text-[#f8fafc]">Product Preview</h2>
+                </div>
+                
+                {/* CSS Window Mockup */}
+                <div className="border border-[#1a1a22] bg-[#0a0a0c] rounded-lg overflow-hidden flex flex-col glass-panel">
+                  {/* Header Window Controls */}
+                  <div className="bg-[#0f0f12] border-b border-[#1a1a22] px-4 py-2.5 flex items-center justify-between">
+                    <div className="flex gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-[#1a1a22]" />
+                      <span className="w-2 h-2 rounded-full bg-[#1a1a22]" />
+                      <span className="w-2 h-2 rounded-full bg-[#1a1a22]" />
                     </div>
-                    <div className="flex justify-between border-b border-[#252525] pb-1">
-                      <span className="text-[#C9C9C9]">Threshold limit:</span>
-                      <span className="text-[#FAFAFA]">16 elements</span>
-                    </div>
-                    <div className="flex justify-between border-b border-[#252525] pb-1">
-                      <span className="text-[#C9C9C9]">Pivot rule:</span>
-                      <span className="text-[#FAFAFA]">Median of three</span>
-                    </div>
-                    <div className="mt-2 text-center border border-[#22C55E]/20 bg-[#166534]/5 text-[#22C55E] py-1.5 rounded text-[10px] font-semibold">
-                      ✓ Diagnostics verified
-                    </div>
+                    <span className="text-[10px] font-mono text-[#64748b]">sorting_workstation_telemetry.json</span>
+                    <div className="w-8" />
                   </div>
                   
-                  {/* Mock Center Panel (Simulated runtime execution table) */}
-                  <div className="col-span-2 p-4 bg-[#080808] flex flex-col gap-3 font-mono text-[10px]">
-                    <span className="text-[#8A8A8A] uppercase text-[9px] font-semibold mb-1">Execution metrics table</span>
-                    <div className="overflow-x-auto w-full">
-                      <table className="w-full text-left border-collapse text-[9px]">
-                        <thead>
-                          <tr className="border-b border-[#252525] text-[#8A8A8A]">
-                            <th className="pb-1.5">Algorithm</th>
-                            <th className="pb-1.5 text-right">Runtime (μs)</th>
-                            <th className="pb-1.5 text-right">Comparisons</th>
-                          </tr>
-                        </thead>
-                        <tbody className="text-[#C9C9C9]">
-                          <tr className="text-[#FAFAFA] bg-[#166534]/5">
-                            <td className="py-1 text-[#22C55E]">✓ Introsort</td>
-                            <td className="py-1 text-right font-bold">148.2</td>
-                            <td className="py-1 text-right">135,120</td>
-                          </tr>
-                          <tr className="border-t border-[#252525]/50">
-                            <td className="py-1">Quick + Insertion</td>
-                            <td className="py-1 text-right">174.5</td>
-                            <td className="py-1 text-right">142,504</td>
-                          </tr>
-                          <tr className="border-t border-[#252525]/50">
-                            <td className="py-1">MergeSort</td>
-                            <td className="py-1 text-right">241.1</td>
-                            <td className="py-1 text-right">132,876</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                  {/* Split Preview */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 min-h-[180px]">
+                    <div className="border-r border-[#1a1a22] p-4 flex flex-col gap-2 bg-[#0a0a0c] text-[10px] font-mono text-[#94a3b8]">
+                      <span className="text-[#64748b] uppercase text-[9px] font-semibold mb-1">active setup</span>
+                      <div className="flex justify-between border-b border-[#1a1a22]/50 pb-1">
+                        <span>Distribution:</span>
+                        <span className="text-[#f8fafc]">Nearly sorted</span>
+                      </div>
+                      <div className="flex justify-between border-b border-[#1a1a22]/50 pb-1">
+                        <span>Data Scale:</span>
+                        <span className="text-[#f8fafc]">10,000 items</span>
+                      </div>
+                      <div className="flex justify-between border-b border-[#1a1a22]/50 pb-1">
+                        <span>Threshold limit:</span>
+                        <span className="text-[#f8fafc]">16 elements</span>
+                      </div>
                     </div>
-                    <div className="mt-auto border-t border-[#252525] pt-2 text-[9px] text-[#8A8A8A] flex justify-between">
-                      <span>Diagnostics: introsort complete</span>
-                      <span>127.0.0.1:8000</span>
+                    <div className="col-span-2 p-4 bg-[#050506] flex flex-col justify-between font-mono text-[10px]">
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[#64748b] uppercase text-[9px] font-semibold">performance comparison</span>
+                        <div className="flex justify-between text-[#10b981] bg-[#10b981]/5 px-2 py-1 rounded">
+                          <span>✓ Introsort</span>
+                          <span>135.2 μs</span>
+                        </div>
+                        <div className="flex justify-between text-[#94a3b8] px-2 py-1">
+                          <span>Quick + Insertion</span>
+                          <span>162.8 μs</span>
+                        </div>
+                        <div className="flex justify-between text-[#94a3b8] px-2 py-1">
+                          <span>MergeSort</span>
+                          <span>210.4 μs</span>
+                        </div>
+                      </div>
+                      <span className="text-[8px] text-[#64748b] text-right mt-4">Native C++ process complete</span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            
-          </div>
-        )}
+            </motion.div>
+          )}
 
-        {/* ── PAGE 2: Benchmark ── */}
-        {activeTab === "benchmark" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Lab Configuration Panel */}
-            <div className="bg-[#111111] border border-[#252525] rounded p-5 flex flex-col gap-4">
-              <div className="border-b border-[#252525] pb-2 mb-1">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Configuration panel</h3>
+          {/* STEP 1: GENERATE DATASET */}
+          {currentStep === 1 && (
+            <motion.div
+              key="step1"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col gap-8 max-w-2xl mx-auto w-full py-6"
+            >
+              <div className="flex flex-col gap-1">
+                <span className="text-[#10b981] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 1 of 6</span>
+                <h2 className="text-xl font-semibold text-[#f8fafc]">Generate Distribution Dataset</h2>
+                <p className="text-[#94a3b8] text-xs">Choose the key distribution structure and size limit to test your sorting architectures.</p>
               </div>
 
-              {/* Dataset Type */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-[#C9C9C9] font-semibold">Dataset type</label>
-                <select
-                  value={datasetType}
-                  onChange={(e) => setDatasetType(e.target.value)}
-                  className="bg-[#080808] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
-                >
-                  <option value="random">Random (uniform)</option>
-                  <option value="nearly_sorted">Nearly sorted</option>
-                  <option value="reverse_sorted">Reverse sorted</option>
-                  <option value="duplicate_heavy">Duplicate heavy</option>
-                </select>
+              {/* Dataset Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { id: "random", label: "Uniform Random", desc: "Standard random distribution. Generates balanced testing scenarios." },
+                  { id: "nearly_sorted", label: "Nearly Sorted", desc: "Low inversion count. Tests insertion-based hybrid recovery speeds." },
+                  { id: "reverse_sorted", label: "Reverse Sorted", desc: "Maximum inversion count. Tests pivot logic and heap fallback rules." },
+                  { id: "duplicate_heavy", label: "Duplicate Heavy", desc: "Repetitive value collections. Checks partition behavior on equal keys." }
+                ].map(card => {
+                  const isSelected = datasetType === card.id;
+                  return (
+                    <button
+                      key={card.id}
+                      onClick={() => setDatasetType(card.id)}
+                      className={`text-left p-4 rounded-lg border transition-all duration-300 flex flex-col gap-1.5 cursor-pointer hover-lift ${
+                        isSelected 
+                          ? "border-[#10b981] bg-[#10b981]/5 text-[#f8fafc]" 
+                          : "border-[#1a1a22] bg-[#0a0a0c] text-[#94a3b8] hover:border-[#10b981]/20 hover:text-[#f8fafc]"
+                      }`}
+                    >
+                      <div className="flex justify-between items-center w-full">
+                        <span className="text-xs font-semibold">{card.label}</span>
+                        {isSelected && <span className="w-2 h-2 rounded-full bg-[#10b981]" />}
+                      </div>
+                      <p className="text-[11px] leading-relaxed text-[#64748b]">{card.desc}</p>
+                    </button>
+                  );
+                })}
               </div>
 
-              {/* Dataset Size Slider */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center text-[10px] text-[#C9C9C9] font-semibold">
-                  <span>Dataset size (n)</span>
-                  <span className="text-[#22C55E] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
+              {/* Dataset Scale Slider */}
+              <div className="p-5 border border-[#1a1a22] bg-[#0a0a0c] rounded-lg flex flex-col gap-4">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-[#94a3b8] font-semibold">Dataset Size (N)</span>
+                  <span className="text-[#10b981] font-mono font-bold text-sm">
+                    {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}
+                  </span>
                 </div>
+                
                 <input 
                   type="range"
                   min="2"
                   max="6"
                   value={sizeExponent}
                   onChange={(e) => setSizeExponent(parseInt(e.target.value))}
-                  className="accent-[#22C55E] bg-[#080808] h-1.5 rounded cursor-pointer"
+                  className="w-full accent-[#10b981] bg-[#050506] cursor-pointer"
                 />
-                <div className="flex justify-between text-[9px] text-[#8A8A8A] px-1 font-mono">
+
+                <div className="flex justify-between text-[9px] text-[#64748b] px-1 font-mono">
                   <span>100</span>
                   <span>1K</span>
                   <span>10K</span>
@@ -1115,311 +1206,525 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Crossover Threshold */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-[#C9C9C9] font-semibold">Crossover threshold</label>
-                <select
-                  value={threshold}
-                  onChange={(e) => setThreshold(parseInt(e.target.value))}
-                  className="bg-[#080808] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+              {/* Bottom Actions */}
+              <div className="flex justify-between items-center pt-2">
+                <button
+                  onClick={handlePrevStep}
+                  className="px-4 py-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] text-[#94a3b8] transition-colors rounded text-xs cursor-pointer font-medium"
                 >
-                  <option value={8}>8 elements</option>
-                  <option value={16}>16 elements</option>
-                  <option value={32}>32 elements</option>
-                  <option value={64}>64 elements</option>
-                </select>
+                  Back
+                </button>
+                <button
+                  onClick={handleNextStep}
+                  className="bg-[#10b981] hover:bg-[#34d399] text-[#050506] font-semibold px-6 py-2.5 rounded transition-all duration-200 text-xs flex items-center gap-1.5 emerald-glow cursor-pointer"
+                >
+                  <span>Select Algorithms</span>
+                  <ChevronRight size={13} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 2: SELECT ALGORITHMS */}
+          {currentStep === 2 && (
+            <motion.div
+              key="step2"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col gap-8 max-w-2xl mx-auto w-full py-6"
+            >
+              <div className="flex flex-col gap-1">
+                <span className="text-[#10b981] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 2 of 6</span>
+                <h2 className="text-xl font-semibold text-[#f8fafc]">Select Testing Candidates</h2>
+                <p className="text-[#94a3b8] text-xs">Identify target framework setups and hybrid logic chains to evaluate side-by-side.</p>
               </div>
 
-              {/* Pivot Strategy */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-[#C9C9C9] font-semibold">Pivot strategy</label>
-                <select
-                  value={pivotStrategy}
-                  onChange={(e) => setPivotStrategy(e.target.value)}
-                  className="bg-[#080808] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
-                >
-                  <option value="first">First element</option>
-                  <option value="random">Random index</option>
-                  <option value="median_of_three">Median of three</option>
-                </select>
-              </div>
-
-              {/* Algorithms Selection Checkboxes */}
-              <div className="flex flex-col gap-2">
-                <label className="text-[10px] text-[#C9C9C9] font-semibold">Algorithm selection</label>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  {[
-                    { id: "quicksort", name: "QuickSort" },
-                    { id: "mergesort", name: "MergeSort" },
-                    { id: "heapsort", name: "HeapSort" },
-                    { id: "quick_insertion", name: "Quick + Insertion" },
-                    { id: "quick_merge", name: "Quick + Merge" },
-                    { id: "introsort", name: "Introsort" }
-                  ].map(algoItem => (
-                    <label 
-                      key={algoItem.id} 
-                      className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition duration-150 bg-[#111111] ${selectedAlgos.includes(algoItem.id) ? "border-[#4ADE80] text-[#FAFAFA]" : "border-[#252525] text-[#C9C9C9] hover:border-[#22C55E]"}`}
+              {/* Algorithms Cards Checklist */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { id: "quicksort", name: "QuickSort", desc: "Classic O(N log N) recursive partitioning logic." },
+                  { id: "mergesort", name: "MergeSort", desc: "Stable sorting array writes. Consistent O(N log N) complexity." },
+                  { id: "heapsort", name: "HeapSort", desc: "In-place pivot-independent comparison limits." },
+                  { id: "quick_insertion", name: "Quick + Insertion", desc: "Hybrid model: Partition shifts to insertion sort at threshold bounds." },
+                  { id: "quick_merge", name: "Quick + Merge", desc: "Hybrid model: Swap partitioning to merge sort below threshold bounds." },
+                  { id: "introsort", name: "Introsort", desc: "Hybrid model: QuickSort, with Insertion bounds and HeapSort recursion safety." }
+                ].map(algo => {
+                  const isChecked = selectedAlgos.includes(algo.id);
+                  return (
+                    <button
+                      key={algo.id}
+                      onClick={() => toggleAlgoSelection(algo.id)}
+                      className={`text-left p-3.5 rounded-lg border transition-all duration-200 flex items-start gap-3 cursor-pointer ${
+                        isChecked 
+                          ? "border-[#10b981]/50 bg-[#10b981]/5 text-[#f8fafc]" 
+                          : "border-[#1a1a22] bg-[#0a0a0c] text-[#94a3b8] hover:border-[#10b981]/20 hover:text-[#f8fafc]"
+                      }`}
                     >
-                      <input 
-                        type="checkbox"
-                        checked={selectedAlgos.includes(algoItem.id)}
-                        onChange={() => toggleAlgoSelection(algoItem.id)}
-                        className="accent-[#22C55E] rounded"
-                      />
-                      <span>{algoItem.name}</span>
-                    </label>
-                  ))}
-                </div>
+                      <div className="mt-0.5">
+                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-colors ${
+                          isChecked ? "bg-[#10b981] border-[#10b981]" : "border-[#64748b]"
+                        }`}>
+                          {isChecked && <Check size={10} className="text-[#050506] stroke-[3]" />}
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-semibold">{algo.name}</span>
+                        <p className="text-[11px] leading-relaxed text-[#64748b]">{algo.desc}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Conversational summary */}
+              <div className="flex items-center gap-3 p-4 border border-[#1a1a22] bg-[#0a0a0c] rounded-lg">
+                <Info size={16} className="text-[#10b981] flex-shrink-0" />
+                <p className="text-xs text-[#94a3b8] leading-relaxed">
+                  Comparing <strong className="text-[#f8fafc]">{selectedAlgos.length} algorithms</strong> on a <strong className="text-[#f8fafc]">{datasetType.replace("_", " ")}</strong> dataset of scale <strong className="text-[#f8fafc]">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</strong>.
+                </p>
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="flex justify-between items-center pt-2">
+                <button
+                  onClick={handlePrevStep}
+                  className="px-4 py-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] text-[#94a3b8] transition-colors rounded text-xs cursor-pointer font-medium"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleNextStep}
+                  disabled={selectedAlgos.length === 0}
+                  className="bg-[#10b981] hover:bg-[#34d399] text-[#050506] font-semibold px-6 py-2.5 rounded transition-all duration-200 text-xs flex items-center gap-1.5 disabled:bg-[#1a1a22] disabled:text-[#64748b] disabled:cursor-not-allowed emerald-glow cursor-pointer"
+                >
+                  <span>Configure Settings</span>
+                  <ChevronRight size={13} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 3: ADVANCED CONFIGURATION & EXECUTION */}
+          {currentStep === 3 && (
+            <motion.div
+              key="step3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col gap-6 max-w-2xl mx-auto w-full py-6"
+            >
+              <div className="flex flex-col gap-1">
+                <span className="text-[#10b981] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 3 of 6</span>
+                <h2 className="text-xl font-semibold text-[#f8fafc]">Configuration & Benchmark Run</h2>
+                <p className="text-[#94a3b8] text-xs">Expose crossover limits, customize pivot selections, and run native C++ execution sweeps.</p>
+              </div>
+
+              {/* Collapsible Advanced Config Accordion */}
+              <div className="border border-[#1a1a22] bg-[#0a0a0c] rounded-lg overflow-hidden transition-all duration-300">
+                <button
+                  onClick={() => setAdvancedOpen(!advancedOpen)}
+                  className="w-full flex items-center justify-between p-4 text-xs font-semibold text-[#f8fafc] hover:bg-[#0f0f12] transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal size={14} className="text-[#10b981]" />
+                    <span>Advanced Configurations</span>
+                  </div>
+                  <span className="text-[#64748b] text-[10px]">
+                    {advancedOpen ? "Click to collapse" : "Click to view settings"}
+                  </span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {advancedOpen && (
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: "auto" }}
+                      exit={{ height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-4 border-t border-[#1a1a22] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#050506]">
+                        {/* Crossover Threshold */}
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[#94a3b8] font-semibold">Crossover Threshold</label>
+                          <select
+                            value={threshold}
+                            onChange={(e) => setThreshold(parseInt(e.target.value))}
+                            className="bg-[#0a0a0c] border border-[#1a1a22] rounded px-3 py-2 text-[#f8fafc] focus:outline-none focus:border-[#10b981] text-xs transition duration-150 cursor-pointer"
+                          >
+                            <option value={8}>8 elements</option>
+                            <option value={16}>16 elements (sweet spot)</option>
+                            <option value={32}>32 elements</option>
+                            <option value={64}>64 elements</option>
+                          </select>
+                        </div>
+
+                        {/* Pivot Strategy */}
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[#94a3b8] font-semibold">Pivot Selection Rule</label>
+                          <select
+                            value={pivotStrategy}
+                            onChange={(e) => setPivotStrategy(e.target.value)}
+                            className="bg-[#0a0a0c] border border-[#1a1a22] rounded px-3 py-2 text-[#f8fafc] focus:outline-none focus:border-[#10b981] text-xs transition duration-150 cursor-pointer"
+                          >
+                            <option value="first">First element</option>
+                            <option value="random">Random index</option>
+                            <option value="median_of_three">Median of three</option>
+                          </select>
+                        </div>
+
+                        {/* Seed */}
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[#94a3b8] font-semibold">Random Generator Seed</label>
+                          <input
+                            type="number"
+                            value={seed}
+                            onChange={(e) => setSeed(parseInt(e.target.value) || 42)}
+                            className="bg-[#0a0a0c] border border-[#1a1a22] rounded px-3 py-2 text-[#f8fafc] focus:outline-none focus:border-[#10b981] text-xs transition duration-150"
+                          />
+                        </div>
+
+                        {/* Timing Runs */}
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[#94a3b8] font-semibold">Average Run Passes</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            value={timingRuns}
+                            onChange={(e) => setTimingRuns(parseInt(e.target.value) || 5)}
+                            className="bg-[#0a0a0c] border border-[#1a1a22] rounded px-3 py-2 text-[#f8fafc] focus:outline-none focus:border-[#10b981] text-xs transition duration-150"
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Action Button */}
-              <button
-                onClick={handleRunBenchmark}
-                disabled={benchLoading}
-                className="w-full flex items-center justify-center gap-2 border border-[#FAFAFA] bg-[#FAFAFA] text-[#080808] hover:bg-transparent hover:text-[#FAFAFA] hover:border-[#22C55E] disabled:bg-[#181818] disabled:text-[#8A8A8A] disabled:border-[#252525] font-semibold py-2.5 rounded transition duration-150 text-xs mt-2 emerald-glow"
-              >
-                {benchLoading ? "Running..." : "Run benchmark"}
-              </button>
-            </div>
-
-            {/* Results, Charts & Summary Panels */}
-            <div className="lg:col-span-2 flex flex-col gap-6">
-              {benchError && (
-                <div className="bg-[#166534]/10 border border-[#22C55E]/20 text-[#22C55E] p-4 rounded text-xs">
-                  {benchError}
-                </div>
-              )}
-
-              {/* Benchmark Summary Printout */}
-              {benchResults.length > 0 && (
-                (() => {
-                  const best = [...benchResults].reduce((min, cur) => cur.execution_time_ms < min.execution_time_ms ? cur : min, benchResults[0]);
-                  return (
-                    <div className="font-mono text-xs text-[#C9C9C9] border-b border-[#252525] pb-3">
-                      Diagnostics: <span className="text-[#22C55E]">{getAlgoDisplayName(best.algorithm)}</span> completed in <span className="text-[#FAFAFA] font-bold">{(best.execution_time_ms * 1000).toFixed(1)} μs</span> (fastest)
-                    </div>
-                  );
-                })()
-              )}
-
-              {/* Results Table */}
-              <div className="bg-[#111111] border border-[#252525] rounded p-5">
-                <h3 className="text-xs font-semibold text-[#FAFAFA] mb-4 border-b border-[#252525] pb-2">
-                  Benchmark results
-                </h3>
-                {benchResults.length === 0 ? (
-                  <div className="text-center py-12 text-[#8A8A8A] italic text-xs">
-                    No active results. Configure parameters and run benchmark to compile records.
-                  </div>
+              <div className="flex flex-col gap-4 mt-2">
+                {!telemetryActive && !benchLoading ? (
+                  <button
+                    onClick={handleRunBenchmark}
+                    className="w-full flex items-center justify-center gap-2 bg-[#f8fafc] text-[#050506] hover:bg-[#e2e8f0] font-semibold py-4 rounded-lg transition duration-200 text-xs emerald-glow hover:emerald-glow-strong cursor-pointer"
+                  >
+                    <Sparkles size={14} className="text-[#10b981]" />
+                    <span>Run Performance Experiment</span>
+                  </button>
                 ) : (
-                  (() => {
-                    const best = [...benchResults].reduce((min, cur) => cur.execution_time_ms < min.execution_time_ms ? cur : min, benchResults[0]);
-                    return (
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
-                          <thead>
-                            <tr className="border-b border-[#252525] text-[#C9C9C9] font-semibold text-[10px]">
-                              <th className="py-2 px-3">Algorithm</th>
-                              <th className="py-2 px-3 text-right">Runtime (μs)</th>
-                              <th className="py-2 px-3 text-right">Comparisons</th>
-                              <th className="py-2 px-3 text-right">Swaps / writes</th>
-                              <th className="py-2 px-3 text-right">Memory (B)</th>
-                            </tr>
-                          </thead>
-                          <tbody className="font-mono text-[#C9C9C9]">
-                            {benchResults.map((r, idx) => {
-                              const isFastest = r.algorithm === best.algorithm;
-                              const rowBg = isFastest ? "bg-[#166534]/5 text-[#FAFAFA]" : "hover:bg-[#181818]/20";
-                              const borderCell = (pos: "first" | "middle" | "last") => {
-                                if (!isFastest) return "border-b border-[#252525] py-2 px-3";
-                                if (pos === "first") return "border-t border-b border-l border-[#22C55E] py-2 px-3 text-[#22C55E]";
-                                if (pos === "last") return "border-t border-b border-r border-[#22C55E] py-2 px-3";
-                                return "border-t border-b border-[#22C55E] py-2 px-3";
-                              };
-
-                              return (
-                                <tr key={idx} className={rowBg}>
-                                  <td className={borderCell("first")}>
-                                    {isFastest ? `✓ ${getAlgoDisplayName(r.algorithm)}` : getAlgoDisplayName(r.algorithm)}
-                                  </td>
-                                  <td className={`${borderCell("middle")} text-right font-bold`}>
-                                    {(r.execution_time_ms * 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })}
-                                  </td>
-                                  <td className={`${borderCell("middle")} text-right`}>
-                                    {r.comparisons.toLocaleString()}
-                                  </td>
-                                  <td className={`${borderCell("middle")} text-right`}>
-                                    {r.swaps.toLocaleString()}
-                                  </td>
-                                  <td className={`${borderCell("last")} text-right`}>
-                                    {r.memory_usage_bytes ? r.memory_usage_bytes.toLocaleString() : "0"}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    );
-                  })()
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2 justify-center py-2">
+                      <span className="w-1.5 h-1.5 bg-[#10b981] rounded-full animate-ping" />
+                      <span className="text-xs text-[#10b981] font-mono">Running C++ native telemetry...</span>
+                    </div>
+                  </div>
                 )}
               </div>
 
-              {/* Graphs Area */}
-              {benchResults.length > 0 && (
-                (() => {
-                  const best = [...benchResults].reduce((min, cur) => cur.execution_time_ms < min.execution_time_ms ? cur : min, benchResults[0]);
-                  return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Runtime Bar Chart */}
-                      <div className="bg-[#111111] border border-[#252525] rounded p-5">
-                        <h4 className="text-xs font-semibold text-[#C9C9C9] mb-4">Runtime comparison (μs)</h4>
-                        <div className="h-56">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={benchResults.map(r => ({ ...r, runtime_us: r.execution_time_ms * 1000 }))}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="#252525" />
-                              <XAxis dataKey="algorithm" stroke="#C9C9C9" tickFormatter={(v) => v.replace("quick_", "Q+").replace("sort", "")} style={{ fontSize: 9 }} />
-                              <YAxis stroke="#C9C9C9" style={{ fontSize: 9 }} />
-                              <Tooltip contentStyle={{ backgroundColor: '#111111', borderColor: '#252525', fontSize: 10, color: '#FAFAFA' }} />
-                              <Bar dataKey="runtime_us" name="Time (μs)" radius={[2, 2, 0, 0]}>
-                                {benchResults.map((entry, index) => {
-                                  const isFastest = entry.algorithm === best.algorithm;
-                                  return <Cell key={`cell-${index}`} fill={isFastest ? "#22C55E" : "#232323"} stroke={isFastest ? "#22C55E" : "#737373"} strokeWidth={1} />;
-                                })}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-
-                      {/* Scale Line Chart (Estimates based on scaling curves) */}
-                      <div className="bg-[#111111] border border-[#252525] rounded p-5">
-                        <h4 className="text-xs font-semibold text-[#C9C9C9] mb-4">Performance vs dataset size</h4>
-                        <div className="h-56">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={[
-                              { size: "100", quicksort: 5, mergesort: 8, heapsort: 9, introsort: 4 },
-                              { size: "1K", quicksort: 65, mergesort: 92, heapsort: 104, introsort: 55 },
-                              { size: "10K", quicksort: 780, mergesort: 1100, heapsort: 1250, introsort: 680 },
-                              { size: "100K", quicksort: 9100, mergesort: 13200, heapsort: 14800, introsort: 8100 }
-                            ]}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="#252525" />
-                              <XAxis dataKey="size" stroke="#C9C9C9" style={{ fontSize: 9 }} />
-                              <YAxis stroke="#C9C9C9" style={{ fontSize: 9 }} />
-                              <Tooltip contentStyle={{ backgroundColor: '#111111', borderColor: '#252525', fontSize: 10, color: '#FAFAFA' }} />
-                              <Line type="monotone" dataKey="introsort" stroke="#22C55E" strokeWidth={1.5} name="Introsort" dot={false} />
-                              <Line type="monotone" dataKey="quicksort" stroke="#C9C9C9" strokeWidth={1.2} name="Quick" dot={false} />
-                              <Line type="monotone" dataKey="mergesort" stroke="#FAFAFA" strokeWidth={1.2} name="Merge" dot={false} />
-                              <Line type="monotone" dataKey="heapsort" stroke="#8A8A8A" strokeWidth={1.2} name="Heap" dot={false} />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()
+              {/* API error view */}
+              {benchError && (
+                <div className="bg-[#ef4444]/10 border border-[#ef4444]/20 text-[#ef4444] p-4 rounded-md text-xs flex items-center gap-2">
+                  <ShieldAlert size={14} />
+                  <span>{benchError}</span>
+                </div>
               )}
 
-              {/* History and Exports Optional features */}
-              {runHistory.length > 0 && (
-                <div className="bg-[#111111] border border-[#252525] rounded p-5">
-                  <div className="flex items-center justify-between border-b border-[#252525] pb-2 mb-3">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-semibold text-[#FAFAFA]">Local experiment history</h4>
-                    </div>
-                    <button
-                      onClick={clearHistory}
-                      className="text-[10px] text-[#22C55E] hover:underline font-semibold"
-                    >
-                      Clear
-                    </button>
+              {/* Telemetry log simulator console */}
+              {(telemetryActive || telemetryLogs.length > 0) && (
+                <div className="bg-[#050507] border border-[#1a1a22] rounded-lg p-4 font-mono text-[11px] text-[#94a3b8] flex flex-col gap-1.5 min-h-[190px] justify-start shadow-inner">
+                  <div className="flex justify-between items-center border-b border-[#1a1a22] pb-1.5 mb-1.5 text-[9px] text-[#64748b]">
+                    <span>WORKSTATION DIAGNOSTICS</span>
+                    <span>ACTIVE PORT: 8000</span>
                   </div>
-                  
-                  <div className="max-h-40 overflow-y-auto text-[11px] font-mono flex flex-col gap-2">
-                    {runHistory.map(h => (
-                      <div key={h.id} className="flex justify-between items-center py-1 border-b border-[#252525] text-[#C9C9C9]">
-                        <span>{h.date} | {h.dataset} (n={h.size.toLocaleString()})</span>
-                        <span>{getAlgoDisplayName(h.algorithm)}: <strong className="text-[#22C55E]">{(h.runtime_ms * 1000).toFixed(0)} μs</strong></span>
+                  <div className="flex-1 flex flex-col gap-1 overflow-y-auto max-h-[160px]">
+                    {telemetryLogs.map((log, idx) => (
+                      <div key={idx} className={log && typeof log === "string" && log.startsWith("[SUCCESS]") ? "text-[#10b981]" : "text-[#94a3b8]"}>
+                        {log}
                       </div>
                     ))}
+                    {telemetryActive && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className="w-1.5 h-3 bg-[#10b981] animate-pulse" />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
-            </div>
-          </div>
-        )}
 
-        {/* ── PAGE 3: Sorting Visualizer ── */}
-        {activeTab === "visualizer" && (
-          <div className="flex flex-col gap-6">
-            {/* Visualizer Controls */}
-            <div className="bg-[#111111] border border-[#252525] rounded p-5 flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Visualizer control panel</h3>
-                <p className="text-[11px] text-[#C9C9C9]">Select algorithms to compare side-by-side, adjust array parameters, and run the visualization pipeline.</p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-                {/* Algorithm Checklist */}
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <span className="text-[10px] text-[#C9C9C9] uppercase tracking-wider font-semibold">Algorithms to visualize</span>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-1">
-                    {[
-                      { id: "introsort", name: "Introsort" },
-                      { id: "quick_insertion", name: "Quick + Insertion" },
-                      { id: "quick_merge", name: "Quick + Merge" },
-                      { id: "quicksort", name: "QuickSort" },
-                      { id: "mergesort", name: "MergeSort" },
-                      { id: "heapsort", name: "HeapSort" }
-                    ].map(algo => {
-                      const checked = selectedVizAlgos.includes(algo.id);
-                      return (
-                        <label 
-                          key={algo.id} 
-                          className={`flex items-center gap-2 p-1.5 px-2.5 rounded border text-xs cursor-pointer select-none transition duration-150 bg-[#111111] ${checked ? "border-[#4ADE80] text-[#FAFAFA]" : "border-[#252525] text-[#C9C9C9] hover:border-[#22C55E]"}`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => {
-                              if (checked) {
-                                if (selectedVizAlgos.length > 1) {
-                                  setSelectedVizAlgos(selectedVizAlgos.filter(a => a !== algo.id));
-                                }
-                              } else {
-                                setSelectedVizAlgos([...selectedVizAlgos, algo.id]);
-                              }
-                            }}
-                            className="accent-[#22C55E]"
-                          />
-                          <span>{algo.name}</span>
-                        </label>
-                      );
-                    })}
+              {/* Back button */}
+              {!benchLoading && !telemetryActive && (
+                <div className="flex justify-start">
+                  <button
+                    onClick={handlePrevStep}
+                    className="px-4 py-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] text-[#94a3b8] transition-colors rounded text-xs cursor-pointer font-medium"
+                  >
+                    Back
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* STEP 4: VIEW RESULTS & CHARTS */}
+          {currentStep === 4 && (
+            <motion.div
+              key="step4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col gap-8 w-full py-4 animate-slideup animate-once"
+            >
+              {/* Dynamic Conclusion Header */}
+              {benchResults.length > 0 && (
+                <div className="border border-[#10b981]/20 bg-[#10b981]/5 rounded-lg p-5 flex flex-col gap-1.5 shadow-sm">
+                  <span className="text-[9px] font-mono text-[#10b981] uppercase tracking-wider font-semibold">Experiment Winner</span>
+                  <h3 className="text-lg font-bold text-[#f8fafc]">
+                    🏆 {getAlgoDisplayName(getFastestAlgo()?.algorithm || "")} is the fastest sorting pipeline on this dataset
+                  </h3>
+                  <p className="text-xs text-[#94a3b8] leading-relaxed">
+                    {getResultsSummaryText()}
+                  </p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                {/* Results Metrics Table */}
+                <div className="lg:col-span-2 border border-[#1a1a22] bg-[#0a0a0c] rounded-lg p-5 flex flex-col gap-4 glass-panel">
+                  <div className="flex justify-between items-center border-b border-[#1a1a22] pb-2">
+                    <span className="text-xs font-semibold text-[#f8fafc]">Algorithm execution telemetry</span>
+                    <span className="text-[10px] text-[#64748b] font-mono">Dataset size: {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
                   </div>
+
+                  {benchResults.length === 0 ? (
+                    <div className="text-center py-12 text-[#64748b] italic text-xs">
+                      No active benchmark data. Configure parameters and run benchmark to compile records.
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="border-b border-[#1a1a22] text-[#94a3b8] font-semibold text-[10px]">
+                            <th className="py-2 px-3">Algorithm</th>
+                            <th className="py-2 px-3 text-right">Runtime (μs)</th>
+                            <th className="py-2 px-3 text-right">Comparisons</th>
+                            <th className="py-2 px-3 text-right">Swaps / writes</th>
+                            <th className="py-2 px-3 text-right">Memory (B)</th>
+                          </tr>
+                        </thead>
+                        <tbody className="font-mono text-[#94a3b8]">
+                          {benchResults.map((r, idx) => {
+                            const best = getFastestAlgo();
+                            const isFastest = r.algorithm === best?.algorithm;
+                            const rowBg = isFastest ? "bg-[#10b981]/5 text-[#f8fafc]" : "hover:bg-[#121216]/40";
+                            const borderCell = (pos: "first" | "middle" | "last") => {
+                              if (!isFastest) return "border-b border-[#1a1a22]/50 py-2.5 px-3";
+                              if (pos === "first") return "border-t border-b border-l border-[#10b981]/40 py-2.5 px-3 text-[#10b981]";
+                              if (pos === "last") return "border-t border-b border-r border-[#10b981]/40 py-2.5 px-3";
+                              return "border-t border-b border-[#10b981]/40 py-2.5 px-3";
+                            };
+
+                            return (
+                              <tr key={idx} className={`${rowBg} transition-colors`}>
+                                <td className={borderCell("first")}>
+                                  {isFastest ? `✓ ${getAlgoDisplayName(r.algorithm)}` : getAlgoDisplayName(r.algorithm)}
+                                </td>
+                                <td className={`${borderCell("middle")} text-right font-bold`}>
+                                  {(r.execution_time_ms * 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })}
+                                </td>
+                                <td className={`${borderCell("middle")} text-right`}>
+                                  {r.comparisons.toLocaleString()}
+                                </td>
+                                <td className={`${borderCell("middle")} text-right`}>
+                                  {r.swaps.toLocaleString()}
+                                </td>
+                                <td className={`${borderCell("last")} text-right`}>
+                                  {r.memory_usage_bytes ? r.memory_usage_bytes.toLocaleString() : "0"}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
 
-                {/* Array Size */}
+                {/* Local experiment run history sidebar */}
+                <div className="border border-[#1a1a22] bg-[#0a0a0c] rounded-lg p-5 flex flex-col gap-4 glass-panel">
+                  <div className="flex items-center justify-between border-b border-[#1a1a22] pb-2">
+                    <span className="text-xs font-semibold text-[#f8fafc]">Local run logs</span>
+                    {runHistory.length > 0 && (
+                      <button
+                        onClick={clearHistory}
+                        className="text-[10px] text-[#10b981] hover:underline font-semibold cursor-pointer"
+                      >
+                        Clear logs
+                      </button>
+                    )}
+                  </div>
+                  
+                  {runHistory.length === 0 ? (
+                    <div className="text-center py-10 text-[#64748b] italic text-[11px]">
+                      No historical runs stored yet.
+                    </div>
+                  ) : (
+                    <div className="max-h-[160px] overflow-y-auto text-[11px] font-mono flex flex-col gap-2.5 pr-1">
+                      {runHistory.slice(0, 10).map(h => (
+                        <div key={h.id} className="flex justify-between items-center py-1 border-b border-[#1a1a22]/50 text-[#94a3b8]">
+                          <span className="truncate max-w-[120px]">{h.dataset} (n={h.size})</span>
+                          <span>{getAlgoDisplayName(h.algorithm)}: <strong className="text-[#10b981]">{(h.runtime_ms * 1000).toFixed(0)} μs</strong></span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Performance charts section */}
+              {benchResults.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-[#1a1a22] pt-8">
+                  {/* Runtime Bar Chart */}
+                  <div className="border border-[#1a1a22] bg-[#0a0a0c] rounded-lg p-5">
+                    <h4 className="text-xs font-semibold text-[#94a3b8] mb-4">Runtime comparison (μs)</h4>
+                    <div className="h-56">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={benchResults.map(r => ({ ...r, runtime_us: r.execution_time_ms * 1000 }))}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#1a1a22" />
+                          <XAxis dataKey="algorithm" stroke="#64748b" tickFormatter={(v) => v.replace("quick_", "Q+").replace("sort", "")} style={{ fontSize: 9 }} />
+                          <YAxis stroke="#64748b" style={{ fontSize: 9 }} />
+                          <Tooltip contentStyle={{ backgroundColor: '#0a0a0c', borderColor: '#1a1a22', fontSize: 10, color: '#f8fafc' }} />
+                          <Bar dataKey="runtime_us" name="Time (μs)" radius={[2, 2, 0, 0]}>
+                            {benchResults.map((entry, index) => {
+                              const isFastest = entry.algorithm === getFastestAlgo()?.algorithm;
+                              return <Cell key={`cell-${index}`} fill={isFastest ? "#10b981" : "#1e293b"} stroke={isFastest ? "#10b981" : "#334155"} strokeWidth={1} />;
+                            })}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Scale Line Chart */}
+                  <div className="border border-[#1a1a22] bg-[#0a0a0c] rounded-lg p-5">
+                    <h4 className="text-xs font-semibold text-[#94a3b8] mb-4">Complexity reference curve (runtime scaling)</h4>
+                    <div className="h-56">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={[
+                          { size: "100", quicksort: 5, mergesort: 8, heapsort: 9, introsort: 4 },
+                          { size: "1K", quicksort: 65, mergesort: 92, heapsort: 104, introsort: 55 },
+                          { size: "10K", quicksort: 780, mergesort: 1100, heapsort: 1250, introsort: 680 },
+                          { size: "100K", quicksort: 9100, mergesort: 13200, heapsort: 14800, introsort: 8100 }
+                        ]}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#1a1a22" />
+                          <XAxis dataKey="size" stroke="#64748b" style={{ fontSize: 9 }} />
+                          <YAxis stroke="#64748b" style={{ fontSize: 9 }} />
+                          <Tooltip contentStyle={{ backgroundColor: '#0a0a0c', borderColor: '#1a1a22', fontSize: 10, color: '#f8fafc' }} />
+                          <Line type="monotone" dataKey="introsort" stroke="#10b981" strokeWidth={1.5} name="Introsort" dot={false} />
+                          <Line type="monotone" dataKey="quicksort" stroke="#475569" strokeWidth={1.2} name="Quick" dot={false} />
+                          <Line type="monotone" dataKey="mergesort" stroke="#94a3b8" strokeWidth={1.2} name="Merge" dot={false} />
+                          <Line type="monotone" dataKey="heapsort" stroke="#334155" strokeWidth={1.2} name="Heap" dot={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Bottom Actions */}
+              <div className="flex justify-between items-center pt-4 border-t border-[#1a1a22]">
+                <button
+                  onClick={() => setCurrentStep(3)}
+                  className="px-4 py-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] text-[#94a3b8] transition-colors rounded text-xs cursor-pointer font-medium"
+                >
+                  Configure parameters
+                </button>
+                <button
+                  onClick={handleNextStep}
+                  className="bg-[#10b981] hover:bg-[#34d399] text-[#050506] font-semibold px-6 py-2.5 rounded transition-all duration-200 text-xs flex items-center gap-1.5 emerald-glow cursor-pointer"
+                >
+                  <span>Visualize execution transitions</span>
+                  <ChevronRight size={13} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 5: SORTING VISUALIZER */}
+          {currentStep === 5 && (
+            <motion.div
+              key="step5"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col gap-6 w-full py-4"
+            >
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#1a1a22] pb-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#10b981] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 5 of 6</span>
+                  <h2 className="text-xl font-semibold text-[#f8fafc]">Visualizing Recursive Boundaries</h2>
+                  <p className="text-[#94a3b8] text-xs">Observe side-by-side array partitions swapping execution limits based on set threshold criteria.</p>
+                </div>
+
+                {/* Mini Player Controls */}
+                <div className="flex items-center gap-2.5 bg-[#0a0a0c] border border-[#1a1a22] p-1.5 rounded-lg">
+                  <button
+                    onClick={handlePlayPause}
+                    className="p-2 bg-[#10b981] hover:bg-[#34d399] text-[#050506] rounded transition-all duration-150 cursor-pointer text-xs flex items-center gap-1.5 font-semibold"
+                  >
+                    {isPlaying ? <Pause size={12} /> : <Play size={12} />}
+                    <span>{isPlaying ? "Pause" : "Play simulation"}</span>
+                  </button>
+                  <button
+                    onClick={generateNewVisualizerArray}
+                    className="p-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] rounded text-[#94a3b8] transition-colors cursor-pointer"
+                    title="Reset simulation dataset"
+                  >
+                    <RotateCcw size={12} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Visualizer Controls Shelf */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-[#1a1a22] bg-[#0a0a0c] rounded-lg text-xs">
+                {/* Visualizer Delay */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[10px] text-[#C9C9C9] uppercase tracking-wider font-semibold">
-                    <span>Array size</span>
-                    <span className="text-[#22C55E] font-bold">{vizSize}</span>
+                  <div className="flex justify-between items-center text-[10px] text-[#94a3b8] uppercase tracking-wider font-semibold">
+                    <span>Animation Delay</span>
+                    <span className="text-[#10b981] font-bold">{vizSpeed}ms</span>
+                  </div>
+                  <input 
+                    type="range"
+                    min="2"
+                    max="150"
+                    value={vizSpeed}
+                    onChange={(e) => setVizSpeed(parseInt(e.target.value))}
+                    className="w-full accent-[#10b981] bg-[#050506] cursor-pointer"
+                  />
+                </div>
+
+                {/* Array size */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between items-center text-[10px] text-[#94a3b8] uppercase tracking-wider font-semibold">
+                    <span>Array scale</span>
+                    <span className="text-[#10b981] font-bold">{vizSize}</span>
                   </div>
                   <input 
                     type="range"
                     min="15"
-                    max="100"
+                    max="80"
                     value={vizSize}
                     onChange={(e) => setVizSize(parseInt(e.target.value))}
-                    className="accent-[#22C55E] bg-zinc-950 h-1 rounded cursor-pointer"
+                    className="w-full accent-[#10b981] bg-[#050506] cursor-pointer"
                   />
                 </div>
 
                 {/* Crossover Threshold */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[10px] text-[#C9C9C9] uppercase tracking-wider font-semibold">
+                  <div className="flex justify-between items-center text-[10px] text-[#94a3b8] uppercase tracking-wider font-semibold">
                     <span>Crossover threshold</span>
-                    <span className="text-[#22C55E] font-bold">{vizThreshold}</span>
+                    <span className="text-[#10b981] font-bold">{vizThreshold}</span>
                   </div>
                   <input 
                     type="range"
@@ -1427,230 +1732,204 @@ export default function Home() {
                     max="35"
                     value={vizThreshold}
                     onChange={(e) => setVizThreshold(parseInt(e.target.value))}
-                    className="accent-[#22C55E] bg-zinc-950 h-1 rounded cursor-pointer"
+                    className="w-full accent-[#10b981] bg-[#050506] cursor-pointer"
                   />
                 </div>
+
+                {/* Duration info */}
+                <div className="flex flex-col justify-end bg-[#050506] p-2 border border-[#1a1a22] rounded">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-[#64748b] font-mono">ELAPSED TIME:</span>
+                    <span className="text-xs font-mono font-bold text-[#f8fafc]">{(vizElapsedTime / 10).toFixed(1)}s</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Divider */}
-              <div className="border-t border-[#252525] my-2" />
+              {/* Dominating Visualizer Side-by-Side Area */}
+              <div className={`grid grid-cols-1 ${selectedVizAlgos.length > 1 ? "md:grid-cols-2 lg:grid-cols-3" : ""} gap-6`}>
+                {selectedVizAlgos.map(algo => {
+                  const state = vizStates[algo];
+                  if (!state) return null;
+                  
+                  return (
+                    <div 
+                      key={algo} 
+                      className={`border rounded-lg p-4 flex flex-col gap-3 transition-all duration-300 bg-[#0a0a0c] ${
+                        state.winner 
+                          ? "border-[#10b981] shadow-[0_0_20px_rgba(16,185,129,0.08)]" 
+                          : "border-[#1a1a22]"
+                      }`}
+                    >
+                      {/* Grid card header info */}
+                      <div className="flex items-center justify-between border-b border-[#1a1a22] pb-2">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-semibold text-[#f8fafc]">
+                            {getAlgoDisplayName(algo)}
+                          </span>
+                          <span className="text-[10px] text-[#64748b]">
+                            Sub-routine: <span className="text-[#10b981] font-medium font-mono">{state.currentSubAlgo}</span>
+                          </span>
+                        </div>
+                        {state.winner && (
+                          <span className="text-[9px] bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/30 px-2 py-0.5 rounded font-bold uppercase animate-pulse">
+                            ✓ Winner
+                          </span>
+                        )}
+                        {state.done && !state.winner && (
+                          <span className="text-[9px] bg-[#1e293b]/30 text-[#94a3b8] border border-[#1a1a22] px-2 py-0.5 rounded font-mono">
+                            Completed
+                          </span>
+                        )}
+                      </div>
 
-              {/* Lower Controls & Action Buttons */}
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="flex items-center gap-6">
-                  {/* Animation Delay */}
-                  <div className="flex flex-col gap-1.5 w-48">
-                    <div className="flex justify-between items-center text-[10px] text-[#C9C9C9] uppercase tracking-wider font-semibold">
-                      <span>Animation delay</span>
-                      <span className="text-[#22C55E] font-bold">{vizSpeed}ms</span>
+                      {/* Dominate Visualizer Bar charts height */}
+                      <div className="h-64 flex items-end justify-between gap-0.5 bg-[#050506] p-4 border border-[#1a1a22] rounded-md relative overflow-hidden">
+                        {state.array.map((bar, idx) => {
+                          let colorClass = "bg-[#1e293b]"; // default unsorted
+                          if (bar.state === "compare") colorClass = "bg-[#f8fafc]"; // comparing
+                          if (bar.state === "operation") colorClass = "bg-[#10b981]"; // active (mutating)
+                          if (bar.state === "sorted") colorClass = "bg-[#34d399]/40"; // sorted (light green)
+
+                          return (
+                            <div 
+                              key={idx}
+                              className={`flex-1 transition-all duration-75 ${colorClass}`}
+                              style={{ height: `${(bar.value / 400) * 100}%` }}
+                            />
+                          );
+                        })}
+                      </div>
+
+                      {/* State metadata */}
+                      <div className="border-t border-[#1a1a22]/50 pt-2 flex flex-col gap-1.5 text-[10px] font-mono text-[#94a3b8]">
+                        <div className="flex justify-between border-b border-[#1a1a22]/30 pb-1">
+                          <span>Partition size:</span>
+                          <span className="text-[#f8fafc] font-semibold">{state.currentPartitionSize}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-[#1a1a22]/30 pb-1">
+                          <span>Comparisons:</span>
+                          <span className="text-[#10b981] font-bold">{state.comparisons.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-[#1a1a22]/30 pb-1">
+                          <span>Swaps/Writes:</span>
+                          <span className="text-[#f8fafc]">{state.swaps.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Recursion depth:</span>
+                          <span className="text-[#f8fafc]">{state.depth}</span>
+                        </div>
+                      </div>
                     </div>
-                    <input 
-                      type="range"
-                      min="2"
-                      max="150"
-                      value={vizSpeed}
-                      onChange={(e) => setVizSpeed(parseInt(e.target.value))}
-                      className="accent-[#22C55E] bg-zinc-950 h-1 rounded cursor-pointer"
-                    />
-                  </div>
-                  {/* Elapsed Time */}
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-[#C9C9C9] uppercase tracking-wider font-semibold">Elapsed time</span>
-                    <span className="text-xs font-mono font-semibold text-[#FAFAFA]">{(vizElapsedTime / 10).toFixed(1)}s</span>
-                  </div>
-                </div>
+                  );
+                })}
+              </div>
 
-                <div className="flex gap-3 w-full md:w-auto">
-                  <button
-                    onClick={handlePlayPause}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 border border-[#FAFAFA] bg-[#FAFAFA] text-[#080808] hover:bg-transparent hover:text-[#FAFAFA] hover:border-[#22C55E] font-semibold px-6 py-2 rounded text-xs transition duration-150 emerald-glow"
-                  >
-                    {isPlaying ? <Pause size={12} /> : <Play size={12} />}
-                    {isPlaying ? "Pause animation" : "Start animation"}
-                  </button>
-                  <button
-                    onClick={generateNewVisualizerArray}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-1.5 bg-transparent hover:border-[#22C55E] text-[#FAFAFA] border border-[#252525] font-semibold px-6 py-2 rounded text-xs transition-colors duration-150"
-                  >
-                    <RotateCcw size={12} />
-                    Reset dataset
-                  </button>
+              {/* Color Legend */}
+              <div className="flex gap-6 text-[10px] font-mono text-[#64748b] justify-center mt-3 border-t border-[#1a1a22] pt-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 bg-[#1e293b] rounded"></span> Unsorted Array
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 bg-[#f8fafc] rounded"></span> Comparing index
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 bg-[#10b981] rounded"></span> Active Partition Operation
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 bg-[#34d399]/40 rounded border border-[#34d399]/20"></span> Sorted Segment
                 </div>
               </div>
-            </div>
 
-            {/* Grid of selected algorithms */}
-            <div className={`grid grid-cols-1 ${selectedVizAlgos.length > 1 ? "md:grid-cols-2 xl:grid-cols-3" : ""} gap-6`}>
-              {selectedVizAlgos.map(algo => {
-                const state = vizStates[algo];
-                if (!state) return null;
+              {/* Bottom Actions */}
+              <div className="flex justify-between items-center pt-4 border-t border-[#1a1a22]">
+                <button
+                  onClick={handlePrevStep}
+                  className="px-4 py-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] text-[#94a3b8] transition-colors rounded text-xs cursor-pointer font-medium"
+                >
+                  Back to results
+                </button>
+                <button
+                  onClick={handleNextStep}
+                  className="bg-[#10b981] hover:bg-[#34d399] text-[#050506] font-semibold px-6 py-2.5 rounded transition-all duration-200 text-xs flex items-center gap-1.5 emerald-glow cursor-pointer"
+                >
+                  <span>Verify analysis conclusions</span>
+                  <ChevronRight size={13} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 6: ANALYZE & LEARN */}
+          {currentStep === 6 && (
+            <motion.div
+              key="step6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex flex-col gap-8 max-w-3xl mx-auto w-full py-6"
+            >
+              <div className="flex flex-col gap-1 border-b border-[#1a1a22] pb-4">
+                <span className="text-[#10b981] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 6 of 6</span>
+                <h2 className="text-xl font-semibold text-[#f8fafc]">Workstation Performance Analysis</h2>
+                <p className="text-[#94a3b8] text-xs">Examine the mathematical conclusions and hardware architecture trade-offs verified in your experiment.</p>
+              </div>
+
+              {/* Curated Questions & Explanations connected to the benchmark run */}
+              <div className="flex flex-col gap-6">
                 
-                return (
-                  <div 
-                    key={algo} 
-                    className={`bg-[#111111] border rounded p-5 flex flex-col gap-4 transition-all duration-300 ${
-                      state.winner 
-                        ? "border-[#22C55E] shadow-[0_0_15px_rgba(34,197,94,0.15)]" 
-                        : "border-[#252525]"
-                    }`}
-                  >
-                    {/* Header */}
-                    <div className="flex items-center justify-between border-b border-[#252525] pb-2">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-semibold text-[#FAFAFA]">
-                          {getAlgoDisplayName(algo)}
-                        </span>
-                        <span className="text-[10px] text-[#C9C9C9]">
-                          Current algorithm: <span className="text-[#22C55E] font-medium">{state.currentSubAlgo}</span>
-                        </span>
-                      </div>
-                      {state.winner && (
-                        <span className="text-[10px] bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/30 px-2 py-0.5 rounded font-medium flex items-center gap-1 animate-pulse">
-                          ✓ Winner
-                        </span>
-                      )}
-                      {state.done && !state.winner && (
-                        <span className="text-[10px] bg-[#181818] text-[#C9C9C9] border border-[#252525] px-2 py-0.5 rounded font-medium">
-                          Completed
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Visualizer Canvas (Dominate Layout Height) */}
-                    <div className="h-64 flex items-end justify-between gap-0.5 bg-[#080808] p-3 border border-[#252525] rounded">
-                      {state.array.map((bar, idx) => {
-                        let colorClass = "bg-[#232323]"; // default unsorted
-                        if (bar.state === "compare") colorClass = "bg-[#FFFFFF]"; // comparing
-                        if (bar.state === "operation") colorClass = "bg-[#22C55E]"; // active (mutating)
-                        if (bar.state === "sorted") colorClass = "bg-[#4ADE80]"; // sorted (light green)
-
-                        return (
-                          <div 
-                            key={idx}
-                            className={`flex-1 transition-all duration-75 ${colorClass}`}
-                            style={{ height: `${(bar.value / 400) * 100}%` }}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {/* Crossover & Sub-algo Info */}
-                    <div className="border-t border-[#252525] pt-3 flex flex-col gap-2">
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] font-mono">
-                        <div className="flex justify-between border-b border-[#252525]/50 pb-1">
-                          <span className="text-[#C9C9C9]">Execution state</span>
-                          <span className="text-[#FAFAFA] font-semibold">{state.switchStatus}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-[#252525]/50 pb-1">
-                          <span className="text-[#C9C9C9]">Partition size</span>
-                          <span className="text-[#FAFAFA] font-semibold">{state.currentPartitionSize}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-[#252525]/50 pb-1">
-                          <span className="text-[#C9C9C9]">Comparisons</span>
-                          <span className="text-[#22C55E] font-bold">{state.comparisons.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-[#252525]/50 pb-1">
-                          <span className="text-[#C9C9C9]">Swaps/mutations</span>
-                          <span className="text-[#FAFAFA] font-semibold">{state.swaps.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between col-span-2">
-                          <span className="text-[#C9C9C9]">Recursion depth</span>
-                          <span className="text-[#FAFAFA] font-semibold">{state.depth}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Color Legend (Centered under the grid) */}
-            <div className="flex gap-6 text-[10px] font-mono text-[#C9C9C9] justify-center mt-6">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-[#232323] rounded-full border border-[#737373]"></span> Unsorted (base array)
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-[#FFFFFF] rounded-full"></span> Comparing
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-[#22C55E] rounded-full"></span> Active (mutating)
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-[#4ADE80] rounded-full"></span> Sorted
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── PAGE 4: Analysis ── */}
-        {activeTab === "analysis" && (
-          <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full py-4 text-xs">
-            {/* Algorithm Analysis Profiles */}
-            <div className="flex flex-col gap-6">
-              <div>
-                <h3 className="text-sm font-semibold text-[#FAFAFA] mb-1">Quick + Insertion sort</h3>
-                <p className="text-[#C9C9C9] leading-relaxed">
-                  Splits partitions recursively using QuickSort. Once partition size drops below the threshold, it invokes Insertion Sort on that range to bypass stack frame overhead and optimize cache locality.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 font-mono text-[11px] text-[#C9C9C9]">
-                  <div>
-                    <span className="text-[#22C55E] font-semibold">Advantages:</span> Bypasses recursion stack limits for small subarrays. Near-zero initialization latency.
-                  </div>
-                  <div>
-                    <span className="text-[#8A8A8A] font-semibold">Disadvantages:</span> Degrades to quadratic O(N²) time complexity under skewed pivot selection on worst-case arrays.
+                {/* Question 1 */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xs font-semibold text-[#f8fafc] flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                    <span>Why did {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} perform better in this run?</span>
+                  </h3>
+                  <div className="pl-3.5 text-xs text-[#94a3b8] leading-relaxed flex flex-col gap-2">
+                    <p>
+                      On the selected <strong className="text-[#f8fafc]">{datasetType}</strong> dataset (scale N={getDatasetSizeFromExponent(sizeExponent).toLocaleString()}), {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} minimized execution cycles by dynamically swapping sorting routines.
+                    </p>
+                    <p>
+                      For large ranges, recursive partitioning quickly narrows down sorting partitions. Once subproblems fit comfortably within cache line limits, transitioning to non-recursive base sorting (like Insertion Sort) avoids stack frame storage allocations.
+                    </p>
                   </div>
                 </div>
-                <div className="text-[10px] text-[#8A8A8A] mt-2 font-mono">
-                  Complexity: Time: O(N log N) average | Space: O(log N)
+
+                {/* Question 2 */}
+                <div className="flex flex-col gap-2 border-t border-[#1a1a22]/50 pt-4">
+                  <h3 className="text-xs font-semibold text-[#f8fafc] flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                    <span>How do hybrid algorithms differ from classical implementations?</span>
+                  </h3>
+                  <div className="pl-3.5 text-xs text-[#94a3b8] leading-relaxed flex flex-col gap-2">
+                    <p>
+                      Classical sorting algorithms (like QuickSort or MergeSort) run their core recursive partitions all the way down to a single element. This triggers heavy recursion stack allocations for tiny sizes where a simpler sorting routine would be faster.
+                    </p>
+                    <p>
+                      Hybrid algorithms like Introsort establish a <strong>crossover threshold</strong> (typically {threshold} elements). When partition size drops below this threshold, it invokes Insertion Sort, which runs in near-linear time on pre-ordered chunks and requires zero extra stack frames.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Question 3 */}
+                <div className="flex flex-col gap-2 border-t border-[#1a1a22]/50 pt-4">
+                  <h3 className="text-xs font-semibold text-[#f8fafc] flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                    <span>What design trade-offs are at play?</span>
+                  </h3>
+                  <div className="pl-3.5 text-xs text-[#94a3b8] leading-relaxed flex flex-col gap-2">
+                    <p>
+                      Memory vs. CPU cycles is the primary trade-off. Quick+Merge provides stable sorting segments but demands O(N) auxiliary space allocations. Quick+Insertion runs in-place, but bad pivot choices on inverted sets can degrade standard QuickSort to quadratic O(N²) time. Introsort mitigates this by falling back to HeapSort if recursion depth hits limits, sacrificing stability to protect performance bounds.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="border-t border-[#252525] pt-6">
-                <h3 className="text-sm font-semibold text-[#FAFAFA] mb-1">Quick + Merge sort</h3>
-                <p className="text-[#C9C9C9] leading-relaxed">
-                  Swaps partitioning routines to an out-of-place Merge Sort when the size drops below threshold limits, providing stable subproblem sorting.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 font-mono text-[11px] text-[#C9C9C9]">
-                  <div>
-                    <span className="text-[#22C55E] font-semibold">Advantages:</span> Stable sorting on segments, lower overall comparisons compared to insertion on larger thresholds.
-                  </div>
-                  <div>
-                    <span className="text-[#8A8A8A] font-semibold">Disadvantages:</span> Requires O(N) auxiliary heap allocations. High array element writes during merge copy operations.
-                  </div>
-                </div>
-                <div className="text-[10px] text-[#8A8A8A] mt-2 font-mono">
-                  Complexity: Time: O(N log N) average | Space: O(N) auxiliary
-                </div>
-              </div>
-
-              <div className="border-t border-[#252525] pt-6">
-                <h3 className="text-sm font-semibold text-[#FAFAFA] mb-1">Introsort</h3>
-                <p className="text-[#C9C9C9] leading-relaxed">
-                  Begins with QuickSort, switches to Insertion Sort on tiny subproblems, and transitions to HeapSort if recursion depth exceeds limits.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 font-mono text-[11px] text-[#C9C9C9]">
-                  <div>
-                    <span className="text-[#22C55E] font-semibold">Advantages:</span> Guarantees O(N log N) worst-case time complexity limit. Safe from quadratic stack collapse.
-                  </div>
-                  <div>
-                    <span className="text-[#8A8A8A] font-semibold">Disadvantages:</span> HeapSort limits pivot cache coherence during fallback sequences.
-                  </div>
-                </div>
-                <div className="text-[10px] text-[#8A8A8A] mt-2 font-mono">
-                  Complexity: Time: O(N log N) bounds | Space: O(log N)
-                </div>
-              </div>
-            </div>
-
-            {/* Complexity Reference & Threshold Analysis */}
-            <div className="border-t border-[#252525] pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Complexity Reference Table */}
-              <div className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-[#FAFAFA]">Complexity comparison reference</h3>
+              {/* Complexity Reference Comparison Table */}
+              <div className="border-t border-[#1a1a22] pt-8 flex flex-col gap-4">
+                <h3 className="text-xs font-semibold text-[#f8fafc]">Complexity comparison reference</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-[#252525] text-[#C9C9C9] font-semibold text-[10px]">
+                      <tr className="border-b border-[#1a1a22] text-[#94a3b8] font-semibold text-[10px]">
                         <th className="py-2">Algorithm</th>
                         <th className="py-2">Best case</th>
                         <th className="py-2">Average case</th>
@@ -1658,92 +1937,87 @@ export default function Home() {
                         <th className="py-2">Space complexity</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#232323] font-mono text-[#C9C9C9]">
+                    <tbody className="divide-y divide-[#1a1a22]/50 font-mono text-[#94a3b8]">
                       <tr>
-                        <td className="py-2 font-sans font-semibold text-[#FAFAFA]">Quick + Insertion</td>
-                        <td className="py-2">O(N)</td>
-                        <td className="py-2">O(N log N)</td>
-                        <td className="py-2">O(N²)</td>
-                        <td className="py-2">O(log N)</td>
+                        <td className="py-2.5 font-sans font-semibold text-[#f8fafc]">Quick + Insertion</td>
+                        <td className="py-2.5 text-[#10b981]">O(N)</td>
+                        <td className="py-2.5">O(N log N)</td>
+                        <td className="py-2.5">O(N²)</td>
+                        <td className="py-2.5">O(log N)</td>
                       </tr>
                       <tr>
-                        <td className="py-2 font-sans font-semibold text-[#FAFAFA]">Quick + Merge</td>
-                        <td className="py-2">O(N log N)</td>
-                        <td className="py-2">O(N log N)</td>
-                        <td className="py-2">O(N²)</td>
-                        <td className="py-2">O(N)</td>
+                        <td className="py-2.5 font-sans font-semibold text-[#f8fafc]">Quick + Merge</td>
+                        <td className="py-2.5">O(N log N)</td>
+                        <td className="py-2.5">O(N log N)</td>
+                        <td className="py-2.5">O(N²)</td>
+                        <td className="py-2.5">O(N) auxiliary</td>
                       </tr>
                       <tr>
-                        <td className="py-2 font-sans font-semibold text-[#FAFAFA]">Introsort</td>
-                        <td className="py-2">O(N)</td>
-                        <td className="py-2 text-[#22C55E]">O(N log N)</td>
-                        <td className="py-2 text-[#22C55E]">O(N log N)</td>
-                        <td className="py-2">O(log N)</td>
+                        <td className="py-2.5 font-sans font-semibold text-[#f8fafc]">Introsort</td>
+                        <td className="py-2.5 text-[#10b981]">O(N)</td>
+                        <td className="py-2.5 text-[#10b981]">O(N log N)</td>
+                        <td className="py-2.5 text-[#10b981]">O(N log N)</td>
+                        <td className="py-2.5">O(log N)</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
 
-              {/* Threshold Analysis List */}
-              <div className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-[#FAFAFA]">Crossover threshold speed curves</h3>
-                <p className="text-[#C9C9C9] text-xs leading-relaxed">
-                  Runtimes associated with various threshold limits (N = 50,000, Uniform Random, averaged over 5 runs):
-                </p>
-                <div className="flex flex-col gap-2 font-mono text-xs text-[#C9C9C9]">
-                  <div className="flex justify-between border-b border-[#252525] pb-1.5">
-                    <span>Threshold = 8</span>
-                    <span>4.12 ms (sub-optimal)</span>
+              {/* Dataset Distribution Impact Summary Grid */}
+              <div className="border-t border-[#1a1a22] pt-8 flex flex-col gap-4">
+                <h3 className="text-xs font-semibold text-[#f8fafc]">Dataset distribution impact matrix</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                  <div className="border border-[#1a1a22] bg-[#0a0a0c] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#10b981]/20 transition-colors">
+                    <strong className="text-[#f8fafc] block">Random Uniform</strong>
+                    <span className="text-[10px] text-[#64748b] font-mono mb-1">High Entropy</span>
+                    <span className="text-[10px] text-[#10b981] font-bold font-mono">Winner: Introsort</span>
+                    <p className="text-[10px] text-[#64748b] leading-relaxed mt-1">Benefited by quick balanced recursive partition splits.</p>
                   </div>
-                  <div className="flex justify-between border-b border-[#252525] pb-1.5">
-                    <span>Threshold = 16</span>
-                    <span className="text-[#22C55E] font-bold">3.51 ms (sweet spot)</span>
+                  <div className="border border-[#1a1a22] bg-[#0a0a0c] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#10b981]/20 transition-colors">
+                    <strong className="text-[#f8fafc] block">Nearly Sorted</strong>
+                    <span className="text-[10px] text-[#64748b] font-mono mb-1">Low Inversions</span>
+                    <span className="text-[10px] text-[#10b981] font-bold font-mono text-nowrap">Winner: Quick+Insertion</span>
+                    <p className="text-[10px] text-[#64748b] leading-relaxed mt-1">Insertion sort bases finish in O(N) linear time on sorted runs.</p>
                   </div>
-                  <div className="flex justify-between border-b border-[#252525] pb-1.5">
-                    <span>Threshold = 32</span>
-                    <span>3.88 ms (moderate overhead)</span>
+                  <div className="border border-[#1a1a22] bg-[#0a0a0c] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#10b981]/20 transition-colors">
+                    <strong className="text-[#f8fafc] block">Reverse Sorted</strong>
+                    <span className="text-[10px] text-[#64748b] font-mono mb-1">Max Inversions</span>
+                    <span className="text-[10px] text-[#10b981] font-bold font-mono">Winner: Introsort</span>
+                    <p className="text-[10px] text-[#64748b] leading-relaxed mt-1">Safe from quadratic time degradation via HeapSort recursion fallback.</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Threshold = 64</span>
-                    <span>4.72 ms (quadratic decay)</span>
+                  <div className="border border-[#1a1a22] bg-[#0a0a0c] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#10b981]/20 transition-colors">
+                    <strong className="text-[#f8fafc] block">Duplicate Heavy</strong>
+                    <span className="text-[10px] text-[#64748b] font-mono mb-1">Key Collisions</span>
+                    <span className="text-[10px] text-[#10b981] font-bold font-mono">Winner: Quick+Merge</span>
+                    <p className="text-[10px] text-[#64748b] leading-relaxed mt-1">Stable merges avoid duplicate element swap loops.</p>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Dataset Distribution Impact Summary */}
-            <div className="border-t border-[#252525] pt-8 flex flex-col gap-4">
-              <h3 className="text-sm font-semibold text-[#FAFAFA]">Dataset distribution impact summary</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                <div className="border border-[#252525] bg-[#111111] p-3 rounded">
-                  <strong className="text-[#FAFAFA] block mb-1">Random distribution</strong>
-                  <span className="text-[#8A8A8A] block mb-2 font-mono">High Entropy</span>
-                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</div>
-                  <p className="text-[10px] text-[#C9C9C9] mt-1 leading-relaxed">Standard random layouts benefit from QuickSort&apos;s optimal pivot partitioning loops.</p>
-                </div>
-                <div className="border border-[#252525] bg-[#111111] p-3 rounded">
-                  <strong className="text-[#FAFAFA] block mb-1">Nearly sorted</strong>
-                  <span className="text-[#8A8A8A] block mb-2 font-mono">Low Inversions</span>
-                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Quick+Insertion</div>
-                  <p className="text-[10px] text-[#C9C9C9] mt-1 leading-relaxed">Insertion Sort base runs in O(N) for presorted runs, avoiding recursive tree builds.</p>
-                </div>
-                <div className="border border-[#252525] bg-[#111111] p-3 rounded">
-                  <strong className="text-[#FAFAFA] block mb-1">Reverse sorted</strong>
-                  <span className="text-[#8A8A8A] block mb-2 font-mono">Maximum Inversions</span>
-                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</div>
-                  <p className="text-[10px] text-[#C9C9C9] mt-1 leading-relaxed">Worst-case pivot selections trigger Introsort&apos;s HeapSort fallback wrapper to keep bounds.</p>
-                </div>
-                <div className="border border-[#252525] bg-[#111111] p-3 rounded">
-                  <strong className="text-[#FAFAFA] block mb-1">Duplicate heavy</strong>
-                  <span className="text-[#8A8A8A] block mb-2 font-mono">High Key Collisions</span>
-                  <div className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Quick+Merge</div>
-                  <p className="text-[10px] text-[#C9C9C9] mt-1 leading-relaxed">Stable merge sorts process repetitive keys with fewer comparisons than insertions.</p>
-                </div>
+              {/* Final page actions */}
+              <div className="flex justify-between items-center pt-4 border-t border-[#1a1a22]">
+                <button
+                  onClick={handlePrevStep}
+                  className="px-4 py-2 border border-[#1a1a22] hover:border-[#94a3b8] hover:text-[#f8fafc] text-[#94a3b8] transition-colors rounded text-xs cursor-pointer font-medium"
+                >
+                  Back to visualizer
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentStep(1);
+                    setMaxUnlockedStep(1);
+                  }}
+                  className="bg-[#10b981] hover:bg-[#34d399] text-[#050506] font-semibold px-6 py-2.5 rounded transition-all duration-200 text-xs flex items-center gap-1.5 emerald-glow cursor-pointer"
+                >
+                  <span>Restart Experiment</span>
+                  <RotateCcw size={12} />
+                </button>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+
+        </AnimatePresence>
       </main>
     </div>
   );
