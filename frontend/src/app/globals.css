@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #050506;
-  --color-surface: #0a0a0c;
-  --color-surface-hover: #121216;
-  --color-panel: #0f0f12;
-  --color-border-custom: #1a1a22;
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-text-disabled: #475569;
-  --color-accent: #10b981;
-  --color-accent-hover: #34d399;
-  --color-accent-dark: #064e3b;
-  --color-accent-glow: rgba(16, 185, 129, 0.15);
+  --color-background: #080808;
+  --color-surface: #111111;
+  --color-surface-hover: #181818;
+  --color-panel: #141414;
+  --color-border-custom: #252525;
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #C9C9C9;
+  --color-text-muted: #8A8A8A;
+  --color-text-disabled: #5A5A5A;
+  --color-accent: #22C55E;
+  --color-accent-hover: #4ADE80;
+  --color-accent-dark: #166534;
+  --color-accent-glow: rgba(34, 197, 94, 0.12);
 }
 
 :root {
-  --background: #050506;
-  --foreground: #f8fafc;
-  --surface: #0a0a0c;
-  --panel: #0f0f12;
-  --border-custom: #1a1a22;
+  --background: #080808;
+  --foreground: #FAFAFA;
+  --surface: #111111;
+  --panel: #141414;
+  --border-custom: #252525;
 }
 
 body {
@@ -37,14 +37,14 @@ body {
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #050506;
+  background: #080808;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a1a22;
+  background: #252525;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #34d399;
+  background: #4ADE80;
 }
 
 /* Glassmorphism panel utility */
