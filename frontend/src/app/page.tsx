@@ -896,11 +896,40 @@ export default function Home() {
     }
   };
 
+  const getChartExplanationText = () => {
+    const best = getFastestAlgo();
+    if (!best) return "";
+    const bestName = getAlgoDisplayName(best.algorithm);
+
+    if (best.algorithm === "introsort") {
+      if (datasetType === "reverse_sorted") {
+        return "Introsort achieved optimal bounds by switching partitioning recursion to HeapSort fallback when execution depth exceeded the safety threshold limit.";
+      }
+      return "Introsort optimized execution by utilizing recursion partitioning for high-entropy bounds and transitioning to Insertion Sort for subproblems.";
+    }
+
+    if (best.algorithm === "quick_insertion") {
+      if (datasetType === "nearly_sorted") {
+        return "Quick + Insertion performed best because Insertion Sort runs in near-linear time on mostly sorted subproblems, avoiding recursive partition overhead.";
+      }
+      return "Quick + Insertion minimized runtime overhead by bypassing recursive stack splits for partitions below the threshold limit.";
+    }
+
+    if (best.algorithm === "quick_merge") {
+      if (datasetType === "duplicate_heavy") {
+        return "Quick + Merge avoided partitioning bottlenecks for heavy equal-key collisions by utilizing auxiliary out-of-place merge stages.";
+      }
+      return "Quick + Merge combined partitioning speed with stable, predictable subproblem merging beneath threshold bounds.";
+    }
+
+    return `${bestName} performed best under these settings by optimizing local cache localization and execution instruction count.`;
+  };
+
   const stepsList = [
-    { id: 0, label: "Start" },
+    { id: 0, label: "Introduce" },
     { id: 1, label: "Configure dataset" },
     { id: 2, label: "Pick algorithms" },
-    { id: 3, label: "Run kernels" },
+    { id: 3, label: "Run benchmark" },
     { id: 4, label: "Compare results" },
     { id: 5, label: "Visualize" },
     { id: 6, label: "Analyze" }
@@ -929,9 +958,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080808] text-[#FAFAFA] flex flex-col font-sans antialiased text-sm">
+    <div className="min-h-screen bg-[#050505] text-[#FAFAFA] flex flex-col font-sans antialiased text-sm">
       {/* Top Navbar */}
-      <header className="border-b border-[#252525] bg-[#080808]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+      <header className="border-b border-[#252525] bg-[#050505]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <div>
             <span className="text-sm font-bold tracking-tight block text-[#FAFAFA]">
@@ -960,10 +989,12 @@ export default function Home() {
                   disabled={!isUnlocked}
                   className={`flex items-center gap-1.5 text-xs py-1 transition-all duration-150 ${
                     isActive 
-                      ? "text-[#FAFAFA] font-semibold" 
+                      ? "text-[#FAFAFA] font-semibold cursor-default" 
                       : isCompleted 
-                        ? "text-[#22C55E] hover:text-[#4ADE80]" 
-                        : "text-[#5A5A5A] cursor-not-allowed"
+                        ? "text-[#22C55E] hover:text-[#4ADE80] cursor-pointer" 
+                        : isUnlocked
+                          ? "text-[#C9C9C9] hover:text-[#FAFAFA] cursor-pointer"
+                          : "text-[#5A5A5A] cursor-not-allowed"
                   }`}
                 >
                   <span className="text-[10px] font-mono">
@@ -1015,14 +1046,14 @@ export default function Home() {
               className="flex flex-col gap-14 py-8 max-w-3xl mx-auto w-full"
             >
               {/* Typography Hero */}
-              <div className="relative border border-[#252525] bg-[#111111] rounded-lg p-10 flex flex-col gap-6 text-left items-start w-full overflow-hidden">
+              <div className="relative border border-[#252525] bg-[#0D0D0D] rounded-lg p-10 flex flex-col gap-6 text-left items-start w-full overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none opacity-20">
                   <SubtleSortingBg />
                 </div>
 
                 <div className="relative z-10 flex flex-col gap-4 items-start">
-                  <span className="text-[10px] font-mono text-[#22C55E] uppercase tracking-wider font-semibold">
-                    performance engineering workstation
+                  <span className="text-[10px] font-mono text-[#22C55E] tracking-wider font-semibold">
+                    Performance engineering workstation
                   </span>
                   <h1 className="text-3xl md:text-5xl font-extrabold text-[#FAFAFA] tracking-tight max-w-2xl leading-tight">
                     Sorting, re-engineered for performance.
@@ -1037,7 +1068,7 @@ export default function Home() {
                         setCurrentStep(1);
                         if (maxUnlockedStep < 1) setMaxUnlockedStep(1);
                       }}
-                      className="bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] border border-[#FAFAFA] hover:border-[#C9C9C9] font-semibold px-6 py-2.5 rounded transition duration-150 text-xs flex items-center gap-1.5 emerald-glow hover:emerald-glow-strong cursor-pointer"
+                      className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong"
                     >
                       <span>Begin guided experiment</span>
                       <ArrowRight size={12} />
@@ -1049,7 +1080,7 @@ export default function Home() {
               {/* Workflow Pipeline timeline */}
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-1 text-left">
-                  <span className="text-[#8A8A8A] uppercase tracking-wider font-mono text-[9px] font-semibold">Interactive pipeline</span>
+                  <span className="text-[#8A8A8A] tracking-wider font-mono text-[9px] font-semibold">Interactive pipeline</span>
                   <h2 className="text-base font-semibold text-[#FAFAFA]">Experiment workflow</h2>
                 </div>
                 
@@ -1073,12 +1104,12 @@ export default function Home() {
               {/* Product Preview Mockup */}
               <div className="flex flex-col gap-4 border-t border-[#252525] pt-12">
                 <div className="flex flex-col gap-1 text-left">
-                  <span className="text-[#8A8A8A] uppercase tracking-wider font-mono text-[9px] font-semibold">Workspace interface preview</span>
+                  <span className="text-[#8A8A8A] tracking-wider font-mono text-[9px] font-semibold">Workspace interface preview</span>
                   <h2 className="text-base font-semibold text-[#FAFAFA]">Product preview</h2>
                 </div>
                 
                 {/* CSS Window Mockup */}
-                <div className="border border-[#252525] bg-[#111111] rounded-lg overflow-hidden flex flex-col">
+                <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg overflow-hidden flex flex-col">
                   {/* Header Window Controls */}
                   <div className="bg-[#141414] border-b border-[#252525] px-4 py-2 flex items-center justify-between">
                     <div className="flex gap-1.5">
@@ -1092,8 +1123,8 @@ export default function Home() {
                   
                   {/* Split Preview */}
                   <div className="grid grid-cols-1 md:grid-cols-3 min-h-[180px]">
-                    <div className="border-r border-[#252525] p-4 flex flex-col gap-2 bg-[#111111] text-[10px] font-mono text-[#C9C9C9]">
-                      <span className="text-[#8A8A8A] uppercase text-[9px] font-semibold mb-1 tracking-wider">active setup</span>
+                    <div className="border-r border-[#252525] p-4 flex flex-col gap-2 bg-[#0D0D0D] text-[10px] font-mono text-[#C9C9C9]">
+                      <span className="text-[#8A8A8A] text-[9px] font-semibold mb-1 tracking-wider">Active setup</span>
                       <div className="flex justify-between border-b border-[#252525]/50 pb-1">
                         <span>Distribution:</span>
                         <span className="text-[#FAFAFA]">Nearly sorted</span>
@@ -1107,9 +1138,9 @@ export default function Home() {
                         <span className="text-[#FAFAFA]">16 elements</span>
                       </div>
                     </div>
-                    <div className="col-span-2 p-4 bg-[#080808] flex flex-col justify-between font-mono text-[10px]">
+                    <div className="col-span-2 p-4 bg-[#050505] flex flex-col justify-between font-mono text-[10px]">
                       <div className="flex flex-col gap-1.5">
-                        <span className="text-[#8A8A8A] uppercase text-[9px] font-semibold tracking-wider">performance comparison</span>
+                        <span className="text-[#8A8A8A] text-[9px] font-semibold tracking-wider">Performance comparison</span>
                         <div className="flex justify-between text-[#22C55E] bg-[#22C55E]/5 border border-[#22C55E]/20 px-2 py-1.5 rounded">
                           <span>✓ Introsort</span>
                           <span>135.2 μs</span>
@@ -1141,7 +1172,7 @@ export default function Home() {
               className="flex flex-col gap-8 max-w-2xl mx-auto w-full py-6 text-left"
             >
               <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 1 of 6</span>
+                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 1 of 6</span>
                 <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Generate distribution dataset</h2>
                 <p className="text-[#C9C9C9] text-xs">Choose the key distribution structure and size limit to test your sorting architectures.</p>
               </div>
@@ -1162,7 +1193,7 @@ export default function Home() {
                       className={`text-left p-4 rounded-lg border transition-all duration-300 flex flex-col gap-1.5 cursor-pointer hover-lift ${
                         isSelected 
                           ? "border-[#4ADE80] bg-[#22C55E]/5 text-[#FAFAFA]" 
-                          : "border-[#252525] bg-[#111111] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
+                          : "border-[#252525] bg-[#0D0D0D] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
                       }`}
                     >
                       <div className="flex justify-between items-center w-full">
@@ -1175,30 +1206,57 @@ export default function Home() {
                 })}
               </div>
 
-              {/* Dataset Scale Slider */}
-              <div className="p-5 border border-[#252525] bg-[#111111] rounded-lg flex flex-col gap-4">
-                <div className="flex justify-between items-end">
-                  <span className="text-[#8A8A8A] text-[10px] uppercase tracking-wider font-semibold">Dataset size (N)</span>
-                  <span className="text-lg font-bold font-mono text-[#FAFAFA] tracking-tight leading-none">
-                    {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}
-                  </span>
-                </div>
-                
-                <input 
-                  type="range"
-                  min="2"
-                  max="6"
-                  value={sizeExponent}
-                  onChange={(e) => setSizeExponent(parseInt(e.target.value))}
-                  className="w-full accent-[#22C55E] bg-[#080808] cursor-pointer"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Dataset Scale Slider */}
+                <div className="p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col justify-between gap-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-end">
+                      <span className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Dataset size (n)</span>
+                      <span className="text-base font-bold font-mono text-[#FAFAFA] tracking-tight leading-none">
+                        {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}
+                      </span>
+                    </div>
+                    
+                    <input 
+                      type="range"
+                      min="2"
+                      max="6"
+                      value={sizeExponent}
+                      onChange={(e) => setSizeExponent(parseInt(e.target.value))}
+                      className="w-full accent-[#22C55E] bg-[#050505] cursor-pointer mt-2"
+                    />
+                  </div>
 
-                <div className="flex justify-between text-[9px] text-[#8A8A8A] px-1 font-mono">
-                  <span>100</span>
-                  <span>1K</span>
-                  <span>10K</span>
-                  <span>100K</span>
-                  <span>1M</span>
+                  <div className="flex justify-between text-[9px] text-[#8A8A8A] px-1 font-mono">
+                    <span>100</span>
+                    <span>1K</span>
+                    <span>10K</span>
+                    <span>100K</span>
+                    <span>1M</span>
+                  </div>
+                </div>
+
+                {/* Dataset Distribution Preview */}
+                <div className="p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col gap-2.5">
+                  <span className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Distribution preview</span>
+                  <div className="h-20 flex items-end justify-between gap-1 bg-[#050505] p-3 border border-[#252525] rounded">
+                    {(() => {
+                      const data = datasetType === "nearly_sorted" 
+                        ? [10, 16, 22, 18, 34, 40, 52, 46, 58, 64, 76, 70, 82, 88, 94, 100]
+                        : datasetType === "reverse_sorted"
+                        ? [100, 94, 88, 82, 76, 70, 64, 58, 52, 46, 40, 34, 28, 22, 16, 10]
+                        : datasetType === "duplicate_heavy"
+                        ? [30, 80, 30, 50, 80, 50, 30, 80, 50, 30, 80, 50, 30, 80, 50, 30]
+                        : [40, 75, 20, 90, 50, 30, 85, 15, 60, 45, 95, 35, 70, 10, 80, 55];
+                      return data.map((val, idx) => (
+                        <div 
+                          key={idx} 
+                          className="flex-1 bg-[#22C55E]/40 border border-[#22C55E]/20 transition-all duration-300"
+                          style={{ height: `${val}%` }}
+                        />
+                      ));
+                    })()}
+                  </div>
                 </div>
               </div>
 
@@ -1212,7 +1270,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] font-semibold px-6 py-2.5 rounded transition-all duration-150 text-xs flex items-center gap-1.5 emerald-glow hover:emerald-glow-strong cursor-pointer"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong"
                 >
                   <span>Select algorithms</span>
                   <ChevronRight size={13} />
@@ -1231,7 +1289,7 @@ export default function Home() {
               className="flex flex-col gap-8 max-w-2xl mx-auto w-full py-6 text-left"
             >
               <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 2 of 6</span>
+                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 2 of 6</span>
                 <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Select testing candidates</h2>
                 <p className="text-[#C9C9C9] text-xs">Identify target framework setups and hybrid logic chains to evaluate side-by-side.</p>
               </div>
@@ -1254,14 +1312,14 @@ export default function Home() {
                       className={`text-left p-3.5 rounded-lg border transition-all duration-200 flex items-start gap-3 cursor-pointer ${
                         isChecked 
                           ? "border-[#4ADE80] bg-[#22C55E]/5 text-[#FAFAFA]" 
-                          : "border-[#252525] bg-[#111111] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
+                          : "border-[#252525] bg-[#0D0D0D] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
                       }`}
                     >
                       <div className="mt-0.5">
                         <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-colors ${
-                          isChecked ? "bg-[#22C55E] border-[#22C55E]" : "border-[#5A5A5A] bg-[#080808]"
+                          isChecked ? "bg-[#22C55E] border-[#22C55E]" : "border-[#5A5A5A] bg-[#050505]"
                         }`}>
-                          {isChecked && <Check size={10} className="text-[#080808] stroke-[3]" />}
+                          {isChecked && <Check size={10} className="text-[#050505] stroke-[3]" />}
                         </div>
                       </div>
                       <div className="flex flex-col gap-0.5">
@@ -1274,7 +1332,7 @@ export default function Home() {
               </div>
 
               {/* Conversational summary */}
-              <div className="flex items-center gap-3 p-4 border border-[#252525] bg-[#111111] rounded-lg">
+              <div className="flex items-center gap-3 p-4 border border-[#252525] bg-[#0D0D0D] rounded-lg">
                 <p className="text-xs text-[#C9C9C9] leading-relaxed">
                   Comparing <strong className="text-[#FAFAFA] font-semibold">{selectedAlgos.length} algorithms</strong> on a <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset of scale <strong className="text-[#FAFAFA] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</strong>.
                 </p>
@@ -1291,7 +1349,7 @@ export default function Home() {
                 <button
                   onClick={handleNextStep}
                   disabled={selectedAlgos.length === 0}
-                  className="bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] font-semibold px-6 py-2.5 rounded transition-all duration-150 text-xs flex items-center gap-1.5 disabled:bg-[#252525] disabled:text-[#5A5A5A] disabled:cursor-not-allowed emerald-glow hover:emerald-glow-strong cursor-pointer font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 disabled:bg-[#252525] disabled:text-[#5A5A5A] disabled:border-[#252525] disabled:cursor-not-allowed disabled:shadow-none cursor-pointer font-medium hover:disabled:text-[#5A5A5A] hover:disabled:bg-[#252525] hover:disabled:border-[#252525]"
                 >
                   <span>Configure settings</span>
                   <ChevronRight size={13} />
@@ -1310,88 +1368,95 @@ export default function Home() {
               className="flex flex-col gap-6 max-w-2xl mx-auto w-full py-6 text-left"
             >
               <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 3 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Configuration & benchmark run</h2>
-                <p className="text-[#C9C9C9] text-xs">Expose crossover limits, customize pivot selections, and run native C++ execution sweeps.</p>
+                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 3 of 6</span>
+                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Run benchmark</h2>
+                <p className="text-[#C9C9C9] text-xs">Configure parameters and run native C++ execution sweeps.</p>
               </div>
 
-              {/* Collapsible Advanced Config Accordion */}
-              <div className="border border-[#252525] bg-[#111111] rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setAdvancedOpen(!advancedOpen)}
-                  className="w-full flex items-center justify-between p-4 text-xs font-semibold text-[#FAFAFA] hover:bg-[#181818] transition-colors cursor-pointer"
-                >
-                  <span className="text-xs font-semibold">Advanced settings</span>
-                  <span className="text-[#8A8A8A] text-[10px] font-mono">
-                    {advancedOpen ? "Click to collapse" : "Click to view settings"}
-                  </span>
-                </button>
+              {/* Active Workspace Setup Summary */}
+              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-4 flex flex-col gap-2.5 text-xs">
+                <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2">
+                  <span className="text-xs font-semibold text-[#FAFAFA]">Active experiment setup</span>
+                  <span className="text-[10px] text-[#8A8A8A] font-mono">Steps 1–2 configuration</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-[10px] text-[#C9C9C9]">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[#8A8A8A] font-sans">Dataset structure</span>
+                    <span className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[#8A8A8A] font-sans">Dataset size (n)</span>
+                    <span className="text-[#FAFAFA] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[#8A8A8A] font-sans">Selected algorithms</span>
+                    <span className="text-[#FAFAFA] font-semibold truncate" title={selectedAlgos.map(a => getAlgoDisplayName(a)).join(", ")}>
+                      {selectedAlgos.map(a => getAlgoDisplayName(a)).join(", ")}
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-                <AnimatePresence initial={false}>
-                  {advancedOpen && (
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: "auto" }}
-                      exit={{ height: 0 }}
-                      className="overflow-hidden"
+              {/* Configuration parameters */}
+              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4">
+                <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2">
+                  <span className="text-xs font-semibold text-[#FAFAFA]">Execution parameters</span>
+                  <span className="text-[10px] text-[#8A8A8A] font-mono">Customizable settings</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  {/* Crossover Threshold */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Crossover threshold</label>
+                    <select
+                      value={threshold}
+                      onChange={(e) => setThreshold(parseInt(e.target.value))}
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150 cursor-pointer"
                     >
-                      <div className="p-4 border-t border-[#252525] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#080808]">
-                        {/* Crossover Threshold */}
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[#8A8A8A] text-[10px] uppercase tracking-wider font-semibold">Crossover threshold</label>
-                          <select
-                            value={threshold}
-                            onChange={(e) => setThreshold(parseInt(e.target.value))}
-                            className="bg-[#111111] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150 cursor-pointer"
-                          >
-                            <option value={8}>8 elements</option>
-                            <option value={16}>16 elements (sweet spot)</option>
-                            <option value={32}>32 elements</option>
-                            <option value={64}>64 elements</option>
-                          </select>
-                        </div>
+                      <option value={8}>8 elements</option>
+                      <option value={16}>16 elements (sweet spot)</option>
+                      <option value={32}>32 elements</option>
+                      <option value={64}>64 elements</option>
+                    </select>
+                  </div>
 
-                        {/* Pivot Strategy */}
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[#8A8A8A] text-[10px] uppercase tracking-wider font-semibold">Pivot selection rule</label>
-                          <select
-                            value={pivotStrategy}
-                            onChange={(e) => setPivotStrategy(e.target.value)}
-                            className="bg-[#111111] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150 cursor-pointer"
-                          >
-                            <option value="first">First element</option>
-                            <option value="random">Random index</option>
-                            <option value="median_of_three">Median of three</option>
-                          </select>
-                        </div>
+                  {/* Pivot Strategy */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Pivot selection rule</label>
+                    <select
+                      value={pivotStrategy}
+                      onChange={(e) => setPivotStrategy(e.target.value)}
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150 cursor-pointer"
+                    >
+                      <option value="first">First element</option>
+                      <option value="random">Random index</option>
+                      <option value="median_of_three">Median of three</option>
+                    </select>
+                  </div>
 
-                        {/* Seed */}
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[#8A8A8A] text-[10px] uppercase tracking-wider font-semibold">Random generator seed</label>
-                          <input
-                            type="number"
-                            value={seed}
-                            onChange={(e) => setSeed(parseInt(e.target.value) || 42)}
-                            className="bg-[#111111] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
-                          />
-                        </div>
+                  {/* Seed */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Random generator seed</label>
+                    <input
+                      type="number"
+                      value={seed}
+                      onChange={(e) => setSeed(parseInt(e.target.value) || 42)}
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+                    />
+                  </div>
 
-                        {/* Timing Runs */}
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[#8A8A8A] text-[10px] uppercase tracking-wider font-semibold">Average run passes</label>
-                          <input
-                            type="number"
-                            min="1"
-                            max="20"
-                            value={timingRuns}
-                            onChange={(e) => setTimingRuns(parseInt(e.target.value) || 5)}
-                            className="bg-[#111111] border border-[#252525] rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
-                          />
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  {/* Timing Runs */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Average run passes</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={timingRuns}
+                      onChange={(e) => setTimingRuns(parseInt(e.target.value) || 5)}
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Action Button */}
@@ -1399,15 +1464,15 @@ export default function Home() {
                 {!telemetryActive && !benchLoading ? (
                   <button
                     onClick={handleRunBenchmark}
-                    className="w-full flex items-center justify-center bg-[#FAFAFA] text-[#080808] hover:bg-[#C9C9C9] font-bold py-4 rounded-lg transition duration-200 text-xs emerald-glow hover:emerald-glow-strong cursor-pointer"
+                    className="w-full flex items-center justify-center bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-bold py-3.5 rounded-lg transition-all duration-300 text-xs emerald-glow hover:emerald-glow-strong cursor-pointer"
                   >
-                    <span>Run performance experiment</span>
+                    <span>Run benchmark</span>
                   </button>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-2 justify-center py-2">
                       <span className="w-1.5 h-1.5 bg-[#22C55E] rounded-full animate-ping" />
-                      <span className="text-xs text-[#22C55E] font-mono">Running C++ native telemetry...</span>
+                      <span className="text-xs text-[#22C55E] font-mono">Running benchmark...</span>
                     </div>
                   </div>
                 )}
@@ -1423,7 +1488,7 @@ export default function Home() {
 
               {/* Telemetry log simulator console */}
               {(telemetryActive || telemetryLogs.length > 0) && (
-                <div className="bg-[#080808] border border-[#252525] rounded-lg p-4 font-mono text-[11px] text-[#C9C9C9] flex flex-col gap-1.5 min-h-[190px] justify-start shadow-inner">
+                <div className="bg-[#050505] border border-[#252525] rounded-lg p-4 font-mono text-[11px] text-[#C9C9C9] flex flex-col gap-1.5 min-h-[190px] justify-start shadow-inner">
                   <div className="flex justify-between items-center border-b border-[#252525]/30 pb-1.5 mb-1.5 text-[9px] text-[#8A8A8A]">
                     <span>Workstation diagnostics</span>
                     <span>Active port: 8000</span>
@@ -1466,26 +1531,38 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col gap-8 w-full py-4 animate-slideup animate-once text-left"
             >
-              {/* Dynamic Conclusion Header */}
+              <div className="flex flex-col gap-1">
+                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 4 of 6</span>
+                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Compare results</h2>
+                <p className="text-[#C9C9C9] text-xs">Analyze native execution runtimes, instruction comparisons, and space scaling curves.</p>
+              </div>
+
+              {/* Terminal Diagnostics Winner Panel */}
               {benchResults.length > 0 && (
-                <div className="border border-[#22C55E]/20 bg-[#22C55E]/5 rounded-lg p-5 flex flex-col gap-1.5 shadow-sm">
-                  <span className="text-[10px] font-mono text-[#22C55E] uppercase tracking-wider font-semibold">Fastest pipeline</span>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-extrabold text-[#FAFAFA] tracking-tight">
-                      {getAlgoDisplayName(getFastestAlgo()?.algorithm || "")}
-                    </span>
-                    <span className="text-xs text-[#22C55E] font-medium font-mono">Winner</span>
+                <div className="border border-[#252525] bg-[#050505] rounded-lg p-4 font-mono text-xs flex flex-col gap-2 shadow-inner">
+                  <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2 text-[10px] text-[#8A8A8A]">
+                    <span>KERNEL_DIAGNOSTICS_LOG</span>
+                    <span>STATUS: ANALYSIS_SUCCESS</span>
                   </div>
-                  <p className="text-xs text-[#C9C9C9] leading-relaxed">
-                    {getResultsSummaryText()}
-                  </p>
+                  <div className="flex flex-col gap-1 text-[#C9C9C9]">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[#8A8A8A]">$</span>
+                      <span>cat winner_telemetry.log</span>
+                    </div>
+                    <div className="text-[#FAFAFA] font-bold mt-1">
+                      FASTEST PIPELINE: {getAlgoDisplayName(getFastestAlgo()?.algorithm || "").toUpperCase()}
+                    </div>
+                    <div className="text-[#22C55E] mt-0.5 leading-relaxed">
+                      {getResultsSummaryText()}
+                    </div>
+                  </div>
                 </div>
               )}
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Results Metrics Table */}
-                <div className="lg:col-span-2 border border-[#252525] bg-[#111111] rounded-lg p-5 flex flex-col gap-4">
+                <div className="lg:col-span-2 border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4">
                   <div className="flex justify-between items-center border-b border-[#252525] pb-2">
                     <span className="text-xs font-semibold text-[#FAFAFA]">Algorithm execution telemetry</span>
                     <span className="text-[10px] text-[#8A8A8A] font-mono">Dataset size: {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
@@ -1511,12 +1588,12 @@ export default function Home() {
                           {benchResults.map((r, idx) => {
                             const best = getFastestAlgo();
                             const isFastest = r.algorithm === best?.algorithm;
-                            const rowBg = isFastest ? "bg-[#22C55E]/5 text-[#FAFAFA]" : "hover:bg-[#181818]/40";
+                            const rowBg = isFastest ? "hover:bg-[#141414]/40 text-[#FAFAFA]" : "hover:bg-[#141414]/40";
                             const borderCell = (pos: "first" | "middle" | "last") => {
                               if (!isFastest) return "border-b border-[#252525]/30 py-3 px-3";
-                              if (pos === "first") return "border-t border-b border-l border-[#22C55E]/30 py-3 px-3 text-[#22C55E] font-bold";
-                              if (pos === "last") return "border-t border-b border-r border-[#22C55E]/30 py-3 px-3 text-[#FAFAFA]";
-                              return "border-t border-b border-[#22C55E]/30 py-3 px-3 text-[#FAFAFA]";
+                              if (pos === "first") return "border-t border-b border-l border-[#22C55E] py-3 px-3 text-[#22C55E] font-bold";
+                              if (pos === "last") return "border-t border-b border-r border-[#22C55E] py-3 px-3 text-[#FAFAFA]";
+                              return "border-t border-b border-[#22C55E] py-3 px-3 text-[#FAFAFA]";
                             };
 
                             return (
@@ -1546,7 +1623,7 @@ export default function Home() {
                 </div>
 
                 {/* Local experiment run history sidebar */}
-                <div className="border border-[#252525] bg-[#111111] rounded-lg p-5 flex flex-col gap-4">
+                <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4">
                   <div className="flex items-center justify-between border-b border-[#252525] pb-2">
                     <span className="text-xs font-semibold text-[#FAFAFA]">Local run logs</span>
                     {runHistory.length > 0 && (
@@ -1580,7 +1657,7 @@ export default function Home() {
               {benchResults.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-[#252525] pt-8">
                   {/* Runtime Bar Chart */}
-                  <div className="border border-[#252525] bg-[#111111] rounded-lg p-5">
+                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5">
                     <h4 className="text-xs font-semibold text-[#C9C9C9] mb-4">Runtime comparison (μs)</h4>
                     <div className="h-56">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1588,11 +1665,11 @@ export default function Home() {
                           <CartesianGrid strokeDasharray="3 3" stroke="#252525" />
                           <XAxis dataKey="algorithm" stroke="#8A8A8A" tickFormatter={(v) => v.replace("quick_", "Q+").replace("sort", "")} style={{ fontSize: 9 }} />
                           <YAxis stroke="#8A8A8A" style={{ fontSize: 9 }} />
-                          <Tooltip contentStyle={{ backgroundColor: '#111111', borderColor: '#252525', fontSize: 10, color: '#FAFAFA' }} />
+                          <Tooltip contentStyle={{ backgroundColor: '#0D0D0D', borderColor: '#252525', fontSize: 10, color: '#FAFAFA' }} />
                           <Bar dataKey="runtime_us" name="Time (μs)" radius={[2, 2, 0, 0]}>
                             {benchResults.map((entry, index) => {
                               const isFastest = entry.algorithm === getFastestAlgo()?.algorithm;
-                              return <Cell key={`cell-${index}`} fill={isFastest ? "#22C55E" : "#181818"} stroke={isFastest ? "#22C55E" : "#252525"} strokeWidth={1} />;
+                              return <Cell key={`cell-${index}`} fill={isFastest ? "#22C55E" : "#141414"} stroke={isFastest ? "#22C55E" : "#252525"} strokeWidth={1} />;
                             })}
                           </Bar>
                         </BarChart>
@@ -1601,7 +1678,7 @@ export default function Home() {
                   </div>
 
                   {/* Scale Line Chart */}
-                  <div className="border border-[#252525] bg-[#111111] rounded-lg p-5">
+                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5">
                     <h4 className="text-xs font-semibold text-[#C9C9C9] mb-4">Complexity reference curve (runtime scaling)</h4>
                     <div className="h-56">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1614,7 +1691,7 @@ export default function Home() {
                           <CartesianGrid strokeDasharray="3 3" stroke="#252525" />
                           <XAxis dataKey="size" stroke="#8A8A8A" style={{ fontSize: 9 }} />
                           <YAxis stroke="#8A8A8A" style={{ fontSize: 9 }} />
-                          <Tooltip contentStyle={{ backgroundColor: '#111111', borderColor: '#252525', fontSize: 10, color: '#FAFAFA' }} />
+                          <Tooltip contentStyle={{ backgroundColor: '#0D0D0D', borderColor: '#252525', fontSize: 10, color: '#FAFAFA' }} />
                           <Line type="monotone" dataKey="introsort" stroke="#22C55E" strokeWidth={1.5} name="Introsort" dot={false} />
                           <Line type="monotone" dataKey="quicksort" stroke="#5A5A5A" strokeWidth={1.2} name="Quick" dot={false} />
                           <Line type="monotone" dataKey="mergesort" stroke="#8A8A8A" strokeWidth={1.2} name="Merge" dot={false} />
@@ -1623,6 +1700,16 @@ export default function Home() {
                       </ResponsiveContainer>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* Chart explanation annotation */}
+              {benchResults.length > 0 && (
+                <div className="border border-[#252525] bg-[#0D0D0D] p-4 rounded-lg flex flex-col gap-1 text-xs">
+                  <span className="text-[9px] uppercase tracking-wider font-semibold text-[#8A8A8A] font-mono">Performance observation</span>
+                  <p className="text-[#C9C9C9] leading-relaxed">
+                    {getChartExplanationText()}
+                  </p>
                 </div>
               )}
 
@@ -1636,7 +1723,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] font-semibold px-6 py-2.5 rounded transition-all duration-150 text-xs flex items-center gap-1.5 emerald-glow hover:emerald-glow-strong cursor-pointer font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong font-medium"
                 >
                   <span>Visualize execution transitions</span>
                   <ChevronRight size={13} />
@@ -1656,16 +1743,16 @@ export default function Home() {
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#252525] pb-4">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[#22C55E] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 5 of 6</span>
-                  <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Visualizing recursive boundaries</h2>
+                  <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 5 of 6</span>
+                  <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Visualize execution</h2>
                   <p className="text-[#C9C9C9] text-xs">Observe side-by-side array partitions swapping execution limits based on set threshold criteria.</p>
                 </div>
 
                 {/* Mini Player Controls */}
-                <div className="flex items-center gap-2.5 bg-[#111111] border border-[#252525] p-1.5 rounded-lg">
+                <div className="flex items-center gap-2.5 bg-[#0D0D0D] border border-[#252525] p-1.5 rounded-lg">
                   <button
                     onClick={handlePlayPause}
-                    className="p-2 bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] rounded transition-all duration-150 cursor-pointer text-xs flex items-center gap-1.5 font-semibold"
+                    className="p-2 bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#050505] rounded transition-all duration-150 cursor-pointer text-xs flex items-center gap-1.5 font-semibold"
                   >
                     {isPlaying ? <Pause size={12} /> : <Play size={12} />}
                     <span>{isPlaying ? "Pause" : "Play simulation"}</span>
@@ -1681,10 +1768,10 @@ export default function Home() {
               </div>
 
               {/* Main Visualizer Controls Shelf */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-[#252525] bg-[#111111] rounded-lg text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-[#252525] bg-[#0D0D0D] rounded-lg text-xs">
                 {/* Visualizer Delay */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] uppercase tracking-wider font-semibold">
+                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] tracking-wider font-semibold">
                     <span>Animation delay</span>
                     <span className="text-[#22C55E] font-bold font-mono">{vizSpeed}ms</span>
                   </div>
@@ -1694,13 +1781,13 @@ export default function Home() {
                     max="150"
                     value={vizSpeed}
                     onChange={(e) => setVizSpeed(parseInt(e.target.value))}
-                    className="w-full accent-[#22C55E] bg-[#080808] cursor-pointer"
+                    className="w-full accent-[#22C55E] bg-[#050505] cursor-pointer"
                   />
                 </div>
 
                 {/* Array size */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] uppercase tracking-wider font-semibold">
+                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] tracking-wider font-semibold">
                     <span>Array scale</span>
                     <span className="text-[#22C55E] font-bold font-mono">{vizSize}</span>
                   </div>
@@ -1710,13 +1797,13 @@ export default function Home() {
                     max="80"
                     value={vizSize}
                     onChange={(e) => setVizSize(parseInt(e.target.value))}
-                    className="w-full accent-[#22C55E] bg-[#080808] cursor-pointer"
+                    className="w-full accent-[#22C55E] bg-[#050505] cursor-pointer"
                   />
                 </div>
 
                 {/* Crossover Threshold */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] uppercase tracking-wider font-semibold">
+                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] tracking-wider font-semibold">
                     <span>Crossover threshold</span>
                     <span className="text-[#22C55E] font-bold font-mono">{vizThreshold}</span>
                   </div>
@@ -1726,12 +1813,12 @@ export default function Home() {
                     max="35"
                     value={vizThreshold}
                     onChange={(e) => setVizThreshold(parseInt(e.target.value))}
-                    className="w-full accent-[#22C55E] bg-[#080808] cursor-pointer"
+                    className="w-full accent-[#22C55E] bg-[#050505] cursor-pointer"
                   />
                 </div>
 
                 {/* Duration info */}
-                <div className="flex flex-col justify-end bg-[#080808] p-2 border border-[#252525] rounded">
+                <div className="flex flex-col justify-end bg-[#050505] p-2 border border-[#252525] rounded">
                   <div className="flex justify-between items-center">
                     <span className="text-[9px] text-[#8A8A8A] font-mono">Elapsed time:</span>
                     <span className="text-xs font-mono font-bold text-[#FAFAFA]">{(vizElapsedTime / 10).toFixed(1)}s</span>
@@ -1748,7 +1835,7 @@ export default function Home() {
                   return (
                     <div 
                       key={algo} 
-                      className={`border rounded-lg p-4 flex flex-col gap-3 transition-all duration-300 bg-[#111111] ${
+                      className={`border rounded-lg p-4 flex flex-col gap-3 transition-all duration-300 bg-[#0D0D0D] ${
                         state.winner 
                           ? "border-[#4ADE80] shadow-[0_0_20px_rgba(34,197,94,0.08)]" 
                           : "border-[#252525]"
@@ -1765,24 +1852,24 @@ export default function Home() {
                           </span>
                         </div>
                         {state.winner && (
-                          <span className="text-[9px] bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 px-2 py-0.5 rounded font-bold uppercase animate-pulse">
+                          <span className="text-[9px] bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 px-2 py-0.5 rounded font-semibold animate-pulse">
                             ✓ Winner
                           </span>
                         )}
                         {state.done && !state.winner && (
-                          <span className="text-[9px] bg-[#181818] text-[#8A8A8A] border border-[#252525] px-2 py-0.5 rounded font-mono">
+                          <span className="text-[9px] bg-[#141414] text-[#8A8A8A] border border-[#252525] px-2 py-0.5 rounded font-mono">
                             Completed
                           </span>
                         )}
                       </div>
 
                       {/* Dominate Visualizer Bar charts height */}
-                      <div className="h-64 flex items-end justify-between gap-0.5 bg-[#080808] p-4 border border-[#252525] rounded-md relative overflow-hidden">
+                      <div className="h-64 flex items-end justify-between gap-0.5 bg-[#050505] p-4 border border-[#252525] rounded-md relative overflow-hidden">
                         {state.array.map((bar, idx) => {
                           let colorClass = "bg-[#252525]"; // default unsorted (grayscale)
                           if (bar.state === "compare") colorClass = "bg-[#FAFAFA]"; // comparing (white)
                           if (bar.state === "operation") colorClass = "bg-[#22C55E]"; // active (mutating)
-                          if (bar.state === "sorted") colorClass = "bg-[#22C55E]/40"; // sorted (light green)
+                          if (bar.state === "sorted") colorClass = "bg-[#4ADE80]"; // sorted (light green)
 
                           return (
                             <div 
@@ -1830,7 +1917,7 @@ export default function Home() {
                   <span className="w-2.5 h-2.5 bg-[#22C55E] rounded"></span> Active partition operation
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 bg-[#22C55E]/40 rounded border border-[#22C55E]/20"></span> Sorted segment
+                  <span className="w-2.5 h-2.5 bg-[#4ADE80] rounded"></span> Sorted segment
                 </div>
               </div>
 
@@ -1844,7 +1931,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] font-semibold px-6 py-2.5 rounded transition-all duration-150 text-xs flex items-center gap-1.5 emerald-glow hover:emerald-glow-strong cursor-pointer font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong font-medium"
                 >
                   <span>Verify analysis conclusions</span>
                   <ChevronRight size={13} />
@@ -1860,124 +1947,209 @@ export default function Home() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex flex-col gap-8 max-w-3xl mx-auto w-full py-6 text-left"
+              className="flex flex-col gap-8 max-w-4xl mx-auto w-full py-6 text-left"
             >
               <div className="flex flex-col gap-1 border-b border-[#252525] pb-4">
-                <span className="text-[#22C55E] font-mono text-[10px] uppercase tracking-wider font-semibold">Step 6 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Workstation performance analysis</h2>
+                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 6 of 6</span>
+                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Analyze performance</h2>
                 <p className="text-[#C9C9C9] text-xs">Examine the mathematical conclusions and hardware architecture trade-offs verified in your experiment.</p>
               </div>
 
-              {/* Curated Questions & Explanations connected to the benchmark run */}
-              <div className="flex flex-col gap-6">
-                
-                {/* Question 1 */}
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-xs font-semibold text-[#FAFAFA]">
-                    Why did {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} perform better in this run?
-                  </h3>
-                  <div className="text-xs text-[#C9C9C9] leading-relaxed flex flex-col gap-2">
-                    <p>
-                      On the selected <strong className="text-[#FAFAFA] font-semibold">{datasetType}</strong> dataset (scale N={getDatasetSizeFromExponent(sizeExponent).toLocaleString()}), {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} minimized execution cycles by dynamically swapping sorting routines.
-                    </p>
-                    <p>
-                      For large ranges, recursive partitioning quickly narrows down sorting partitions. Once subproblems fit comfortably within cache line limits, transitioning to non-recursive base sorting (like Insertion Sort) avoids stack frame storage allocations.
-                    </p>
-                  </div>
+              {/* Question 1: Dynamic Winner Summary */}
+              <div className="flex flex-col gap-2 bg-[#0D0D0D] border border-[#252525] p-5 rounded-lg">
+                <h3 className="text-xs font-semibold text-[#FAFAFA]">
+                  Why did {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} perform better in this run?
+                </h3>
+                <div className="text-xs text-[#C9C9C9] leading-relaxed flex flex-col gap-2">
+                  <p>
+                    On the selected <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset (scale n={getDatasetSizeFromExponent(sizeExponent).toLocaleString()}), {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} minimized execution cycles by dynamically swapping sorting routines.
+                  </p>
+                  <p>
+                    For large ranges, recursive partitioning quickly narrows down sorting partitions. Once subproblems fit comfortably within cache line limits, transitioning to non-recursive base sorting (like Insertion Sort) avoids stack frame storage allocations.
+                  </p>
                 </div>
+              </div>
 
-                {/* Question 2 */}
-                <div className="flex flex-col gap-2 border-t border-[#252525]/30 pt-4">
-                  <h3 className="text-xs font-semibold text-[#FAFAFA]">
-                    How do hybrid algorithms differ from classical implementations?
-                  </h3>
-                  <div className="text-xs text-[#C9C9C9] leading-relaxed flex flex-col gap-2">
-                    <p>
-                      Classical sorting algorithms (like QuickSort or MergeSort) run their core recursive partitions all the way down to a single element. This triggers heavy recursion stack allocations for tiny sizes where a simpler sorting routine would be faster.
-                    </p>
-                    <p>
-                      Hybrid algorithms like Introsort establish a <strong className="text-[#FAFAFA] font-semibold">crossover threshold</strong> (typically {threshold} elements). When partition size drops below this threshold, it invokes Insertion Sort, which runs in near-linear time on pre-ordered chunks and requires zero extra stack frames.
-                    </p>
+              {/* Structured Hybrid Architecture Columns */}
+              <div className="flex flex-col gap-4 border-t border-[#252525] pt-8">
+                <h3 className="text-xs font-semibold text-[#FAFAFA]">Hybrid architecture profiles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Column 1: Quick + Insertion */}
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <strong className="text-xs text-[#FAFAFA] block">Quick + Insertion</strong>
+                        <span className="text-[9px] text-[#8A8A8A] font-mono">In-place threshold hybrid</span>
+                      </div>
+                      <div className="border-b border-[#252525] my-1" />
+                      <div className="flex flex-col gap-2.5 text-[11px] leading-relaxed text-[#C9C9C9]">
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Overview</strong>
+                          Partitions down to crossover threshold, stopping recursion early. Final pass of Insertion Sort cleans remaining inversions.
+                        </p>
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Advantages</strong>
+                          Extremely low stack frame memory overhead; optimizes cache utilization for local sub-arrays.
+                        </p>
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Disadvantages</strong>
+                          Unstable sort. Bad pivot choices on pre-sorted sets degrade runtime to quadratic $O(n^2)$.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-[10px] font-mono text-[#8A8A8A]">
+                      <div className="flex justify-between">
+                        <span>Best case:</span>
+                        <span className="text-[#22C55E]">O(n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Average:</span>
+                        <span className="text-[#FAFAFA]">O(n log n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Worst case:</span>
+                        <span>O(n²)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Space:</span>
+                        <span className="text-[#FAFAFA]">O(log n)</span>
+                      </div>
+                      <div className="mt-1 flex justify-between font-sans">
+                        <span>Use case:</span>
+                        <span className="text-[#FAFAFA] text-right">In-place sort of random sets</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {/* Question 3 */}
-                <div className="flex flex-col gap-2 border-t border-[#252525]/30 pt-4">
-                  <h3 className="text-xs font-semibold text-[#FAFAFA]">
-                    What design trade-offs are at play?
-                  </h3>
-                  <div className="text-xs text-[#C9C9C9] leading-relaxed flex flex-col gap-2">
-                    <p>
-                      Memory vs. CPU cycles is the primary trade-off. Quick+Merge provides stable sorting segments but demands O(N) auxiliary space allocations. Quick+Insertion runs in-place, but bad pivot choices on inverted sets can degrade standard QuickSort to quadratic O(N²) time. Introsort mitigates this by falling back to HeapSort if recursion depth hits limits, sacrificing stability to protect performance bounds.
-                    </p>
+                  {/* Column 2: Quick + Merge */}
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <strong className="text-xs text-[#FAFAFA] block">Quick + Merge</strong>
+                        <span className="text-[9px] text-[#8A8A8A] font-mono">Stable partition hybrid</span>
+                      </div>
+                      <div className="border-b border-[#252525] my-1" />
+                      <div className="flex flex-col gap-2.5 text-[11px] leading-relaxed text-[#C9C9C9]">
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Overview</strong>
+                          Recursive pivot partitioning delegates to stable MergeSort once sub-array sizes fall below the threshold.
+                        </p>
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Advantages</strong>
+                          Ensures stable relative order of duplicate elements within local sub-partitions.
+                        </p>
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Disadvantages</strong>
+                          Demands $O(n)$ auxiliary workspace allocations, creating allocation bottlenecks at scale.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-[10px] font-mono text-[#8A8A8A]">
+                      <div className="flex justify-between">
+                        <span>Best case:</span>
+                        <span className="text-[#FAFAFA]">O(n log n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Average:</span>
+                        <span className="text-[#FAFAFA]">O(n log n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Worst case:</span>
+                        <span>O(n²)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Space:</span>
+                        <span className="text-[#FAFAFA]">O(n) aux</span>
+                      </div>
+                      <div className="mt-1 flex justify-between font-sans">
+                        <span>Use case:</span>
+                        <span className="text-[#FAFAFA] text-right">Stable sorting with extra RAM</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Column 3: Introsort */}
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <strong className="text-xs text-[#FAFAFA] block">Introsort</strong>
+                        <span className="text-[9px] text-[#8A8A8A] font-mono">Three-way defensive hybrid</span>
+                      </div>
+                      <div className="border-b border-[#252525] my-1" />
+                      <div className="flex flex-col gap-2.5 text-[11px] leading-relaxed text-[#C9C9C9]">
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Overview</strong>
+                          Starts with QuickSort. Switches to HeapSort if recursion depth hits limit; transitions to Insertion Sort below threshold.
+                        </p>
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Advantages</strong>
+                          Guarantees $O(n \log n)$ worst-case bounds while maintaining standard QuickSort average speeds.
+                        </p>
+                        <p>
+                          <strong className="text-[#FAFAFA] font-medium block mb-0.5">Disadvantages</strong>
+                          Unstable sort. Slightly higher constant factor overhead than pure Quick + Insertion.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-[10px] font-mono text-[#8A8A8A]">
+                      <div className="flex justify-between">
+                        <span>Best case:</span>
+                        <span className="text-[#22C55E]">O(n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Average:</span>
+                        <span className="text-[#22C55E]">O(n log n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Worst case:</span>
+                        <span className="text-[#22C55E]">O(n log n)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Space:</span>
+                        <span className="text-[#FAFAFA]">O(log n)</span>
+                      </div>
+                      <div className="mt-1 flex justify-between font-sans">
+                        <span>Use case:</span>
+                        <span className="text-[#FAFAFA] text-right">Standard library routines</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Complexity Reference Comparison Table */}
-              <div className="border-t border-[#252525] pt-8 flex flex-col gap-4">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Complexity comparison reference</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs border-collapse">
-                    <thead>
-                      <tr className="border-b border-[#252525] text-[#8A8A8A] font-semibold text-[10px]">
-                        <th className="py-2">Algorithm</th>
-                        <th className="py-2">Best case</th>
-                        <th className="py-2">Average case</th>
-                        <th className="py-2">Worst case</th>
-                        <th className="py-2">Space complexity</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#252525]/30 font-mono text-[#C9C9C9]">
-                      <tr>
-                        <td className="py-2.5 font-sans font-semibold text-[#FAFAFA]">Quick + Insertion</td>
-                        <td className="py-2.5 text-[#22C55E]">O(N)</td>
-                        <td className="py-2.5">O(N log N)</td>
-                        <td className="py-2.5">O(N²)</td>
-                        <td className="py-2.5">O(log N)</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 font-sans font-semibold text-[#FAFAFA]">Quick + Merge</td>
-                        <td className="py-2.5">O(N log N)</td>
-                        <td className="py-2.5">O(N log N)</td>
-                        <td className="py-2.5">O(N²)</td>
-                        <td className="py-2.5">O(N) auxiliary</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 font-sans font-semibold text-[#FAFAFA]">Introsort</td>
-                        <td className="py-2.5 text-[#22C55E]">O(N)</td>
-                        <td className="py-2.5 text-[#22C55E]">O(N log N)</td>
-                        <td className="py-2.5 text-[#22C55E]">O(N log N)</td>
-                        <td className="py-2.5">O(log N)</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+              {/* Empirical Crossover Threshold Analysis */}
+              <div className="border-t border-[#252525] pt-8 flex flex-col gap-3">
+                <h3 className="text-xs font-semibold text-[#FAFAFA]">Empirical crossover threshold analysis</h3>
+                <p className="text-xs text-[#C9C9C9] leading-relaxed">
+                  The crossover threshold (configured at <span className="font-mono text-[#FAFAFA]">{threshold}</span> elements in your benchmark) determines when recursive subproblems transition to insertion-based sorting. 
+                  Lower thresholds increase recursion stack frames and function call overhead. Higher thresholds force the $O(n^2)$ insertion sort to execute on excessively large partitions, degrading overall runtime. 
+                  Empirically, a threshold of <span className="font-mono text-[#FAFAFA]">16</span> coordinates best with standard L1 data cache lines (typically 64 bytes), minimizing memory cache misses and maximizing processing throughput.
+                </p>
               </div>
 
               {/* Dataset Distribution Impact Summary Grid */}
               <div className="border-t border-[#252525] pt-8 flex flex-col gap-4">
                 <h3 className="text-xs font-semibold text-[#FAFAFA]">Dataset distribution impact matrix</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-                  <div className="border border-[#252525] bg-[#111111] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
                     <strong className="text-[#FAFAFA] block">Random uniform</strong>
                     <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">High Entropy</span>
                     <span className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
                     <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Benefited by quick balanced recursive partition splits.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#111111] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
                     <strong className="text-[#FAFAFA] block">Nearly sorted</strong>
                     <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">Low Inversions</span>
                     <span className="text-[10px] text-[#22C55E] font-bold font-mono text-nowrap">Winner: Quick+Insertion</span>
-                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Insertion sort bases finish in O(N) linear time on sorted runs.</p>
+                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Insertion sort bases finish in O(n) linear time on sorted runs.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#111111] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
                     <strong className="text-[#FAFAFA] block">Reverse sorted</strong>
                     <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">Max Inversions</span>
                     <span className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
                     <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Safe from quadratic time degradation via HeapSort recursion fallback.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#111111] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
                     <strong className="text-[#FAFAFA] block">Duplicate heavy</strong>
                     <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">Key Collisions</span>
                     <span className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Quick+Merge</span>
@@ -1999,7 +2171,7 @@ export default function Home() {
                     setCurrentStep(1);
                     setMaxUnlockedStep(1);
                   }}
-                  className="bg-[#FAFAFA] hover:bg-[#C9C9C9] text-[#080808] font-semibold px-6 py-2.5 rounded transition-all duration-150 text-xs flex items-center gap-1.5 emerald-glow hover:emerald-glow-strong cursor-pointer font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer font-medium"
                 >
                   <span>Restart experiment</span>
                   <RotateCcw size={12} />
