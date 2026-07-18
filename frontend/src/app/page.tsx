@@ -1178,7 +1178,7 @@ export default function Home() {
               </div>
 
               {/* Dataset Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {[
                   { id: "random", label: "Uniform random", desc: "Standard random distribution. Generates balanced testing scenarios." },
                   { id: "nearly_sorted", label: "Nearly sorted", desc: "Low inversion count. Tests insertion-based hybrid recovery speeds." },
@@ -1190,29 +1190,29 @@ export default function Home() {
                     <button
                       key={card.id}
                       onClick={() => setDatasetType(card.id)}
-                      className={`text-left p-4 rounded-lg border transition-all duration-300 flex flex-col gap-1.5 cursor-pointer hover-lift ${
+                      className={`text-left p-6 rounded-lg border transition-all duration-300 flex flex-col gap-3 cursor-pointer hover-lift ${
                         isSelected 
                           ? "border-[#4ADE80] bg-[#22C55E]/5 text-[#FAFAFA]" 
                           : "border-[#252525] bg-[#0D0D0D] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
                       }`}
                     >
                       <div className="flex justify-between items-center w-full">
-                        <span className="text-xs font-semibold">{card.label}</span>
+                        <span className="text-sm font-semibold">{card.label}</span>
                         {isSelected && <span className="w-2 h-2 rounded-full bg-[#22C55E]" />}
                       </div>
-                      <p className="text-[11px] leading-relaxed text-[#8A8A8A]">{card.desc}</p>
+                      <p className="text-xs leading-relaxed text-[#8A8A8A]">{card.desc}</p>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Dataset Scale Slider */}
-                <div className="p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col justify-between gap-4">
-                  <div className="flex flex-col gap-2">
+                <div className="p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col justify-between gap-6">
+                  <div className="flex flex-col gap-3">
                     <div className="flex justify-between items-end">
-                      <span className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Dataset size (n)</span>
-                      <span className="text-base font-bold font-mono text-[#FAFAFA] tracking-tight leading-none">
+                      <span className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Dataset size (n)</span>
+                      <span className="text-lg font-bold font-mono text-[#FAFAFA] tracking-tight leading-none">
                         {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}
                       </span>
                     </div>
@@ -1227,7 +1227,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="flex justify-between text-[9px] text-[#8A8A8A] px-1 font-mono">
+                  <div className="flex justify-between text-xs text-[#8A8A8A] px-1 font-mono">
                     <span>100</span>
                     <span>1K</span>
                     <span>10K</span>
@@ -1237,9 +1237,9 @@ export default function Home() {
                 </div>
 
                 {/* Dataset Distribution Preview */}
-                <div className="p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col gap-2.5">
-                  <span className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Distribution preview</span>
-                  <div className="h-20 flex items-end justify-between gap-1 bg-[#050505] p-3 border border-[#252525] rounded">
+                <div className="p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col gap-4">
+                  <span className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Distribution preview</span>
+                  <div className="h-28 flex items-end justify-between gap-1 bg-[#050505] p-3 border border-[#252525] rounded">
                     {(() => {
                       const data = datasetType === "nearly_sorted" 
                         ? [10, 16, 22, 18, 34, 40, 52, 46, 58, 64, 76, 70, 82, 88, 94, 100]
@@ -1295,7 +1295,7 @@ export default function Home() {
               </div>
 
               {/* Algorithms Cards Checklist */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   { id: "quicksort", name: "QuickSort", desc: "Classic O(N log N) recursive partitioning logic." },
                   { id: "mergesort", name: "MergeSort", desc: "Stable sorting array writes. Consistent O(N log N) complexity." },
@@ -1309,22 +1309,22 @@ export default function Home() {
                     <button
                       key={algo.id}
                       onClick={() => toggleAlgoSelection(algo.id)}
-                      className={`text-left p-3.5 rounded-lg border transition-all duration-200 flex items-start gap-3 cursor-pointer ${
+                      className={`text-left p-6 rounded-lg border transition-all duration-200 flex items-start gap-4 cursor-pointer ${
                         isChecked 
                           ? "border-[#4ADE80] bg-[#22C55E]/5 text-[#FAFAFA]" 
                           : "border-[#252525] bg-[#0D0D0D] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
                       }`}
                     >
                       <div className="mt-0.5">
-                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-colors ${
+                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                           isChecked ? "bg-[#22C55E] border-[#22C55E]" : "border-[#5A5A5A] bg-[#050505]"
                         }`}>
-                          {isChecked && <Check size={10} className="text-[#050505] stroke-[3]" />}
+                          {isChecked && <Check size={12} className="text-[#050505] stroke-[3]" />}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-semibold">{algo.name}</span>
-                        <p className="text-[11px] leading-relaxed text-[#8A8A8A]">{algo.desc}</p>
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-sm font-semibold">{algo.name}</span>
+                        <p className="text-xs leading-relaxed text-[#8A8A8A]">{algo.desc}</p>
                       </div>
                     </button>
                   );
@@ -1332,8 +1332,8 @@ export default function Home() {
               </div>
 
               {/* Conversational summary */}
-              <div className="flex items-center gap-3 p-4 border border-[#252525] bg-[#0D0D0D] rounded-lg">
-                <p className="text-xs text-[#C9C9C9] leading-relaxed">
+              <div className="flex items-center gap-4 p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg">
+                <p className="text-sm text-[#C9C9C9] leading-relaxed">
                   Comparing <strong className="text-[#FAFAFA] font-semibold">{selectedAlgos.length} algorithms</strong> on a <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset of scale <strong className="text-[#FAFAFA] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</strong>.
                 </p>
               </div>
@@ -1374,22 +1374,22 @@ export default function Home() {
               </div>
 
               {/* Active Workspace Setup Summary */}
-              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-4 flex flex-col gap-2.5 text-xs">
+              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-4 text-sm">
                 <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2">
-                  <span className="text-xs font-semibold text-[#FAFAFA]">Active experiment setup</span>
-                  <span className="text-[10px] text-[#8A8A8A] font-mono">Steps 1–2 configuration</span>
+                  <span className="text-sm font-semibold text-[#FAFAFA]">Active experiment setup</span>
+                  <span className="text-xs text-[#8A8A8A] font-mono">Steps 1–2 configuration</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-[10px] text-[#C9C9C9]">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[#8A8A8A] font-sans">Dataset structure</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 font-mono text-xs text-[#C9C9C9]">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[#8A8A8A] font-sans text-xs">Dataset structure</span>
                     <span className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</span>
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[#8A8A8A] font-sans">Dataset size (n)</span>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[#8A8A8A] font-sans text-xs">Dataset size (n)</span>
                     <span className="text-[#FAFAFA] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[#8A8A8A] font-sans">Selected algorithms</span>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[#8A8A8A] font-sans text-xs">Selected algorithms</span>
                     <span className="text-[#FAFAFA] font-semibold truncate" title={selectedAlgos.map(a => getAlgoDisplayName(a)).join(", ")}>
                       {selectedAlgos.map(a => getAlgoDisplayName(a)).join(", ")}
                     </span>
@@ -1398,19 +1398,19 @@ export default function Home() {
               </div>
 
               {/* Configuration parameters */}
-              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4">
+              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-5">
                 <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2">
-                  <span className="text-xs font-semibold text-[#FAFAFA]">Execution parameters</span>
-                  <span className="text-[10px] text-[#8A8A8A] font-mono">Customizable settings</span>
+                  <span className="text-sm font-semibold text-[#FAFAFA]">Execution parameters</span>
+                  <span className="text-xs text-[#8A8A8A] font-mono">Customizable settings</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
                   {/* Crossover Threshold */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Crossover threshold</label>
+                  <div className="flex flex-col gap-2.5">
+                    <label className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Crossover threshold</label>
                     <select
                       value={threshold}
                       onChange={(e) => setThreshold(parseInt(e.target.value))}
-                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150 cursor-pointer"
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-4 py-3 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-sm transition duration-150 cursor-pointer"
                     >
                       <option value={8}>8 elements</option>
                       <option value={16}>16 elements (sweet spot)</option>
@@ -1420,12 +1420,12 @@ export default function Home() {
                   </div>
 
                   {/* Pivot Strategy */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Pivot selection rule</label>
+                  <div className="flex flex-col gap-2.5">
+                    <label className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Pivot selection rule</label>
                     <select
                       value={pivotStrategy}
                       onChange={(e) => setPivotStrategy(e.target.value)}
-                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150 cursor-pointer"
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-4 py-3 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-sm transition duration-150 cursor-pointer"
                     >
                       <option value="first">First element</option>
                       <option value="random">Random index</option>
@@ -1434,26 +1434,26 @@ export default function Home() {
                   </div>
 
                   {/* Seed */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Random generator seed</label>
+                  <div className="flex flex-col gap-2.5">
+                    <label className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Random generator seed</label>
                     <input
                       type="number"
                       value={seed}
                       onChange={(e) => setSeed(parseInt(e.target.value) || 42)}
-                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-4 py-3 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-sm transition duration-150"
                     />
                   </div>
 
                   {/* Timing Runs */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[#8A8A8A] text-[10px] tracking-wider font-semibold">Average run passes</label>
+                  <div className="flex flex-col gap-2.5">
+                    <label className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Average run passes</label>
                     <input
                       type="number"
                       min="1"
                       max="20"
                       value={timingRuns}
                       onChange={(e) => setTimingRuns(parseInt(e.target.value) || 5)}
-                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-3 py-2 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-xs transition duration-150"
+                      className="bg-[#050505] border border-[#252525] hover:border-[#22C55E]/50 rounded px-4 py-3 text-[#FAFAFA] focus:outline-none focus:border-[#22C55E] text-sm transition duration-150"
                     />
                   </div>
                 </div>
