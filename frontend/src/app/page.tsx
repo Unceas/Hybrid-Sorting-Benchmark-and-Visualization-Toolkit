@@ -960,20 +960,20 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#050505] text-[#FAFAFA] flex flex-col font-sans antialiased text-sm">
       {/* Top Navbar */}
-      <header className="border-b border-[#252525] bg-[#050505]/95 backdrop-blur px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+      <header className="border-b border-[#252525] bg-[#050505]/95 backdrop-blur px-8 py-5 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <div>
-            <span className="text-sm font-bold tracking-tight block text-[#FAFAFA]">
+            <span className="text-base font-bold tracking-tight block text-[#FAFAFA]">
               SortLab
             </span>
-            <span className="text-[10px] text-[#8A8A8A] tracking-tight block font-mono">
+            <span className="text-[11px] text-[#8A8A8A] tracking-tight block font-mono">
               performance workstation
             </span>
           </div>
         </div>
 
         {/* Stepper Navigation */}
-        <nav className="hidden md:flex items-center gap-3">
+        <nav className="hidden md:flex items-center gap-5">
           {stepsList.map((step, idx) => {
             const isCompleted = step.id < currentStep;
             const isActive = step.id === currentStep;
@@ -982,22 +982,22 @@ export default function Home() {
             return (
               <React.Fragment key={step.id}>
                 {idx > 0 && (
-                  <div className={`h-[1px] w-3 ${isCompleted ? "bg-[#22C55E]" : "bg-[#252525]"}`} />
+                  <div className={`h-[1px] w-5 ${isCompleted ? "bg-[#22C55E]" : "bg-[#252525]"}`} />
                 )}
                 <button
                   onClick={() => handleStepNavigation(step.id)}
                   disabled={!isUnlocked}
-                  className={`flex items-center gap-1.5 text-xs py-1 transition-all duration-150 ${
+                  className={`flex items-center gap-2 text-xs md:text-sm py-2 px-1 transition-all duration-150 border-b-2 ${
                     isActive 
-                      ? "text-[#FAFAFA] font-semibold cursor-default" 
+                      ? "text-[#FAFAFA] font-semibold cursor-default border-[#22C55E]" 
                       : isCompleted 
-                        ? "text-[#22C55E] hover:text-[#4ADE80] cursor-pointer" 
+                        ? "text-[#22C55E] hover:text-[#4ADE80] cursor-pointer border-transparent" 
                         : isUnlocked
-                          ? "text-[#C9C9C9] hover:text-[#FAFAFA] cursor-pointer"
-                          : "text-[#5A5A5A] cursor-not-allowed"
+                          ? "text-[#C9C9C9] hover:text-[#FAFAFA] cursor-pointer border-transparent"
+                          : "text-[#5A5A5A] cursor-not-allowed border-transparent"
                   }`}
                 >
-                  <span className="text-[10px] font-mono">
+                  <span className="text-[11px] font-mono">
                     {isCompleted ? "✓" : `0${step.id}`}
                   </span>
                   <span>{step.label}</span>
@@ -1007,7 +1007,7 @@ export default function Home() {
           })}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           {currentStep > 0 && (
             <button
               onClick={() => {
@@ -1015,7 +1015,7 @@ export default function Home() {
                 setMaxUnlockedStep(0);
                 setBenchResults([]);
               }}
-              className="text-xs text-[#8A8A8A] hover:text-[#FAFAFA] transition-colors font-medium cursor-pointer"
+              className="text-sm text-[#8A8A8A] hover:text-[#FAFAFA] transition-colors font-medium cursor-pointer"
             >
               Reset workbench
             </button>
@@ -1024,7 +1024,7 @@ export default function Home() {
             href="https://github.com/Unceas/Efficient-Sorting" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-xs text-[#8A8A8A] hover:text-[#FAFAFA] transition-colors font-medium"
+            className="text-sm text-[#8A8A8A] hover:text-[#FAFAFA] transition-colors font-medium"
           >
             GitHub
           </a>
@@ -1032,7 +1032,7 @@ export default function Home() {
       </header>
 
       {/* Main workspace container */}
-      <main className="flex-1 p-6 max-w-5xl mx-auto w-full flex flex-col justify-start overflow-y-auto">
+      <main className="flex-1 p-8 md:p-12 max-w-6xl mx-auto w-full flex flex-col justify-start overflow-y-auto">
         <AnimatePresence mode="wait">
           
           {/* STEP 0: LANDING */}
