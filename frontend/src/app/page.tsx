@@ -1264,16 +1264,16 @@ export default function Home() {
               <div className="flex justify-between items-center pt-2">
                 <button
                   onClick={handlePrevStep}
-                  className="px-4 py-2 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-xs cursor-pointer font-medium"
+                  className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong"
                 >
                   <span>Select algorithms</span>
-                  <ChevronRight size={13} />
+                  <ChevronRight size={14} />
                 </button>
               </div>
             </motion.div>
@@ -1342,17 +1342,17 @@ export default function Home() {
               <div className="flex justify-between items-center pt-2">
                 <button
                   onClick={handlePrevStep}
-                  className="px-4 py-2 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-xs cursor-pointer font-medium"
+                  className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNextStep}
                   disabled={selectedAlgos.length === 0}
-                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 disabled:bg-[#252525] disabled:text-[#5A5A5A] disabled:border-[#252525] disabled:cursor-not-allowed disabled:shadow-none cursor-pointer font-medium hover:disabled:text-[#5A5A5A] hover:disabled:bg-[#252525] hover:disabled:border-[#252525]"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-1.5 disabled:bg-[#252525] disabled:text-[#5A5A5A] disabled:border-[#252525] disabled:cursor-not-allowed disabled:shadow-none cursor-pointer font-medium hover:disabled:text-[#5A5A5A] hover:disabled:bg-[#252525] hover:disabled:border-[#252525]"
                 >
                   <span>Configure settings</span>
-                  <ChevronRight size={13} />
+                  <ChevronRight size={14} />
                 </button>
               </div>
             </motion.div>
@@ -1464,7 +1464,7 @@ export default function Home() {
                 {!telemetryActive && !benchLoading ? (
                   <button
                     onClick={handleRunBenchmark}
-                    className="w-full flex items-center justify-center bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-bold py-3.5 rounded-lg transition-all duration-300 text-xs emerald-glow hover:emerald-glow-strong cursor-pointer"
+                    className="w-full flex items-center justify-center bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold py-4 rounded-lg transition-all duration-300 text-sm emerald-glow hover:emerald-glow-strong cursor-pointer"
                   >
                     <span>Run benchmark</span>
                   </button>
@@ -1513,7 +1513,7 @@ export default function Home() {
                 <div className="flex justify-start">
                   <button
                     onClick={handlePrevStep}
-                    className="px-4 py-2 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-xs cursor-pointer font-medium"
+                    className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                   >
                     Back
                   </button>
@@ -1539,17 +1539,17 @@ export default function Home() {
 
               {/* Terminal Diagnostics Winner Panel */}
               {benchResults.length > 0 && (
-                <div className="border border-[#252525] bg-[#050505] rounded-lg p-4 font-mono text-xs flex flex-col gap-2 shadow-inner">
-                  <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2 text-[10px] text-[#8A8A8A]">
+                <div className="border border-[#252525] bg-[#050505] rounded-lg p-6 font-mono text-sm flex flex-col gap-2.5 shadow-inner">
+                  <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2 text-xs text-[#8A8A8A]">
                     <span>KERNEL_DIAGNOSTICS_LOG</span>
                     <span>STATUS: ANALYSIS_SUCCESS</span>
                   </div>
-                  <div className="flex flex-col gap-1 text-[#C9C9C9]">
+                  <div className="flex flex-col gap-1.5 text-[#C9C9C9]">
                     <div className="flex items-center gap-1.5">
                       <span className="text-[#8A8A8A]">$</span>
                       <span>cat winner_telemetry.log</span>
                     </div>
-                    <div className="text-[#FAFAFA] font-bold mt-1">
+                    <div className="text-[#FAFAFA] font-bold mt-1 text-sm">
                       FASTEST PIPELINE: {getAlgoDisplayName(getFastestAlgo()?.algorithm || "").toUpperCase()}
                     </div>
                     <div className="text-[#22C55E] mt-0.5 leading-relaxed">
@@ -1562,26 +1562,26 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Results Metrics Table */}
-                <div className="lg:col-span-2 border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4">
+                <div className="lg:col-span-2 border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-5">
                   <div className="flex justify-between items-center border-b border-[#252525] pb-2">
-                    <span className="text-xs font-semibold text-[#FAFAFA]">Algorithm execution telemetry</span>
-                    <span className="text-[10px] text-[#8A8A8A] font-mono">Dataset size: {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
+                    <span className="text-sm font-semibold text-[#FAFAFA]">Algorithm execution telemetry</span>
+                    <span className="text-xs text-[#8A8A8A] font-mono">Dataset size: {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
                   </div>
 
                   {benchResults.length === 0 ? (
-                    <div className="text-center py-12 text-[#8A8A8A] italic text-xs">
+                    <div className="text-center py-12 text-[#8A8A8A] italic text-sm">
                       No active benchmark data. Configure parameters and run benchmark to compile records.
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
+                      <table className="w-full text-left text-sm border-collapse">
                         <thead>
-                          <tr className="border-b border-[#252525] text-[#8A8A8A] font-semibold text-[10px]">
-                            <th className="py-2 px-3">Algorithm</th>
-                            <th className="py-2 px-3 text-right">Runtime (μs)</th>
-                            <th className="py-2 px-3 text-right">Comparisons</th>
-                            <th className="py-2 px-3 text-right">Swaps / writes</th>
-                            <th className="py-2 px-3 text-right">Memory (B)</th>
+                          <tr className="border-b border-[#252525] text-[#8A8A8A] font-semibold text-xs">
+                            <th className="py-3 px-4">Algorithm</th>
+                            <th className="py-3 px-4 text-right">Runtime (μs)</th>
+                            <th className="py-3 px-4 text-right">Comparisons</th>
+                            <th className="py-3 px-4 text-right">Swaps / writes</th>
+                            <th className="py-3 px-4 text-right">Memory (B)</th>
                           </tr>
                         </thead>
                         <tbody className="font-mono text-[#C9C9C9]">
@@ -1657,8 +1657,8 @@ export default function Home() {
               {benchResults.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-[#252525] pt-8">
                   {/* Runtime Bar Chart */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5">
-                    <h4 className="text-xs font-semibold text-[#C9C9C9] mb-4">Runtime comparison (μs)</h4>
+                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6">
+                    <h4 className="text-sm font-semibold text-[#C9C9C9] mb-4">Runtime comparison (μs)</h4>
                     <div className="h-56">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={benchResults.map(r => ({ ...r, runtime_us: r.execution_time_ms * 1000 }))}>
@@ -1678,8 +1678,8 @@ export default function Home() {
                   </div>
 
                   {/* Scale Line Chart */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5">
-                    <h4 className="text-xs font-semibold text-[#C9C9C9] mb-4">Complexity reference curve (runtime scaling)</h4>
+                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6">
+                    <h4 className="text-sm font-semibold text-[#C9C9C9] mb-4">Complexity reference curve (runtime scaling)</h4>
                     <div className="h-56">
                       <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={[
@@ -1705,8 +1705,8 @@ export default function Home() {
 
               {/* Chart explanation annotation */}
               {benchResults.length > 0 && (
-                <div className="border border-[#252525] bg-[#0D0D0D] p-4 rounded-lg flex flex-col gap-1 text-xs">
-                  <span className="text-[9px] uppercase tracking-wider font-semibold text-[#8A8A8A] font-mono">Performance observation</span>
+                <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col gap-2 text-sm">
+                  <span className="text-xs tracking-wider font-semibold text-[#8A8A8A] font-mono">Performance observation</span>
                   <p className="text-[#C9C9C9] leading-relaxed">
                     {getChartExplanationText()}
                   </p>
@@ -1717,16 +1717,16 @@ export default function Home() {
               <div className="flex justify-between items-center pt-4 border-t border-[#252525]">
                 <button
                   onClick={() => setCurrentStep(3)}
-                  className="px-4 py-2 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-xs cursor-pointer font-medium"
+                  className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                 >
                   Configure parameters
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong font-medium"
                 >
                   <span>Visualize execution transitions</span>
-                  <ChevronRight size={13} />
+                  <ChevronRight size={14} />
                 </button>
               </div>
             </motion.div>
@@ -1768,10 +1768,10 @@ export default function Home() {
               </div>
 
               {/* Main Visualizer Controls Shelf */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-[#252525] bg-[#0D0D0D] rounded-lg text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg text-sm">
                 {/* Visualizer Delay */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] tracking-wider font-semibold">
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-xs text-[#8A8A8A] tracking-wider font-semibold">
                     <span>Animation delay</span>
                     <span className="text-[#22C55E] font-bold font-mono">{vizSpeed}ms</span>
                   </div>
@@ -1786,8 +1786,8 @@ export default function Home() {
                 </div>
 
                 {/* Array size */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] tracking-wider font-semibold">
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-xs text-[#8A8A8A] tracking-wider font-semibold">
                     <span>Array scale</span>
                     <span className="text-[#22C55E] font-bold font-mono">{vizSize}</span>
                   </div>
@@ -1802,8 +1802,8 @@ export default function Home() {
                 </div>
 
                 {/* Crossover Threshold */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[9px] text-[#8A8A8A] tracking-wider font-semibold">
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-xs text-[#8A8A8A] tracking-wider font-semibold">
                     <span>Crossover threshold</span>
                     <span className="text-[#22C55E] font-bold font-mono">{vizThreshold}</span>
                   </div>
@@ -1818,10 +1818,10 @@ export default function Home() {
                 </div>
 
                 {/* Duration info */}
-                <div className="flex flex-col justify-end bg-[#050505] p-2 border border-[#252525] rounded">
+                <div className="flex flex-col justify-end bg-[#050505] p-2.5 border border-[#252525] rounded">
                   <div className="flex justify-between items-center">
-                    <span className="text-[9px] text-[#8A8A8A] font-mono">Elapsed time:</span>
-                    <span className="text-xs font-mono font-bold text-[#FAFAFA]">{(vizElapsedTime / 10).toFixed(1)}s</span>
+                    <span className="text-[10px] text-[#8A8A8A] font-mono">Elapsed time:</span>
+                    <span className="text-sm font-mono font-semibold text-[#FAFAFA]">{(vizElapsedTime / 10).toFixed(1)}s</span>
                   </div>
                 </div>
               </div>
@@ -1835,7 +1835,7 @@ export default function Home() {
                   return (
                     <div 
                       key={algo} 
-                      className={`border rounded-lg p-4 flex flex-col gap-3 transition-all duration-300 bg-[#0D0D0D] ${
+                      className={`border rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 bg-[#0D0D0D] ${
                         state.winner 
                           ? "border-[#4ADE80] shadow-[0_0_20px_rgba(34,197,94,0.08)]" 
                           : "border-[#252525]"
@@ -1844,20 +1844,20 @@ export default function Home() {
                       {/* Grid card header info */}
                       <div className="flex items-center justify-between border-b border-[#252525] pb-2">
                         <div className="flex flex-col">
-                          <span className="text-xs font-semibold text-[#FAFAFA]">
+                          <span className="text-sm font-semibold text-[#FAFAFA]">
                             {getAlgoDisplayName(algo)}
                           </span>
-                          <span className="text-[10px] text-[#8A8A8A]">
+                          <span className="text-xs text-[#8A8A8A]">
                             Sub-routine: <span className="text-[#22C55E] font-medium font-mono">{state.currentSubAlgo}</span>
                           </span>
                         </div>
                         {state.winner && (
-                          <span className="text-[9px] bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 px-2 py-0.5 rounded font-semibold animate-pulse">
+                          <span className="text-xs bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 px-2 py-0.5 rounded font-semibold animate-pulse">
                             ✓ Winner
                           </span>
                         )}
                         {state.done && !state.winner && (
-                          <span className="text-[9px] bg-[#141414] text-[#8A8A8A] border border-[#252525] px-2 py-0.5 rounded font-mono">
+                          <span className="text-xs bg-[#141414] text-[#8A8A8A] border border-[#252525] px-2 py-0.5 rounded font-mono">
                             Completed
                           </span>
                         )}
@@ -1882,7 +1882,7 @@ export default function Home() {
                       </div>
 
                       {/* State metadata */}
-                      <div className="border-t border-[#252525]/50 pt-2 flex flex-col gap-1.5 text-[10px] font-mono text-[#C9C9C9]">
+                      <div className="border-t border-[#252525]/50 pt-2 flex flex-col gap-2 text-xs font-mono text-[#C9C9C9]">
                         <div className="flex justify-between border-b border-[#252525]/30 pb-1">
                           <span>Partition size:</span>
                           <span className="text-[#FAFAFA] font-semibold">{state.currentPartitionSize}</span>
@@ -1925,16 +1925,16 @@ export default function Home() {
               <div className="flex justify-between items-center pt-4 border-t border-[#252525]">
                 <button
                   onClick={handlePrevStep}
-                  className="px-4 py-2 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-xs cursor-pointer font-medium"
+                  className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                 >
                   Back to results
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong font-medium"
                 >
                   <span>Verify analysis conclusions</span>
-                  <ChevronRight size={13} />
+                  <ChevronRight size={14} />
                 </button>
               </div>
             </motion.div>
@@ -1956,11 +1956,11 @@ export default function Home() {
               </div>
 
               {/* Question 1: Dynamic Winner Summary */}
-              <div className="flex flex-col gap-2 bg-[#0D0D0D] border border-[#252525] p-5 rounded-lg">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">
+              <div className="flex flex-col gap-4 bg-[#0D0D0D] border border-[#252525] p-6 rounded-lg">
+                <h3 className="text-sm font-semibold text-[#FAFAFA]">
                   Why did {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} perform better in this run?
                 </h3>
-                <div className="text-xs text-[#C9C9C9] leading-relaxed flex flex-col gap-2">
+                <div className="text-sm text-[#C9C9C9] leading-relaxed flex flex-col gap-2">
                   <p>
                     On the selected <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset (scale n={getDatasetSizeFromExponent(sizeExponent).toLocaleString()}), {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} minimized execution cycles by dynamically swapping sorting routines.
                   </p>
@@ -1972,17 +1972,17 @@ export default function Home() {
 
               {/* Structured Hybrid Architecture Columns */}
               <div className="flex flex-col gap-4 border-t border-[#252525] pt-8">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Hybrid architecture profiles</h3>
+                <h3 className="text-sm font-semibold text-[#FAFAFA]">Hybrid architecture profiles</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Column 1: Quick + Insertion */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
                     <div className="flex flex-col gap-3">
                       <div>
-                        <strong className="text-xs text-[#FAFAFA] block">Quick + Insertion</strong>
-                        <span className="text-[9px] text-[#8A8A8A] font-mono">In-place threshold hybrid</span>
+                        <strong className="text-sm text-[#FAFAFA] block">Quick + Insertion</strong>
+                        <span className="text-xs text-[#8A8A8A] font-mono">In-place threshold hybrid</span>
                       </div>
                       <div className="border-b border-[#252525] my-1" />
-                      <div className="flex flex-col gap-2.5 text-[11px] leading-relaxed text-[#C9C9C9]">
+                      <div className="flex flex-col gap-2.5 text-xs leading-relaxed text-[#C9C9C9]">
                         <p>
                           <strong className="text-[#FAFAFA] font-medium block mb-0.5">Overview</strong>
                           Partitions down to crossover threshold, stopping recursion early. Final pass of Insertion Sort cleans remaining inversions.
@@ -1997,7 +1997,7 @@ export default function Home() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-[10px] font-mono text-[#8A8A8A]">
+                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-xs font-mono text-[#8A8A8A]">
                       <div className="flex justify-between">
                         <span>Best case:</span>
                         <span className="text-[#22C55E]">O(n)</span>
@@ -2022,14 +2022,14 @@ export default function Home() {
                   </div>
 
                   {/* Column 2: Quick + Merge */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
                     <div className="flex flex-col gap-3">
                       <div>
-                        <strong className="text-xs text-[#FAFAFA] block">Quick + Merge</strong>
-                        <span className="text-[9px] text-[#8A8A8A] font-mono">Stable partition hybrid</span>
+                        <strong className="text-sm text-[#FAFAFA] block">Quick + Merge</strong>
+                        <span className="text-xs text-[#8A8A8A] font-mono">Stable partition hybrid</span>
                       </div>
                       <div className="border-b border-[#252525] my-1" />
-                      <div className="flex flex-col gap-2.5 text-[11px] leading-relaxed text-[#C9C9C9]">
+                      <div className="flex flex-col gap-2.5 text-xs leading-relaxed text-[#C9C9C9]">
                         <p>
                           <strong className="text-[#FAFAFA] font-medium block mb-0.5">Overview</strong>
                           Recursive pivot partitioning delegates to stable MergeSort once sub-array sizes fall below the threshold.
@@ -2044,7 +2044,7 @@ export default function Home() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-[10px] font-mono text-[#8A8A8A]">
+                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-xs font-mono text-[#8A8A8A]">
                       <div className="flex justify-between">
                         <span>Best case:</span>
                         <span className="text-[#FAFAFA]">O(n log n)</span>
@@ -2069,14 +2069,14 @@ export default function Home() {
                   </div>
 
                   {/* Column 3: Introsort */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
                     <div className="flex flex-col gap-3">
                       <div>
-                        <strong className="text-xs text-[#FAFAFA] block">Introsort</strong>
-                        <span className="text-[9px] text-[#8A8A8A] font-mono">Three-way defensive hybrid</span>
+                        <strong className="text-sm text-[#FAFAFA] block">Introsort</strong>
+                        <span className="text-xs text-[#8A8A8A] font-mono">Three-way defensive hybrid</span>
                       </div>
                       <div className="border-b border-[#252525] my-1" />
-                      <div className="flex flex-col gap-2.5 text-[11px] leading-relaxed text-[#C9C9C9]">
+                      <div className="flex flex-col gap-2.5 text-xs leading-relaxed text-[#C9C9C9]">
                         <p>
                           <strong className="text-[#FAFAFA] font-medium block mb-0.5">Overview</strong>
                           Starts with QuickSort. Switches to HeapSort if recursion depth hits limit; transitions to Insertion Sort below threshold.
@@ -2091,7 +2091,7 @@ export default function Home() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-[10px] font-mono text-[#8A8A8A]">
+                    <div className="mt-5 pt-3 border-t border-[#252525]/50 flex flex-col gap-1.5 text-xs font-mono text-[#8A8A8A]">
                       <div className="flex justify-between">
                         <span>Best case:</span>
                         <span className="text-[#22C55E]">O(n)</span>
@@ -2119,8 +2119,8 @@ export default function Home() {
 
               {/* Empirical Crossover Threshold Analysis */}
               <div className="border-t border-[#252525] pt-8 flex flex-col gap-3">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Empirical crossover threshold analysis</h3>
-                <p className="text-xs text-[#C9C9C9] leading-relaxed">
+                <h3 className="text-sm font-semibold text-[#FAFAFA]">Empirical crossover threshold analysis</h3>
+                <p className="text-sm text-[#C9C9C9] leading-relaxed">
                   The crossover threshold (configured at <span className="font-mono text-[#FAFAFA]">{threshold}</span> elements in your benchmark) determines when recursive subproblems transition to insertion-based sorting. 
                   Lower thresholds increase recursion stack frames and function call overhead. Higher thresholds force the $O(n^2)$ insertion sort to execute on excessively large partitions, degrading overall runtime. 
                   Empirically, a threshold of <span className="font-mono text-[#FAFAFA]">16</span> coordinates best with standard L1 data cache lines (typically 64 bytes), minimizing memory cache misses and maximizing processing throughput.
@@ -2129,31 +2129,31 @@ export default function Home() {
 
               {/* Dataset Distribution Impact Summary Grid */}
               <div className="border-t border-[#252525] pt-8 flex flex-col gap-4">
-                <h3 className="text-xs font-semibold text-[#FAFAFA]">Dataset distribution impact matrix</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
-                    <strong className="text-[#FAFAFA] block">Random uniform</strong>
-                    <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">High Entropy</span>
-                    <span className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
-                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Benefited by quick balanced recursive partition splits.</p>
+                <h3 className="text-sm font-semibold text-[#FAFAFA]">Dataset distribution impact matrix</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                    <strong className="text-sm font-semibold text-[#FAFAFA] block">Random uniform</strong>
+                    <span className="text-xs text-[#8A8A8A] font-mono mb-1">High Entropy</span>
+                    <span className="text-xs text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
+                    <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Benefited by quick balanced recursive partition splits.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
-                    <strong className="text-[#FAFAFA] block">Nearly sorted</strong>
-                    <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">Low Inversions</span>
-                    <span className="text-[10px] text-[#22C55E] font-bold font-mono text-nowrap">Winner: Quick+Insertion</span>
-                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Insertion sort bases finish in O(n) linear time on sorted runs.</p>
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                    <strong className="text-sm font-semibold text-[#FAFAFA] block">Nearly sorted</strong>
+                    <span className="text-xs text-[#8A8A8A] font-mono mb-1">Low Inversions</span>
+                    <span className="text-xs text-[#22C55E] font-bold font-mono text-nowrap">Winner: Quick+Insertion</span>
+                    <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Insertion sort bases finish in O(n) linear time on sorted runs.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
-                    <strong className="text-[#FAFAFA] block">Reverse sorted</strong>
-                    <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">Max Inversions</span>
-                    <span className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
-                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Safe from quadratic time degradation via HeapSort recursion fallback.</p>
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                    <strong className="text-sm font-semibold text-[#FAFAFA] block">Reverse sorted</strong>
+                    <span className="text-xs text-[#8A8A8A] font-mono mb-1">Max Inversions</span>
+                    <span className="text-xs text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
+                    <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Safe from quadratic time degradation via HeapSort recursion fallback.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-3.5 rounded-lg flex flex-col gap-1 hover:border-[#22C55E]/20 transition-colors">
-                    <strong className="text-[#FAFAFA] block">Duplicate heavy</strong>
-                    <span className="text-[10px] text-[#8A8A8A] font-mono mb-1">Key Collisions</span>
-                    <span className="text-[10px] text-[#22C55E] font-bold font-mono">Winner: Quick+Merge</span>
-                    <p className="text-[10px] text-[#8A8A8A] leading-relaxed mt-1">Stable merges avoid duplicate element swap loops.</p>
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                    <strong className="text-sm font-semibold text-[#FAFAFA] block">Duplicate heavy</strong>
+                    <span className="text-xs text-[#8A8A8A] font-mono mb-1">Key Collisions</span>
+                    <span className="text-xs text-[#22C55E] font-bold font-mono">Winner: Quick+Merge</span>
+                    <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Stable merges avoid duplicate element swap loops.</p>
                   </div>
                 </div>
               </div>
@@ -2162,7 +2162,7 @@ export default function Home() {
               <div className="flex justify-between items-center pt-4 border-t border-[#252525]">
                 <button
                   onClick={handlePrevStep}
-                  className="px-4 py-2 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-xs cursor-pointer font-medium"
+                  className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                 >
                   Back to visualizer
                 </button>
@@ -2171,10 +2171,10 @@ export default function Home() {
                     setCurrentStep(1);
                     setMaxUnlockedStep(1);
                   }}
-                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer font-medium"
+                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-1.5 cursor-pointer font-medium"
                 >
                   <span>Restart experiment</span>
-                  <RotateCcw size={12} />
+                  <RotateCcw size={14} />
                 </button>
               </div>
             </motion.div>
