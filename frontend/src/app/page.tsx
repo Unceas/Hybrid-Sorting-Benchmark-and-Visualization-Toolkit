@@ -1052,13 +1052,13 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10 flex flex-col gap-4 items-start">
-                  <span className="text-[10px] font-mono text-[#22C55E] tracking-wider font-semibold">
+                  <span className="text-xs font-mono text-[#22C55E] tracking-wider font-semibold">
                     Performance engineering workstation
                   </span>
-                  <h1 className="text-3xl md:text-5xl font-extrabold text-[#FAFAFA] tracking-tight max-w-2xl leading-tight">
+                  <h1 className="text-4xl md:text-6xl font-extrabold text-[#FAFAFA] tracking-tight max-w-2xl leading-tight">
                     Sorting, re-engineered for performance.
                   </h1>
-                  <p className="text-[#C9C9C9] text-xs max-w-lg leading-relaxed">
+                  <p className="text-[#C9C9C9] text-sm md:text-base max-w-xl leading-relaxed">
                     Empirically analyze crossover thresholds, compile native C++ kernels, and inspect execution telemetry in a guided performance environment.
                   </p>
                   
@@ -1171,10 +1171,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col gap-8 max-w-2xl mx-auto w-full py-6 text-left"
             >
-              <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 1 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Generate distribution dataset</h2>
-                <p className="text-[#C9C9C9] text-xs">Choose the key distribution structure and size limit to test your sorting architectures.</p>
+              <div className="flex flex-col gap-2 mb-2">
+                <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 1 of 6</span>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Generate distribution dataset</h2>
+                <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Choose the key distribution structure and size limit to test your sorting architectures.</p>
               </div>
 
               {/* Dataset Cards Grid */}
@@ -1288,10 +1288,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col gap-8 max-w-2xl mx-auto w-full py-6 text-left"
             >
-              <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 2 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Select testing candidates</h2>
-                <p className="text-[#C9C9C9] text-xs">Identify target framework setups and hybrid logic chains to evaluate side-by-side.</p>
+              <div className="flex flex-col gap-2 mb-2">
+                <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 2 of 6</span>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Select testing candidates</h2>
+                <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Identify target framework setups and hybrid logic chains to evaluate side-by-side.</p>
               </div>
 
               {/* Algorithms Cards Checklist */}
@@ -1367,10 +1367,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col gap-6 max-w-2xl mx-auto w-full py-6 text-left"
             >
-              <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 3 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Run benchmark</h2>
-                <p className="text-[#C9C9C9] text-xs">Configure parameters and run native C++ execution sweeps.</p>
+              <div className="flex flex-col gap-2 mb-2">
+                <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 3 of 6</span>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Run benchmark</h2>
+                <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Configure parameters and run native C++ execution sweeps.</p>
               </div>
 
               {/* Active Workspace Setup Summary */}
@@ -1531,10 +1531,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col gap-8 w-full py-4 animate-slideup animate-once text-left"
             >
-              <div className="flex flex-col gap-1">
-                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 4 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Compare results</h2>
-                <p className="text-[#C9C9C9] text-xs">Analyze native execution runtimes, instruction comparisons, and space scaling curves.</p>
+              <div className="flex flex-col gap-2 mb-2">
+                <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 4 of 6</span>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Compare results</h2>
+                <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Analyze native execution runtimes, instruction comparisons, and space scaling curves.</p>
               </div>
 
               {/* Terminal Diagnostics Winner Panel */}
@@ -1742,10 +1742,10 @@ export default function Home() {
               className="flex flex-col gap-6 w-full py-4 text-left"
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#252525] pb-4">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 5 of 6</span>
-                  <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Visualize execution</h2>
-                  <p className="text-[#C9C9C9] text-xs">Observe side-by-side array partitions swapping execution limits based on set threshold criteria.</p>
+                <div className="flex flex-col gap-2 mb-1">
+                  <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 5 of 6</span>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Visualize execution</h2>
+                  <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Observe side-by-side array partitions swapping execution limits based on set threshold criteria.</p>
                 </div>
 
                 {/* Mini Player Controls */}
@@ -1949,10 +1949,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col gap-8 max-w-4xl mx-auto w-full py-6 text-left"
             >
-              <div className="flex flex-col gap-1 border-b border-[#252525] pb-4">
-                <span className="text-[#22C55E] font-mono text-[10px] tracking-wider font-semibold">Step 6 of 6</span>
-                <h2 className="text-xl font-bold tracking-tight text-[#FAFAFA]">Analyze performance</h2>
-                <p className="text-[#C9C9C9] text-xs">Examine the mathematical conclusions and hardware architecture trade-offs verified in your experiment.</p>
+              <div className="flex flex-col gap-2 border-b border-[#252525] pb-6 mb-2">
+                <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 6 of 6</span>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Analyze performance</h2>
+                <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Examine the mathematical conclusions and hardware architecture trade-offs verified in your experiment.</p>
               </div>
 
               {/* Question 1: Dynamic Winner Summary */}
