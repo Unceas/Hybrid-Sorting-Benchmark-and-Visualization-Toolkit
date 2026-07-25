@@ -238,37 +238,11 @@ export default function Home() {
   };
 
   const runTelemetryAnimation = (size: number, rawResults: BenchmarkResult[]) => {
-    setTelemetryActive(true);
-    const messages = [
-      `[INFO] Connecting to native performance kernels...`,
-      `[INFO] Target environment: C++17 native compiler`,
-      `[INFO] Generating ${datasetType} distribution dataset (N = ${size.toLocaleString()})`,
-      `[INFO] Seed value: ${seed} | Average run passes: ${timingRuns}`,
-      `[INFO] Commencing benchmark sweeps for: ${selectedAlgos.map(getAlgoDisplayName).join(", ")}`,
-      `[INFO] Running pivot strategy: ${pivotStrategy.replace(/_/g, " ")}`,
-      `[INFO] Evaluating crossover threshold boundary at: ${threshold} elements`,
-      `[SUCCESS] Native hardware cycles collected successfully.`,
-      `[SUCCESS] Telemetry verified. Loading analytical workstation...`
-    ];
-
-    setTelemetryLogs([messages[0]]);
-    let i = 1;
-    const interval = setInterval(() => {
-      if (i < messages.length) {
-        if (messages[i]) {
-          setTelemetryLogs(prev => [...prev, messages[i]]);
-        }
-        i++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => {
-          setTelemetryActive(false);
-          setBenchResults(rawResults);
-          setCurrentStep(4);
-          if (maxUnlockedStep < 4) setMaxUnlockedStep(4);
-        }, 600);
-      }
-    }, 400);
+    // Immediate execution transition without artificial delays
+    setTelemetryActive(false);
+    setBenchResults(rawResults);
+    setCurrentStep(4);
+    if (maxUnlockedStep < 4) setMaxUnlockedStep(4);
   };
 
   const generateMockBenchmarkResults = (algos: string[], size: number, dataset: string, thresh: number): BenchmarkResult[] => {
@@ -431,7 +405,7 @@ export default function Home() {
     }
   }, [currentStep, selectedAlgos, threshold]);
 
-  // Generate new visualizer dataset
+  // Generate deterministic seeded visualizer dataset matching the benchmark instance
   const generateNewVisualizerArray = useCallback(() => {
     if (animationRef.current) clearInterval(animationRef.current);
     setIsPlaying(false);
@@ -439,10 +413,30 @@ export default function Home() {
     generatorsRef.current = {};
     vizArraysRef.current = {};
     
+    // Simple LCG PRNG for seed persistence
+    let s = seed % 2147483647;
+    if (s <= 0) s += 2147483646;
+    const prng = () => {
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+    
     const baseArray: VizElement[] = [];
     for (let i = 0; i < vizSize; ++i) {
+      let val = 0;
+      if (datasetType === "nearly_sorted") {
+        val = Math.floor((i / vizSize) * 360) + 20 + Math.floor((prng() - 0.5) * 30);
+      } else if (datasetType === "reverse_sorted") {
+        val = Math.floor(((vizSize - 1 - i) / vizSize) * 360) + 20;
+      } else if (datasetType === "duplicate_heavy") {
+        const buckets = [40, 120, 220, 320];
+        val = buckets[Math.floor(prng() * buckets.length)];
+      } else {
+        val = Math.floor(prng() * 380) + 20;
+      }
+
       baseArray.push({
-        value: Math.floor(Math.random() * 380) + 20,
+        value: Math.max(10, Math.min(400, val)),
         state: "unsorted"
       });
     }
@@ -477,7 +471,7 @@ export default function Home() {
     setVizStates(initialStates);
     setVizElapsedTime(0);
     setVizStartTime(null);
-  }, [vizSize, selectedVizAlgos]);
+  }, [vizSize, selectedVizAlgos, seed, datasetType]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -951,18 +945,11 @@ export default function Home() {
     const best = getFastestAlgo();
     if (!best) return "";
     const bestName = getAlgoDisplayName(best.algorithm);
-    const timeVal = (best.execution_time_ms * 1000).toLocaleString(undefined, { maximumFractionDigits: 1 });
+    const timeVal = Math.round(best.execution_time_ms * 1000).toLocaleString();
+    const compVal = best.comparisons.toLocaleString();
+    const swapVal = best.swaps.toLocaleString();
     
-    switch (datasetType) {
-      case "nearly_sorted":
-        return `${bestName} completed faster than all other algorithms on this dataset (${timeVal} μs). By invoking insertion-based base runs on sorted segments, it skipped the recursive stack layers.`;
-      case "reverse_sorted":
-        return `${bestName} optimized reverse key orientations (${timeVal} μs) by managing pivot choices and swapping to fallback bounds to avoid quadratic slowdowns.`;
-      case "duplicate_heavy":
-        return `${bestName} outperformed alternative setups with repetitive keys (${timeVal} μs) by using partition balancing loops.`;
-      default:
-        return `${bestName} achieved the fastest execution run (${timeVal} μs) on this high-entropy dataset.`;
-    }
+    return `${bestName} completed in ${timeVal} μs across ${getDatasetSizeFromExponent(sizeExponent).toLocaleString()} items (${compVal} comparisons, ${swapVal} swaps).`;
   };
 
   const getChartExplanationText = () => {
@@ -1036,7 +1023,7 @@ export default function Home() {
               SortLab
             </span>
             <span className="text-[11px] text-[#8A8A8A] tracking-tight block font-mono">
-              performance workstation
+              hybrid sorting lab
             </span>
           </div>
         </div>
@@ -1122,14 +1109,14 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10 flex flex-col gap-4 items-start">
-                  <span className="text-xs font-mono text-[#22C55E] tracking-wider font-semibold">
-                    Performance engineering workstation
+                  <span className="text-xs font-mono text-[#22C55E] tracking-wider font-semibold uppercase">
+                    Hybrid Sorting Lab
                   </span>
                   <h1 className="text-4xl md:text-6xl font-extrabold text-[#FAFAFA] tracking-tight max-w-2xl leading-tight">
                     Sorting, re-engineered for performance.
                   </h1>
                   <p className="text-[#C9C9C9] text-sm md:text-base max-w-xl leading-relaxed">
-                    Empirically analyze crossover thresholds, compile native C++ kernels, and inspect execution telemetry in a guided performance environment.
+                    Empirically test crossover thresholds, compare hybrid sorting algorithms, and observe partition mechanics.
                   </p>
                   
                   <div className="mt-2">
@@ -1140,7 +1127,7 @@ export default function Home() {
                       }}
                       className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-6 py-2.5 rounded transition-all duration-300 text-xs flex items-center gap-1.5 cursor-pointer emerald-glow hover:emerald-glow-strong"
                     >
-                      <span>Begin guided experiment</span>
+                      <span>Begin experiment</span>
                       <ArrowRight size={12} />
                     </button>
                   </div>
@@ -1150,20 +1137,19 @@ export default function Home() {
               {/* Workflow Pipeline timeline */}
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-1 text-left">
-                  <span className="text-[#8A8A8A] tracking-wider font-mono text-[9px] font-semibold">Interactive pipeline</span>
-                  <h2 className="text-base font-semibold text-[#FAFAFA]">Experiment workflow</h2>
+                  <span className="text-[#8A8A8A] tracking-wider font-mono text-[9px] font-semibold">Product identity</span>
+                  <h2 className="text-base font-semibold text-[#FAFAFA]">Experiment flow</h2>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {[
-                    { step: "Configure dataset", desc: "Select distribution settings and sequence limits." },
-                    { step: "Pick algorithms", desc: "Identify base frameworks and hybrid target configurations." },
-                    { step: "Run native kernels", desc: "Compile C++ and capture clock metrics." },
-                    { step: "Compare results", desc: "Examine swaps, compares, and scale curves." },
-                    { step: "Visualize & analyze", desc: "Watch recursion limits in real-time." }
+                    { label: "Create", step: "Configure dataset", desc: "Select distribution settings, size, and crossover parameters." },
+                    { label: "Compare", step: "Run benchmark", desc: "Execute benchmark sweeps and examine comparative runtimes." },
+                    { label: "Observe", step: "Observe execution", desc: "Watch recursion limits and partition swaps in real-time." },
+                    { label: "Understand", step: "Analyze findings", desc: "Review structural trade-offs and mathematical characteristics." }
                   ].map((item, idx) => (
                     <div key={idx} className="flex flex-col gap-2 border-l border-[#252525] pl-4 py-2 hover:border-[#22C55E]/30 transition-colors">
-                      <span className="text-[10px] font-mono text-[#22C55E] font-semibold">0{idx + 1}</span>
+                      <span className="text-[10px] font-mono text-[#22C55E] font-semibold">{item.label}</span>
                       <h3 className="text-xs font-semibold text-[#FAFAFA]">{item.step}</h3>
                       <p className="text-[11px] text-[#8A8A8A] leading-relaxed">{item.desc}</p>
                     </div>
@@ -1548,11 +1534,13 @@ export default function Home() {
                 )}
               </div>
 
-              {/* API error view */}
+              {/* Simulation Mode Badge - Muted Gray Differentiation */}
               {benchError && (
-                <div className="bg-[#ef4444]/10 border border-[#ef4444]/20 text-[#ef4444] p-4 rounded-md text-xs flex items-center gap-2">
-                  <ShieldAlert size={14} />
-                  <span>{benchError}</span>
+                <div className="bg-[#141414] border border-[#252525] text-[#8A8A8A] p-4 rounded-md text-xs font-mono flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-[#252525] text-[#FAFAFA] text-[10px] font-bold">SIMULATION MODE · DEMO DATA</span>
+                    <span>Backend service offline (127.0.0.1:8000). Showing simulated benchmark metrics.</span>
+                  </div>
                 </div>
               )}
 
@@ -1613,7 +1601,7 @@ export default function Home() {
                   <div className="flex flex-col gap-2 max-w-2xl">
                     <div className="flex items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-[#22C55E] text-[#050505]">
-                        FASTEST PIPELINE
+                        FASTEST ALGORITHM
                       </span>
                       {getPercentFaster() && (
                         <span className="text-xs font-mono text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-2 py-0.5 rounded font-semibold">
@@ -1623,7 +1611,7 @@ export default function Home() {
                     </div>
                     
                     <h3 className="text-2xl font-bold text-[#FAFAFA]">
-                      {getAlgoDisplayName(getFastestAlgo()?.algorithm || "")} ({((getFastestAlgo()?.execution_time_ms || 0) * 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })} μs)
+                      {getAlgoDisplayName(getFastestAlgo()?.algorithm || "")} ({Math.round((getFastestAlgo()?.execution_time_ms || 0) * 1000).toLocaleString()} μs)
                     </h3>
                     
                     <p className="text-sm text-[#C9C9C9] leading-relaxed">
@@ -1631,19 +1619,27 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      const fastest = getFastestAlgo()?.algorithm || "introsort";
-                      setSelectedVizAlgos([fastest]);
-                      setVizThreshold(threshold);
-                      setCurrentStep(5);
-                      if (maxUnlockedStep < 5) setMaxUnlockedStep(5);
-                    }}
-                    className="bg-[#FAFAFA] hover:bg-[#22C55E] hover:text-[#050505] text-[#050505] font-semibold px-6 py-3 rounded-lg transition-all duration-300 text-sm flex items-center gap-2 whitespace-nowrap cursor-pointer emerald-glow shadow-md hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]"
-                  >
-                    <span>Visualize {getAlgoDisplayName(getFastestAlgo()?.algorithm || "")}</span>
-                    <ChevronRight size={16} />
-                  </button>
+                  <div className="flex flex-col sm:flex-row items-center gap-3">
+                    <button
+                      onClick={() => setCurrentStep(3)}
+                      className="px-4 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] rounded-lg text-sm font-medium transition-colors cursor-pointer"
+                    >
+                      Run again
+                    </button>
+                    <button
+                      onClick={() => {
+                        const fastest = getFastestAlgo()?.algorithm || "introsort";
+                        setSelectedVizAlgos([fastest]);
+                        setVizThreshold(threshold);
+                        setCurrentStep(5);
+                        if (maxUnlockedStep < 5) setMaxUnlockedStep(5);
+                      }}
+                      className="bg-[#FAFAFA] hover:bg-[#22C55E] hover:text-[#050505] text-[#050505] font-semibold px-6 py-3 rounded-lg transition-all duration-300 text-sm flex items-center gap-2 whitespace-nowrap cursor-pointer emerald-glow shadow-md hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]"
+                    >
+                      <span>Observe {getAlgoDisplayName(getFastestAlgo()?.algorithm || "")}</span>
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -1841,9 +1837,11 @@ export default function Home() {
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#252525] pb-4">
                 <div className="flex flex-col gap-2 mb-1">
-                  <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">Step 5 of 6</span>
-                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Visualize execution</h2>
-                  <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Observe side-by-side array partitions swapping execution limits based on set threshold criteria.</p>
+                  <span className="text-[#22C55E] font-mono text-xs tracking-wider font-semibold">
+                    Visualizing {selectedVizAlgos.map(getAlgoDisplayName).join(" vs ")} · {datasetType.replace("_", " ").toUpperCase()} · Threshold {vizThreshold} · Seed {seed}
+                  </span>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#FAFAFA]">Observe execution</h2>
+                  <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Observe element partition swaps and base insertion runs on the benchmark dataset.</p>
                 </div>
 
                 {/* Mini Player Controls */}
@@ -2053,21 +2051,21 @@ export default function Home() {
                 <p className="text-[#C9C9C9] text-sm md:text-base leading-relaxed">Examine the mathematical conclusions and hardware architecture trade-offs verified in your experiment.</p>
               </div>
 
-              {/* Collapsible Deep-Dive: Dynamic Winner Summary */}
-              <details className="group border border-[#252525] bg-[#0D0D0D] rounded-lg overflow-hidden transition-all">
-                <summary className="p-6 text-sm font-semibold text-[#FAFAFA] cursor-pointer flex justify-between items-center select-none hover:bg-[#141414]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]">
-                  <span>Why did {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} perform best in this run?</span>
-                  <ChevronRight size={16} className="text-[#8A8A8A] transition-transform duration-200 group-open:rotate-90" />
-                </summary>
-                <div className="px-6 pb-6 pt-2 text-sm text-[#C9C9C9] leading-relaxed border-t border-[#252525]/50 flex flex-col gap-2">
+              {/* Closing Synthesis Section */}
+              <div className="flex flex-col gap-4 bg-[#0D0D0D] border border-[#252525] p-6 rounded-lg">
+                <span className="text-xs font-mono text-[#22C55E] font-semibold uppercase tracking-wider">Experiment Synthesis</span>
+                <h3 className="text-xl font-bold text-[#FAFAFA]">
+                  What did we learn?
+                </h3>
+                <div className="text-sm text-[#C9C9C9] leading-relaxed flex flex-col gap-3">
                   <p>
-                    On the selected <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset (scale n={getDatasetSizeFromExponent(sizeExponent).toLocaleString()}), {getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")} minimized execution cycles by dynamically swapping sorting routines.
+                    <strong className="text-[#FAFAFA] font-semibold">{getAlgoDisplayName(getFastestAlgo()?.algorithm || "Introsort")}</strong> was fastest in this experiment on the <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset (n={getDatasetSizeFromExponent(sizeExponent).toLocaleString()}).
                   </p>
-                  <p>
-                    For large ranges, recursive partitioning quickly narrows down sorting partitions. Once subproblems fit comfortably within cache line limits, transitioning to non-recursive base sorting (like Insertion Sort) avoids stack frame storage allocations.
+                  <p className="text-[#8A8A8A]">
+                    Explore how the algorithms differ and what may have influenced the result.
                   </p>
                 </div>
-              </details>
+              </div>
 
               {/* Structured Hybrid Architecture Columns */}
               <div className="flex flex-col gap-4 border-t border-[#252525] pt-8">
@@ -2257,22 +2255,22 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Final page actions */}
+              {/* Final page actions: Close the loop */}
               <div className="flex justify-between items-center pt-4 border-t border-[#252525]">
                 <button
                   onClick={handlePrevStep}
                   className="px-6 py-3 border border-[#252525] hover:border-[#8A8A8A] hover:text-[#FAFAFA] text-[#C9C9C9] transition-colors rounded text-sm cursor-pointer font-medium"
                 >
-                  Back to visualizer
+                  Back to observe
                 </button>
                 <button
                   onClick={() => {
                     setCurrentStep(1);
                     setMaxUnlockedStep(1);
                   }}
-                  className="bg-[#FAFAFA] hover:bg-transparent hover:text-[#FAFAFA] border border-[#FAFAFA] hover:border-[#22C55E] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-1.5 cursor-pointer font-medium"
+                  className="bg-[#FAFAFA] hover:bg-[#22C55E] hover:text-[#050505] text-[#050505] font-semibold px-8 py-3.5 rounded transition-all duration-300 text-sm flex items-center gap-2 cursor-pointer font-medium shadow-md hover:scale-[1.02]"
                 >
-                  <span>Restart experiment</span>
+                  <span>Try another dataset</span>
                   <RotateCcw size={14} />
                 </button>
               </div>
