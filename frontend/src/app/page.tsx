@@ -1103,7 +1103,7 @@ export default function Home() {
               className="flex flex-col gap-14 py-8 max-w-3xl mx-auto w-full"
             >
               {/* Typography Hero */}
-              <div className="relative border border-[#252525] bg-[#0D0D0D] rounded-lg p-10 flex flex-col gap-6 text-left items-start w-full overflow-hidden">
+              <div className="relative border border-[#252525] bg-[#0D0D0D] rounded-lg p-10 flex flex-col gap-6 text-left items-start w-full overflow-hidden subtle-card-glow">
                 <div className="absolute inset-0 pointer-events-none opacity-20">
                   <SubtleSortingBg />
                 </div>
@@ -1165,7 +1165,7 @@ export default function Home() {
                 </div>
                 
                 {/* CSS Window Mockup */}
-                <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg overflow-hidden flex flex-col">
+                <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg overflow-hidden flex flex-col subtle-card-glow">
                   {/* Header Window Controls */}
                   <div className="bg-[#141414] border-b border-[#252525] px-4 py-2 flex items-center justify-between">
                     <div className="flex gap-1.5">
@@ -1246,7 +1246,7 @@ export default function Home() {
                     <button
                       key={card.id}
                       onClick={() => setDatasetType(card.id)}
-                      className={`text-left p-6 rounded-lg border transition-all duration-300 flex flex-col gap-3 cursor-pointer hover-lift ${
+                      className={`text-left p-6 rounded-lg border transition-all duration-300 flex flex-col gap-3 cursor-pointer hover-lift subtle-card-glow ${
                         isSelected 
                           ? "border-[#4ADE80] bg-[#22C55E]/5 text-[#FAFAFA]" 
                           : "border-[#252525] bg-[#0D0D0D] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
@@ -1264,7 +1264,7 @@ export default function Home() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Dataset Scale Slider */}
-                <div className="p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col justify-between gap-6">
+                <div className="p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col justify-between gap-6 subtle-card-glow">
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between items-end">
                       <span className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Dataset size (n)</span>
@@ -1293,7 +1293,7 @@ export default function Home() {
                 </div>
 
                 {/* Dataset Distribution Preview */}
-                <div className="p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col gap-4">
+                <div className="p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg flex flex-col gap-4 subtle-card-glow">
                   <span className="text-[#8A8A8A] text-xs font-semibold tracking-wider">Distribution preview</span>
                   <div className="h-28 flex items-end justify-between gap-1 bg-[#050505] p-3 border border-[#252525] rounded">
                     {(() => {
@@ -1365,7 +1365,7 @@ export default function Home() {
                     <button
                       key={algo.id}
                       onClick={() => toggleAlgoSelection(algo.id)}
-                      className={`text-left p-6 rounded-lg border transition-all duration-200 flex items-start gap-4 cursor-pointer ${
+                      className={`text-left p-6 rounded-lg border transition-all duration-200 flex items-start gap-4 cursor-pointer subtle-card-glow ${
                         isChecked 
                           ? "border-[#4ADE80] bg-[#22C55E]/5 text-[#FAFAFA]" 
                           : "border-[#252525] bg-[#0D0D0D] text-[#C9C9C9] hover:border-[#22C55E]/20 hover:text-[#FAFAFA]"
@@ -1388,7 +1388,7 @@ export default function Home() {
               </div>
 
               {/* Conversational summary */}
-              <div className="flex items-center gap-4 p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg">
+              <div className="flex items-center gap-4 p-5 border border-[#252525] bg-[#0D0D0D] rounded-lg subtle-card-glow">
                 <p className="text-sm text-[#C9C9C9] leading-relaxed">
                   Comparing <strong className="text-[#FAFAFA] font-semibold">{selectedAlgos.length} algorithms</strong> on a <strong className="text-[#FAFAFA] font-semibold">{datasetType.replace("_", " ")}</strong> dataset of scale <strong className="text-[#FAFAFA] font-semibold">{getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</strong>.
                 </p>
@@ -1430,7 +1430,7 @@ export default function Home() {
               </div>
 
               {/* Active Workspace Setup Summary */}
-              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-4 text-sm">
+              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-4 text-sm subtle-card-glow">
                 <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2">
                   <span className="text-sm font-semibold text-[#FAFAFA]">Active experiment setup</span>
                   <span className="text-xs text-[#8A8A8A] font-mono">Steps 1–2 configuration</span>
@@ -1454,7 +1454,7 @@ export default function Home() {
               </div>
 
               {/* Configuration parameters */}
-              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-5">
+              <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-5 subtle-card-glow">
                 <div className="flex justify-between items-center border-b border-[#252525]/50 pb-2">
                   <span className="text-sm font-semibold text-[#FAFAFA]">Execution parameters</span>
                   <span className="text-xs text-[#8A8A8A] font-mono">Customizable settings</span>
@@ -1646,7 +1646,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Results Metrics Table */}
-                <div className="lg:col-span-2 border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-5">
+                <div className="lg:col-span-2 border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 flex flex-col gap-5 subtle-card-glow">
                   <div className="flex justify-between items-center border-b border-[#252525] pb-2">
                     <span className="text-sm font-semibold text-[#FAFAFA]">Algorithm execution telemetry</span>
                     <span className="text-xs text-[#8A8A8A] font-mono">Dataset size: {getDatasetSizeFromExponent(sizeExponent).toLocaleString()}</span>
@@ -1717,7 +1717,7 @@ export default function Home() {
                 </div>
 
                 {/* Local experiment run history sidebar */}
-                <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4">
+                <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-5 flex flex-col gap-4 subtle-card-glow">
                   <div className="flex items-center justify-between border-b border-[#252525] pb-2">
                     <span className="text-xs font-semibold text-[#FAFAFA]">Local run logs</span>
                     {runHistory.length > 0 && (
@@ -1751,7 +1751,7 @@ export default function Home() {
               {benchResults.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-[#252525] pt-8">
                   {/* Runtime Bar Chart */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6">
+                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 subtle-card-glow">
                     <h4 className="text-sm font-semibold text-[#C9C9C9] mb-4">Runtime comparison (μs)</h4>
                     <div className="h-56">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1772,7 +1772,7 @@ export default function Home() {
                   </div>
 
                   {/* Scale Line Chart */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6">
+                  <div className="border border-[#252525] bg-[#0D0D0D] rounded-lg p-6 subtle-card-glow">
                     <h4 className="text-sm font-semibold text-[#C9C9C9] mb-4">Complexity reference curve (runtime scaling)</h4>
                     <div className="h-56">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1799,7 +1799,7 @@ export default function Home() {
 
               {/* Chart explanation annotation */}
               {benchResults.length > 0 && (
-                <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col gap-2 text-sm">
+                <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col gap-2 text-sm subtle-card-glow">
                   <span className="text-xs tracking-wider font-semibold text-[#8A8A8A] font-mono">Performance observation</span>
                   <p className="text-[#C9C9C9] leading-relaxed">
                     {getChartExplanationText()}
@@ -1864,7 +1864,7 @@ export default function Home() {
               </div>
 
               {/* Main Visualizer Controls Shelf */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 border border-[#252525] bg-[#0D0D0D] rounded-lg text-sm subtle-card-glow">
                 {/* Visualizer Delay */}
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center text-xs text-[#8A8A8A] tracking-wider font-semibold">
@@ -1931,7 +1931,7 @@ export default function Home() {
                   return (
                     <div 
                       key={algo} 
-                      className={`border rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 bg-[#0D0D0D] ${
+                      className={`border rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 bg-[#0D0D0D] subtle-card-glow ${
                         state.winner 
                           ? "border-[#4ADE80] shadow-[0_0_20px_rgba(34,197,94,0.08)]" 
                           : "border-[#252525]"
@@ -2052,7 +2052,7 @@ export default function Home() {
               </div>
 
               {/* Closing Synthesis Section */}
-              <div className="flex flex-col gap-4 bg-[#0D0D0D] border border-[#252525] p-6 rounded-lg">
+              <div className="flex flex-col gap-4 bg-[#0D0D0D] border border-[#252525] p-6 rounded-lg subtle-card-glow">
                 <span className="text-xs font-mono text-[#22C55E] font-semibold uppercase tracking-wider">Experiment Synthesis</span>
                 <h3 className="text-xl font-bold text-[#FAFAFA]">
                   What did we learn?
@@ -2072,7 +2072,7 @@ export default function Home() {
                 <h3 className="text-sm font-semibold text-[#FAFAFA]">Hybrid architecture profiles</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Column 1: Quick + Insertion */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <div className="flex flex-col gap-3">
                       <div>
                         <strong className="text-sm text-[#FAFAFA] block">Quick + Insertion</strong>
@@ -2119,7 +2119,7 @@ export default function Home() {
                   </div>
 
                   {/* Column 2: Quick + Merge */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <div className="flex flex-col gap-3">
                       <div>
                         <strong className="text-sm text-[#FAFAFA] block">Quick + Merge</strong>
@@ -2166,7 +2166,7 @@ export default function Home() {
                   </div>
 
                   {/* Column 3: Introsort */}
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-6 rounded-lg flex flex-col justify-between hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <div className="flex flex-col gap-3">
                       <div>
                         <strong className="text-sm text-[#FAFAFA] block">Introsort</strong>
@@ -2228,25 +2228,25 @@ export default function Home() {
               <div className="border-t border-[#252525] pt-8 flex flex-col gap-4">
                 <h3 className="text-sm font-semibold text-[#FAFAFA]">Dataset distribution impact matrix</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <strong className="text-sm font-semibold text-[#FAFAFA] block">Random uniform</strong>
                     <span className="text-xs text-[#8A8A8A] font-mono mb-1">High Entropy</span>
                     <span className="text-xs text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
                     <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Benefited by quick balanced recursive partition splits.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <strong className="text-sm font-semibold text-[#FAFAFA] block">Nearly sorted</strong>
                     <span className="text-xs text-[#8A8A8A] font-mono mb-1">Low Inversions</span>
                     <span className="text-xs text-[#22C55E] font-bold font-mono text-nowrap">Winner: Quick+Insertion</span>
                     <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Insertion sort bases finish in O(n) linear time on sorted runs.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <strong className="text-sm font-semibold text-[#FAFAFA] block">Reverse sorted</strong>
                     <span className="text-xs text-[#8A8A8A] font-mono mb-1">Max Inversions</span>
                     <span className="text-xs text-[#22C55E] font-bold font-mono">Winner: Introsort</span>
                     <p className="text-xs text-[#C9C9C9] leading-relaxed mt-1">Safe from quadratic time degradation via HeapSort recursion fallback.</p>
                   </div>
-                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors">
+                  <div className="border border-[#252525] bg-[#0D0D0D] p-5 rounded-lg flex flex-col gap-1.5 hover:border-[#22C55E]/20 transition-colors subtle-card-glow">
                     <strong className="text-sm font-semibold text-[#FAFAFA] block">Duplicate heavy</strong>
                     <span className="text-xs text-[#8A8A8A] font-mono mb-1">Key Collisions</span>
                     <span className="text-xs text-[#22C55E] font-bold font-mono">Winner: Quick+Merge</span>
